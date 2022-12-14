@@ -34,4 +34,10 @@ describe('Get Address', () => {
       expect(typeof address).toBe('string');
     }
   });
+
+  it('should return error message if key is not passed in', async () => {
+    const address = await getAddress();
+
+    expect(address).toBe('enter private key as argument');
+  });
 });
