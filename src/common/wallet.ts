@@ -46,6 +46,10 @@ export async function createWallet(
  * @return address
  */
 export async function getAddress(key: JWKInterface): Promise<string> {
+  if (!key) {
+    return 'enter private key as argument';
+  }
+
   const address = await arweave.wallets.jwkToAddress(key);
   return address;
 }
