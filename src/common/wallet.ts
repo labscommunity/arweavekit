@@ -9,6 +9,12 @@ const arweave = Arweave.init({
   protocol: 'http',
 });
 
+const arweaveMainnet = Arweave.init({
+  host: 'arweave.net',
+  port: 443,
+  protocol: 'https',
+});
+
 /**
  * create wallet
  * @returns walletAddress, JWK, and seedPhrase if options.seedPhrase is passed in
@@ -52,4 +58,27 @@ export async function getAddress(key: JWKInterface): Promise<string> {
 
   const address = await arweave.wallets.jwkToAddress(key);
   return address;
+}
+
+
+/**
+ * create wallet
+ * @params options -> { walletAddress: string }
+ * @returns walletBalance: string
+ */
+
+export async function getBalance(
+  options: BalanceProps
+): Promise<string> {
+  if (options === undefined) {
+    return 'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
+  }
+
+  if (options.walletAddress.length < 43) {
+    return 'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).'
+  }
+
+  const walletBalance = arweaveMainnet.wallets.getBalance(options.walletAddress)
+
+  return walletBalance;
 }
