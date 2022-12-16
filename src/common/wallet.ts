@@ -70,11 +70,11 @@ export async function getAddress(key: JWKInterface): Promise<string> {
 export async function getBalance(
   options: BalanceProps
 ): Promise<string> {
-  if (options === undefined) {
+  if (options.walletAddress.length === 0) {
     return 'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
   }
 
-  if (options.walletAddress.length < 43) {
+  if (options.walletAddress.length > 0 && options.walletAddress.length < 43) {
     return 'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).'
   }
 
