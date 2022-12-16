@@ -8,3 +8,6 @@ export interface CreateReturnProps {
   walletAddress: string;
   seedPhrase?: string;
 }
+export interface BalanceProps {
+  walletAddress: string;
+}
