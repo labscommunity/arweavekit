@@ -1,3 +1,4 @@
+<<<<<<<< HEAD:__tests__/wallet/create.spec.ts
 const { createWallet } = require('../../src/index');
 
 describe('Create Wallet', () => {
@@ -19,3 +20,6 @@ describe('Create Wallet', () => {
     expect(generateWallet.walletAddress).toBeDefined();
   });
 });
+========
+const Transaction = require('arweave/node/lib/transaction');
+>>>>>>>> 45ec94d (chore: refactor):__tests__/wallet.spec.ts
