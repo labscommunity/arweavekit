@@ -1,4 +1,4 @@
-import { getBalance } from '../src/common/wallet';
+import { getBalance } from "../src/common/wallet";
 
 const { createWallet, getAddress } = require('../src/common/wallet');
 
