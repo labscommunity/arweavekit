@@ -11,3 +11,10 @@ export interface SignTransactionProps {
     quantity?: string;
   };
 }
+
+export interface GetTransactionData {
+  transactionId: string;
+  options?: {
+    tags?: boolean;
+  };
+}
