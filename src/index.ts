@@ -1,3 +1,3 @@
-import { createWallet, getAddress } from './common/wallet';
+import { createWallet, getAddress, getBalance } from './common/wallet';
 
-export { createWallet, getAddress };
+export { createWallet, getAddress, getBalance };
