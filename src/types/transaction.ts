@@ -15,6 +15,7 @@ export interface SignTransactionProps {
 export interface GetTransactionData {
   transactionId: string;
   options?: {
+    data?: boolean;
     tags?: boolean;
   };
 }

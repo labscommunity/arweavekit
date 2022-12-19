@@ -1,28 +1,31 @@
 const { getTransactionData } = require('../src/index');
 
 describe('Transaction Data', () => {
-  it('should get transaction data without tags', async () => {
+  it('should get transaction', async () => {
     // todo - create transaction
-
-    // get transaction data
-    let txData = getTransactionData('', { tags: false });
-
-    expect(txData).toBeDefined();
-    expect(txData.id).toBeDefined();
+    // get transaction
   });
 
-  it('should get transaction data with tags', async () => {
+  it('should get transaction data only', async () => {
     // todo - create transaction
 
-    // todo - add tags
-
     // get transaction data
-    let txData = getTransactionData('', { tags: true });
+    let txData = getTransactionData('', { data: true });
 
     expect(txData).toBeDefined();
     expect(txData.id).toBeDefined();
     expect(txData.tags).toBeDefined();
+  });
 
-    // todo check for tags
+  it('should get transaction and tags', async () => {
+    // todo - create transaction
+    // todo - add tags
+    // todo - get transaction and tags
+  });
+
+  it('should get transaction data and tags', async () => {
+    // todo - create transaction
+    // todo - add tags
+    // todo - get transaction data and tags
   });
 });

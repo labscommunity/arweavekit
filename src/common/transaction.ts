@@ -51,21 +51,34 @@ export async function getTransactionStatus(transactionId: string) {
   return status;
 }
 
-export async function getTransactionData(input: GetTransactionData) {
-  const txData = await arweave.transactions.getData(input.transactionId);
-  let txTags;
+/**
+ *
+ * @returns getTransaction(id) transaction
+ * @returns getTransaction(id, { options: data: true}) only data
+ * @returns getTransaction(id, { options: tags: true}) transaction and tags
+ * @returns getTransaction(id, { options: data: true, tags: true }) only data and tags
+ */
+export async function getTransaction(input: GetTransactionData) {
+  const transaction = await arweave.transactions.get(input.transactionId);
+  // const txData = await arweave.transactions.getData(input.transactionId);
+  let txTags, txData;
 
   if (input.options?.tags) {
-    const transaction = await arweave.transactions.get(input.transactionId);
     txTags = transaction.tags.forEach((tag) => {
       let key = tag.get('name', { decode: true, string: true });
       let value = tag.get('value', { decode: true, string: true });
 
       return { key, value };
     });
+  } else if (input.options?.data) {
+    txData = await arweave.transactions.getData(input.transactionId);
   }
 
-  return input.options?.tags
+  return input.options?.data
+    ? txData
+    : input.options?.tags
+    ? { transaction, tags: txTags }
+    : input.options?.data && input.options?.tags
     ? { transactionData: txData, tags: txTags }
-    : txData;
+    : transaction;
 }
