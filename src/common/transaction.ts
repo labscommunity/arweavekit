@@ -60,7 +60,6 @@ export async function getTransactionStatus(transactionId: string) {
  */
 export async function getTransaction(input: GetTransactionData) {
   const transaction = await arweave.transactions.get(input.transactionId);
-  // const txData = await arweave.transactions.getData(input.transactionId);
   let txTags, txData;
 
   if (input.options?.tags) {
