@@ -25,7 +25,7 @@ export interface CreateTransactionReturnProps {
   data: string | Uint8Array | ArrayBuffer;
   data_size: string;
   data_root: string;
-  data_tree: [];
+  // data_tree: [];
   reward: string;
   signature: string;
 }
