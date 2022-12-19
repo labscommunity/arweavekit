@@ -1,5 +1,5 @@
 import arweave from '../utils';
-import { SignTransactionProps } from '../types/transaction';
+import { GetTransactionData, SignTransactionProps } from '../types/transaction';
 
 /**
  * sign transaction
@@ -49,4 +49,23 @@ export async function getTransactionStatus(transactionId: string) {
   const status = await arweave.transactions.getStatus(transactionId);
 
   return status;
+}
+
+export async function getTransactionData(input: GetTransactionData) {
+  const txData = await arweave.transactions.getData(input.transactionId);
+  let txTags;
+
+  if (input.options?.tags) {
+    const transaction = await arweave.transactions.get(input.transactionId);
+    txTags = transaction.tags.forEach((tag) => {
+      let key = tag.get('name', { decode: true, string: true });
+      let value = tag.get('value', { decode: true, string: true });
+
+      return { key, value };
+    });
+  }
+
+  return input.options?.tags
+    ? { transactionData: txData, tags: txTags }
+    : txData;
 }
