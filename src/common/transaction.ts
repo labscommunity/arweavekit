@@ -5,13 +5,12 @@ import { SignTransactionProps } from '../types/transaction';
  * sign transaction
  * @returns trasaction data
  */
+
 export async function signTransaction(input: SignTransactionProps) {
   if (!input?.transaction && !input?.key) {
-    // generate key
     const key = await arweave.wallets.generate();
     let transaction;
 
-    // create data transaction
     if (input.options.type === 'data') {
       const { options } = input;
       transaction = await arweave.createTransaction(
@@ -21,7 +20,6 @@ export async function signTransaction(input: SignTransactionProps) {
         key
       );
     } else if (input.options.type === 'wallet') {
-      // sign wallet to wallet transaction
       const { address, quantity } = input.options;
       transaction = await arweave.createTransaction({
         target: address,
@@ -29,7 +27,6 @@ export async function signTransaction(input: SignTransactionProps) {
       });
     }
 
-    // sign transaction
     if (transaction) {
       const signedTransaction = await arweave.transactions.sign(
         transaction,
@@ -46,4 +43,10 @@ export async function signTransaction(input: SignTransactionProps) {
     );
     return signedTransaction;
   }
+}
+
+export async function getTransactionStatus(transactionId: string) {
+  const status = await arweave.transactions.getStatus(transactionId);
+
+  return status;
 }
