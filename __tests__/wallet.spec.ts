@@ -1,5 +1,6 @@
-const Transaction = require('arweave/node/lib/transaction');
-const { createWallet, getAddress, getBalance } = require('../src/index');
+import { getBalance } from '../src/common/wallet';
+
+const { createWallet, getAddress } = require('../src/common/wallet');
 
 describe('Create Wallet', () => {
   jest.setTimeout(300000); // takes a while to generate seedPhrase
