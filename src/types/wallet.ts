@@ -1,5 +1,8 @@
-import { JWKInterface } from "arweave/node/lib/wallet";
+import { JWKInterface } from 'arweave/node/lib/wallet';
 
+export interface BalanceProps {
+  walletAddress: string;
+}
 export interface CreateProps {
   seedPhrase: boolean;
 }
