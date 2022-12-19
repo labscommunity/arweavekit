@@ -1,6 +1,7 @@
 import {
   signTransaction,
   getTransactionStatus,
+  getTransactionData,
 } from '../src/common/transaction';
 import { createWallet, getAddress, getBalance } from './common/wallet';
 
@@ -10,4 +11,5 @@ export {
   getBalance,
   signTransaction,
   getTransactionStatus,
+  getTransactionData,
 };
