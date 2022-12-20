@@ -43,10 +43,10 @@ export async function createTransaction(
       data: params.data,
     }, params.key ? params.key : 'use_wallet');
     return txn;
-  } else if (params.options?.target && params.options.quantity) {
+  } else if (params.target && params.quantity) {
     const txn = await arweaveMainnet.createTransaction({
-      target: params.options.target,
-      quantity: params.options.quantity,
+      target: params.target,
+      quantity: params.quantity,
     }, params.key ? params.key : 'use_wallet');
     return txn;
   }

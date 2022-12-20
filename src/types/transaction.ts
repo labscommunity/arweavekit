@@ -6,11 +6,13 @@ interface Tag {
 }
 export interface CreateTransactionProps {
   data?: string | Uint8Array | ArrayBuffer;
+  quantity?: string;
+  target?: string;
   options?: {
     tags: Tag[];
-    quantity?: string;
-    target?: string;
-    uploadLargeBatch?: boolean
+    useChunkedUploading?: boolean;
+    useBundlr?: boolean;
+    signAndPostfunction?: boolean;
   };
   key?: JWKInterface;
 }
