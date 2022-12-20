@@ -38,34 +38,16 @@ const arweaveMainnet = Arweave.init({
 
 export async function createTransaction(
   params: CreateTransactionProps): Promise<CreateTransactionReturnProps | string> {
-  // When key is provided in app 
-  if (params.key) {
-    if (params.data) {
-      const txn = await arweaveMainnet.createTransaction({
-        data: params.data,
-      }, params.key);
-      return txn;
-    }
-    if (params.options?.target && params.options.quantity) {
-      const txn = await arweaveMainnet.createTransaction({
-        target: params.options.target,
-        quantity: params.options.quantity,
-      }, params.key);
-      return txn;
-    }
-  }
-  // When key is not provided in app 
   if (params.data) {
     const txn = await arweaveMainnet.createTransaction({
       data: params.data,
-    });
+    }, params.key ? params.key : 'use_wallet');
     return txn;
-  }
-  if (params.options?.target && params.options.quantity) {
+  } else if (params.options?.target && params.options.quantity) {
     const txn = await arweaveMainnet.createTransaction({
       target: params.options.target,
       quantity: params.options.quantity,
-    });
+    }, params.key ? params.key : 'use_wallet');
     return txn;
   }
   // When neither data nor token quantity and target are provided
