@@ -44,20 +44,39 @@ export async function createTransaction(
     if (params.options?.useBundlr) {
       const bundlr = new Bundlr("http://node1.bundlr.network", "arweave", params.key);
       const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
-      return txn;
+      if (params.options?.signAndPostfunction) {
+        await txn.sign();
+        const response = await txn.upload();
+        return response;
+      } else {
+        return txn;
+      }
     } else {
       const txn = await arweaveMainnet.createTransaction({
         data: params.data,
       }, params.key ? params.key : 'use_wallet');
-      params.options?.tags.map((k, v) => txn.addTag(k.name, k.value));
-      return txn;
+      params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
+      if (params.options?.signAndPostfunction) {
+        await txn.sign();
+        const response = await txn.upload();
+        return response;
+      } else {
+        return txn;
+      }
     }
   } else if (params.target && params.quantity) {
     const txn = await arweaveMainnet.createTransaction({
       target: params.target,
       quantity: params.quantity,
     }, params.key ? params.key : 'use_wallet');
-    return txn;
+    params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
+    if (params.options?.signAndPostfunction) {
+      await txn.sign();
+      const response = await txn.upload();
+      return response;
+    } else {
+      return txn;
+    }
   }
   // When neither data nor token quantity and target are provided
   return 'Pass in valid data or token quantity and target to create a transaction.'

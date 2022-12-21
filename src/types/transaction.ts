@@ -11,7 +11,6 @@ export interface CreateTransactionProps {
   options?: {
     tags: Tag[];
     useBundlr?: boolean;
-    useChunkedUploading?: boolean;
     signAndPostfunction?: boolean;
   };
   key?: JWKInterface;
