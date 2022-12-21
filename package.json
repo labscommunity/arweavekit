@@ -31,6 +31,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
+    "@bundlr-network/client": "^0.9.11",
     "@types/human-crypto-keys": "^0.1.0",
     "arweave": "^1.11.8",
     "arweave-mnemonic-keys": "^0.0.9",

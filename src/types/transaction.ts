@@ -10,24 +10,24 @@ export interface CreateTransactionProps {
   target?: string;
   options?: {
     tags: Tag[];
-    useChunkedUploading?: boolean;
     useBundlr?: boolean;
+    useChunkedUploading?: boolean;
     signAndPostfunction?: boolean;
   };
   key?: JWKInterface;
 }
-export interface CreateTransactionReturnProps {
-  format: number;
-  id: string,
-  last_tx: string;
-  owner: string;
-  tags: Tag[];
-  target: string;
-  quantity: string;
-  data: string | Uint8Array | ArrayBuffer;
-  data_size: string;
-  data_root: string;
-  // data_tree: [];
-  reward: string;
-  signature: string;
-}
+// export interface CreateTransactionReturnProps {
+//   format: number;
+//   id: string,
+//   last_tx: string;
+//   owner: string;
+//   tags: Tag[];
+//   target: string;
+//   quantity: string;
+//   data: string | Uint8Array | ArrayBuffer;
+//   data_size: string;
+//   data_root: string;
+//   data_tree: [];
+//   reward: string;
+//   signature: string;
+// }

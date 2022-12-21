@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
-import Transaction from 'arweave/node/lib/transaction';
+import Bundlr from '@bundlr-network/client';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { CreateTransactionProps, CreateTransactionReturnProps } from '../types/transaction';
+import { CreateTransactionProps } from '../types/transaction';
 
 const arweaveMainnet = Arweave.init({
   host: 'arweave.net',
@@ -37,12 +37,21 @@ const arweaveMainnet = Arweave.init({
  */
 
 export async function createTransaction(
-  params: CreateTransactionProps): Promise<CreateTransactionReturnProps | string> {
+  params: CreateTransactionProps) {
+  // Check is transaction is for data or wallet to wallet
   if (params.data) {
-    const txn = await arweaveMainnet.createTransaction({
-      data: params.data,
-    }, params.key ? params.key : 'use_wallet');
-    return txn;
+    // Check whether to use @bundlr-network/client or arweave
+    if (params.options?.useBundlr) {
+      const bundlr = new Bundlr("http://node1.bundlr.network", "arweave", params.key);
+      const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
+      return txn;
+    } else {
+      const txn = await arweaveMainnet.createTransaction({
+        data: params.data,
+      }, params.key ? params.key : 'use_wallet');
+      params.options?.tags.map((k, v) => txn.addTag(k.name, k.value));
+      return txn;
+    }
   } else if (params.target && params.quantity) {
     const txn = await arweaveMainnet.createTransaction({
       target: params.target,
