@@ -23,7 +23,11 @@ describe('Create Transaction', () => {
     expect(txn).toMatchObject({ owner: key.n });
   });
 
-  it('should return ___ when target argument is passed in on function call', async () => { });
+  it('should return ___ when target argument is passed in on function call', async () => {
+    const txn = await createTransaction({ target: 'zBBCc4yIvbs2kS2t1ZsAhjThkC15P2Y5ICryqN2agus' });
+
+    console.log("txn", txn);
+  });
 
   it('should return ___ when quantity argument is passed in on function call', async () => { });
 
