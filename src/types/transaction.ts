@@ -11,7 +11,7 @@ export interface CreateTransactionProps {
   options?: {
     tags: Tag[];
     useBundlr?: boolean;
-    signAndPostfunction?: boolean;
+    signAndPostData?: boolean;
   };
   key?: JWKInterface;
 }
