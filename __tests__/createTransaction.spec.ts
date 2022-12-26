@@ -16,7 +16,7 @@ describe('Create Transaction', () => {
     expect(txn).toMatchObject({ owner: '' });
   });
 
-  it('should return ___ when both data and key arguments are passed in on function call', async () => {
+  it('should return part of owner key in transaction object when both data and key arguments are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
     const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key });
 
@@ -29,26 +29,26 @@ describe('Create Transaction', () => {
     expect(txn).toEqual('Pass in valid data or token quantity and target to create a transaction.')
   });
 
-  it('should return ___ when quantity argument is passed in on function call', async () => {
+  it('should return string asking to call function with valid arguments when quantity argument is passed in on function call', async () => {
     const txn = await createTransaction({ quantity: '1000000' });
 
     expect(txn).toEqual('Pass in valid data or token quantity and target to create a transaction.')
   });
 
-  it('should return ___ when target and quantity, but no key arguments are passed in on function call', async () => {
+  it('should return string alerting insufficient balance when target and quantity, but no key arguments are passed in on function call', async () => {
     const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY', quantity: '1000000' });
 
     expect(txn).toEqual('Wallet does not have sufficient balance to complete transaction.');
   });
 
-  it('should return ___ when target, quantity and key arguments are passed in on function call but wallet does not have balance', async () => {
+  it('should return string alerting insufficient balance when target, quantity and key arguments are passed in on function call but wallet does not have balance', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
     const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY', quantity: '1000000', key: key });
 
     expect(txn).toEqual('Wallet does not have sufficient balance to complete transaction.');
   });
 
-  it('should return ___ when target, quantity and key arguments are passed in on function call', async () => {
+  it('should return object when target, quantity and key arguments are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet2.json').toString());
     const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY', quantity: '1000000', key: key });
 
@@ -62,4 +62,4 @@ describe('Create Transaction', () => {
   it('should return ___ when useBundlr argument is passed in on function call', async () => { });
 
   it('should return ___ when signAndPostTxn argument is passed in on function call', async () => { });
-})
+});
