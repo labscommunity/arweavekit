@@ -2,6 +2,7 @@ import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import { CreateTransactionProps } from '../types/transaction';
+import { stringToB64Url } from 'arweave/node/lib/utils';
 
 const arweaveMainnet = Arweave.init({
   host: 'arweave.net',
@@ -42,18 +43,43 @@ export async function createTransaction(
   if (params.data) {
     // Check whether to use @bundlr-network/client or arweave
     if (params.options?.useBundlr) {
-      const bundlr = new Bundlr("http://node1.bundlr.network", "arweave", params.key);
-      const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
-      if (params.options?.signAndPostData) {
-        await txn.sign();
-        const response = await txn.upload();
-        return response;
-      } else {
-        return txn;
+      try {
+        const bundlr = new Bundlr("http://node1.bundlr.network", "arweave", params.key);
+        const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
+        if (params.options?.signAndPostData) {
+          await txn.sign();
+          const response = await txn.upload();
+          return response;
+        } else {
+          return txn;
+        }
+      } catch (error) {
+        const res = `Cannot create data transaction through bundlr because: ${error}`;
+        return res;
       }
     } else {
+      try {
+        const txn = await arweaveMainnet.createTransaction({
+          data: params.data,
+        }, params.key ? params.key : 'use_wallet');
+        params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
+        if (params.options?.signAndPostData) {
+          await arweaveMainnet.transactions.sign(txn, params.key);
+          const response = await arweaveMainnet.transactions.post(txn);
+          return { txn, response };
+        } else {
+          return txn;
+        }
+      } catch (error) {
+        const res = `Cannot create data transaction through arweave because: ${error}`;
+        return res;
+      }
+    }
+  } else if (params.target && params.quantity) {
+    try {
       const txn = await arweaveMainnet.createTransaction({
-        data: params.data,
+        target: params.target,
+        quantity: params.quantity,
       }, params.key ? params.key : 'use_wallet');
       params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
       if (params.options?.signAndPostData) {
@@ -63,19 +89,9 @@ export async function createTransaction(
       } else {
         return txn;
       }
-    }
-  } else if (params.target && params.quantity) {
-    const txn = await arweaveMainnet.createTransaction({
-      target: params.target,
-      quantity: params.quantity,
-    }, params.key ? params.key : 'use_wallet');
-    params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
-    if (params.options?.signAndPostData) {
-      await arweaveMainnet.transactions.sign(txn, params.key);
-      const response = await arweaveMainnet.transactions.post(txn);
-      return { txn, response };
-    } else {
-      return txn;
+    } catch (error) {
+      const res = `Cannot create wallet to wallet transaction through arweave because: ${error}`;
+      return res;
     }
   }
   // When neither data nor token quantity and target are provided

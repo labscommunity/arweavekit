@@ -1,3 +1,5 @@
 node_modules
 .env
 dist
+wallet1.json
+wallet2.json
