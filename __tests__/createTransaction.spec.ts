@@ -23,7 +23,7 @@ describe('Create Transaction', () => {
     expect(txn).toMatchObject({ owner: key.n });
   });
 
-  it('should return ___ when target argument is passed in on function call', async () => {
+  it('should return tring asking to call function with valid arguments when target argument is passed in on function call', async () => {
     const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY' });
 
     expect(txn).toEqual('Pass in valid data or token quantity and target to create a transaction.')
