@@ -46,7 +46,7 @@ export async function createTransaction(
       try {
         const bundlr = new Bundlr("http://node1.bundlr.network", "arweave", params.key);
         const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
-        if (params.options?.signAndPostData) {
+        if (params.options?.signAndPostTxn) {
           await txn.sign();
           const response = await txn.upload();
           return response;
@@ -63,7 +63,7 @@ export async function createTransaction(
           data: params.data,
         }, params.key ? params.key : 'use_wallet');
         params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
-        if (params.options?.signAndPostData) {
+        if (params.options?.signAndPostTxn) {
           await arweaveMainnet.transactions.sign(txn, params.key);
           const response = await arweaveMainnet.transactions.post(txn);
           return { txn, response };
@@ -82,7 +82,7 @@ export async function createTransaction(
         quantity: params.quantity,
       }, params.key ? params.key : 'use_wallet');
       params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
-      if (params.options?.signAndPostData) {
+      if (params.options?.signAndPostTxn) {
         await arweaveMainnet.transactions.sign(txn, params.key);
         const response = await arweaveMainnet.transactions.post(txn);
         return { txn, response };
