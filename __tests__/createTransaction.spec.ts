@@ -2,21 +2,26 @@ import { createTransaction } from "../src/common/transaction";
 import { readFileSync } from 'fs';
 
 describe('Create Transaction', () => {
-  it('should return string asking to call function with valid arguments', async () => {
-    // const key = JSON.parse(readFileSync('wallet1.json').toString());
-    // console.log("key: ", key);
-    // const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key });
+  jest.setTimeout(300000);
 
-    // console.log("txn: ", txn);
-    // expect(typeof txn).toEqual("object");
-    // const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png' });
+  it('should return string asking to call function with valid arguments', async () => {
     const txn = await createTransaction({});
-    console.log("txn: ", txn);
+
+    expect(txn).toEqual('Pass in valid data or token quantity and target to create a transaction.')
   });
 
-  it('should return empty string for owner key in transaction object when no key argument is passed in on fucntion call', async () => { });
+  it('should return empty string for owner key in transaction object when no key argument is passed in on fucntion call', async () => {
+    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png' });
 
-  it('should return ___ when both data and key arguments are passed in on function call', async () => { });
+    expect(txn).toMatchObject({ owner: '' });
+  });
+
+  it('should return ___ when both data and key arguments are passed in on function call', async () => {
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key });
+
+    expect(txn).toMatchObject({ owner: key.n });
+  });
 
   it('should return ___ when target argument is passed in on function call', async () => { });
 
