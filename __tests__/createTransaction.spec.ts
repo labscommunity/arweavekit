@@ -24,7 +24,7 @@ describe('Create Transaction', () => {
   });
 
   it('should return ___ when target argument is passed in on function call', async () => {
-    const txn = await createTransaction({ target: 'zBBCc4yIvbs2kS2t1ZsAhjThkC15P2Y5ICryqN2agus' });
+    const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY' });
 
     expect(txn).toEqual('Pass in valid data or token quantity and target to create a transaction.')
   });
@@ -36,16 +36,28 @@ describe('Create Transaction', () => {
   });
 
   it('should return ___ when target and quantity, but no key arguments are passed in on function call', async () => {
-    const txn = await createTransaction({ target: 'zBBCc4yIvbs2kS2t1ZsAhjThkC15P2Y5ICryqN2agus', quantity: '1000000' });
+    const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY', quantity: '1000000' });
 
-    expect(txn).toMatchObject({
-      owner: '',
-      target: 'zBBCc4yIvbs2kS2t1ZsAhjThkC15P2Y5ICryqN2agus',
-      quantity: '1000000'
-    })
+    expect(txn).toEqual('Wallet does not have sufficient balance to complete transaction.');
   });
 
-  it('should return ___ when target, quantity and key arguments are passed in on function call', async () => { });
+  it('should return ___ when target, quantity and key arguments are passed in on function call but wallet does not have balance', async () => {
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY', quantity: '1000000', key: key });
+
+    expect(txn).toEqual('Wallet does not have sufficient balance to complete transaction.');
+  });
+
+  it('should return ___ when target, quantity and key arguments are passed in on function call', async () => {
+    const key = JSON.parse(readFileSync('wallet2.json').toString());
+    const txn = await createTransaction({ target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY', quantity: '1000000', key: key });
+
+    expect(txn).toMatchObject({
+      owner: key.n,
+      target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
+      quantity: '1000000'
+    });
+  });
 
   it('should return ___ when useBundlr argument is passed in on function call', async () => { });
 

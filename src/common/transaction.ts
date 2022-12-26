@@ -3,6 +3,7 @@ import Bundlr from '@bundlr-network/client';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import { CreateTransactionProps } from '../types/transaction';
 import { stringToB64Url } from 'arweave/node/lib/utils';
+import { getAddress, getBalance } from './wallet';
 
 const arweaveMainnet = Arweave.init({
   host: 'arweave.net',
@@ -77,17 +78,26 @@ export async function createTransaction(
     }
   } else if (params.target && params.quantity) {
     try {
-      const txn = await arweaveMainnet.createTransaction({
-        target: params.target,
-        quantity: params.quantity,
-      }, params.key ? params.key : 'use_wallet');
-      params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
-      if (params.options?.signAndPostTxn) {
-        await arweaveMainnet.transactions.sign(txn, params.key);
-        const response = await arweaveMainnet.transactions.post(txn);
-        return { txn, response };
+      let senderBalance: string = '';
+      if (params.key) {
+        const senderAddress = await getAddress(params.key);
+        senderBalance = await getBalance({ walletAddress: senderAddress });
+      };
+      if (parseInt(senderBalance) >= parseInt(params.quantity)) {
+        const txn = await arweaveMainnet.createTransaction({
+          target: params.target,
+          quantity: params.quantity,
+        }, params.key ? params.key : 'use_wallet');
+        params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
+        if (params.options?.signAndPostTxn) {
+          await arweaveMainnet.transactions.sign(txn, params.key);
+          const response = await arweaveMainnet.transactions.post(txn);
+          return { txn, response };
+        } else {
+          return txn;
+        }
       } else {
-        return txn;
+        return 'Wallet does not have sufficient balance to complete transaction.'
       }
     } catch (error) {
       const res = `Cannot create wallet to wallet transaction through arweave because: ${error}`;
