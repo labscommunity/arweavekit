@@ -66,11 +66,31 @@ describe('Create Transaction', () => {
     expect(txn).toMatchObject({ bundlr: { currency: 'arweave', address: '3pcfE9v2eRhtnHvBK95n4c2_XBzGbZuC_dwccW-BfO4' }, signer: { jwk: key } });
   });
 
-  it('should return ___ when tags are passed in on function call', async () => { });
+  it('should return ___ when tags are passed in on function call', async () => {
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
 
-  it('should return ___ when tags and useBundlr arguments are passed in on function call', async () => { });
+    // console.log("tag txn", txn);
+  });
 
-  it('should return ___ when signAndPostTxn argument is passed in on function call', async () => { });
+  it('should return ___ when tags and useBundlr arguments are passed in on function call', async () => {
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key, options: { useBundlr: true, tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
 
-  it('should return ___ when signAndPostTxn and useBundlr arguments are passed in on function call', async () => { });
+    // console.log("tag bundlr txn", txn);
+  });
+
+  it('should return ___ when signAndPostTxn argument is passed in on function call', async () => {
+    const key = JSON.parse(readFileSync('wallet2.json').toString());
+    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }], signAndPostTxn: true } });
+
+    console.log("tag txn sign", txn);
+  });
+
+  it('should return ___ when signAndPostTxn and useBundlr arguments are passed in on function call', async () => {
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { useBundlr: true, tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }], signAndPostTxn: true } });
+
+    console.log("tag bundlr txn sign", txn);
+  });
 });
