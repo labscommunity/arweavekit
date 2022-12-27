@@ -2,7 +2,6 @@ import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import { CreateTransactionProps } from '../types/transaction';
-import { stringToB64Url } from 'arweave/node/lib/utils';
 import { getAddress, getBalance } from './wallet';
 
 const arweaveMainnet = Arweave.init({
@@ -38,6 +37,16 @@ const arweaveMainnet = Arweave.init({
  * signature: string;
  */
 
+/* 
+
+Rethinking logic defaulting to bundlr
+- Data vs Wallet to Wallet Txns
+- use Arweave
+- sign and post transactions
+- tags
+*/
+
+
 export async function createTransaction(
   params: CreateTransactionProps) {
   // Check is transaction is for data or wallet to wallet
@@ -63,7 +72,7 @@ export async function createTransaction(
         const txn = await arweaveMainnet.createTransaction({
           data: params.data,
         }, params.key ? params.key : 'use_wallet');
-        params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
+        params.options?.tags?.map((k, i) => txn.addTag(k.name, k.value));
         if (params.options?.signAndPostTxn) {
           await arweaveMainnet.transactions.sign(txn, params.key);
           const response = await arweaveMainnet.transactions.post(txn);
@@ -88,7 +97,7 @@ export async function createTransaction(
           target: params.target,
           quantity: params.quantity,
         }, params.key ? params.key : 'use_wallet');
-        params.options?.tags.map((k, i) => txn.addTag(k.name, k.value));
+        params.options?.tags?.map((k, i) => txn.addTag(k.name, k.value));
         if (params.options?.signAndPostTxn) {
           await arweaveMainnet.transactions.sign(txn, params.key);
           const response = await arweaveMainnet.transactions.post(txn);

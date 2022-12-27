@@ -9,7 +9,7 @@ export interface CreateTransactionProps {
   quantity?: string;
   target?: string;
   options?: {
-    tags: Tag[];
+    tags?: Tag[];
     useBundlr?: boolean;
     signAndPostTxn?: boolean;
   };
