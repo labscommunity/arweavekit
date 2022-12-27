@@ -11,14 +11,14 @@ describe('Create Transaction', () => {
   });
 
   it('should return empty string for owner key in transaction object when no key argument is passed in on fucntion call', async () => {
-    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png' });
+    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json' });
 
     expect(txn).toMatchObject({ owner: '' });
   });
 
   it('should return part of owner key in transaction object when both data and key arguments are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key });
+    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key });
 
     expect(txn).toMatchObject({ owner: key.n });
   });
@@ -61,28 +61,28 @@ describe('Create Transaction', () => {
 
   it('should return object when useBundlr argument is passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key, options: { useBundlr: true } });
+    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { useBundlr: true } });
 
     expect(txn).toMatchObject({ bundlr: { currency: 'arweave', address: '3pcfE9v2eRhtnHvBK95n4c2_XBzGbZuC_dwccW-BfO4' }, signer: { jwk: key } });
   });
 
   it('should return ___ when tags are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
+    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
 
     // console.log("tag txn", txn);
   });
 
   it('should return ___ when tags and useBundlr arguments are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key, options: { useBundlr: true, tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
+    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { useBundlr: true, tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
 
     // console.log("tag bundlr txn", txn);
   });
 
   it('should return ___ when signAndPostTxn argument is passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet2.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/imgTest.png', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }], signAndPostTxn: true } });
+    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }], signAndPostTxn: true } });
 
     console.log("tag txn sign", txn);
   });

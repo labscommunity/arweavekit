@@ -54,7 +54,7 @@ export async function createTransaction(
     // Check whether to use @bundlr-network/client or arweave
     if (params.options?.useBundlr) {
       try {
-        const bundlr = new Bundlr("http://node1.bundlr.network", "arweave", params.key);
+        const bundlr = new Bundlr("http://node2.bundlr.network", "arweave", params.key);
         const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
         if (params.options?.signAndPostTxn) {
           await txn.sign();
