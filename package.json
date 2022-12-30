@@ -21,6 +21,7 @@
   "homepage": "https://github.com/labscommunity/permawebjs#readme",
   "devDependencies": {
     "@types/jest": "^29.2.4",
+    "arlocal": "^1.1.59",
     "install": "^0.13.0",
     "jest": "^29.3.1",
     "jest-cli": "^29.3.1",
