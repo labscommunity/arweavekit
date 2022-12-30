@@ -5,7 +5,9 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
+    "arlocal:run": "npx arlocal",
     "test": "jest",
+    "tests:concurrently": "concurrently --kill-others \"yarn arlocal:run\" \"yarn test\"",
     "build": "rollup -c",
     "watch": "webpack --watch"
   },
@@ -35,6 +37,7 @@
     "@types/human-crypto-keys": "^0.1.0",
     "arweave": "^1.11.8",
     "arweave-mnemonic-keys": "^0.0.9",
+    "concurrently": "^7.6.0",
     "lodash": "^4.17.21",
     "warp-contracts": "^1.2.42"
   },
