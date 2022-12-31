@@ -53,64 +53,72 @@ export async function createTransaction(
   if (params.data) {
     // Check whether to use @bundlr-network/client or arweave
     if (params.options?.useBundlr) {
-      try {
-        const bundlr = new Bundlr("http://node2.bundlr.network", "arweave", params.key);
-        const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
-        if (params.options?.signAndPostTxn) {
-          await txn.sign();
-          const response = await txn.upload();
-          return response;
-        } else {
-          return txn;
-        }
-      } catch (error) {
-        const res = `Cannot create data transaction through bundlr because: ${error}`;
-        return res;
+      const bundlr = new Bundlr("http://node2.bundlr.network", "arweave", params.key);
+      const txn = bundlr.createTransaction(JSON.stringify(params.data), { tags: params.options.tags });
+      if (params.options?.signAndPostTxn) {
+        await txn.sign();
+        const response = await txn.upload();
+        return response;
+      } else {
+        return txn;
       }
     } else {
-      try {
-        const txn = await arweaveMainnet.createTransaction({
-          data: params.data,
-        }, params.key ? params.key : 'use_wallet');
-        params.options?.tags?.map((k, i) => txn.addTag(k.name, k.value));
-        if (params.options?.signAndPostTxn) {
-          await arweaveMainnet.transactions.sign(txn, params.key);
-          const response = await arweaveMainnet.transactions.post(txn);
-          return { txn, response };
-        } else {
-          return txn;
-        }
-      } catch (error) {
-        const res = `Cannot create data transaction through arweave because: ${error}`;
-        return res;
+      const txn = await arweaveMainnet.createTransaction({
+        data: params.data,
+      }, params.key ? params.key : 'use_wallet');
+      params.options?.tags?.map((k, i) => txn.addTag(k.name, k.value));
+      if (params.options?.signAndPostTxn) {
+        await arweaveMainnet.transactions.sign(txn, params.key);
+        const response = await arweaveMainnet.transactions.post(txn);
+        return { txn, response };
+      } else {
+        return txn;
       }
     }
   } else if (params.target && params.quantity) {
-    try {
-      let senderBalance: string = '';
-      if (params.key) {
-        const senderAddress = await getAddress(params.key);
-        senderBalance = await getBalance({ walletAddress: senderAddress });
-      };
-      if (parseInt(senderBalance) >= parseInt(params.quantity)) {
-        const txn = await arweaveMainnet.createTransaction({
-          target: params.target,
-          quantity: params.quantity,
-        }, params.key ? params.key : 'use_wallet');
-        params.options?.tags?.map((k, i) => txn.addTag(k.name, k.value));
-        if (params.options?.signAndPostTxn) {
-          await arweaveMainnet.transactions.sign(txn, params.key);
-          const response = await arweaveMainnet.transactions.post(txn);
-          return { txn, response };
-        } else {
-          return txn;
-        }
+    let senderBalance: string = '';
+    if (params.key) {
+      const senderAddress = await getAddress(params.key);
+      senderBalance = await getBalance({ walletAddress: senderAddress });
+    };
+    if (parseInt(senderBalance) >= parseInt(params.quantity)) {
+      const txn = await arweaveMainnet.createTransaction({
+        target: params.target,
+        quantity: params.quantity,
+      }, params.key ? params.key : 'use_wallet');
+      params.options?.tags?.map((k, i) => txn.addTag(k.name, k.value));
+      if (params.options?.signAndPostTxn) {
+        await arweaveMainnet.transactions.sign(txn, params.key);
+        const response = await arweaveMainnet.transactions.post(txn);
+        return { txn, response };
       } else {
-        return 'Wallet does not have sufficient balance to complete transaction.'
+        return txn;
       }
-    } catch (error) {
-      const res = `Cannot create wallet to wallet transaction through arweave because: ${error}`;
-      return res;
+    } else {
+      return 'Wallet does not have sufficient balance to complete transaction.'
+    }
+  } else if (params.data && params.target && params.quantity) {
+    let senderBalance: string = '';
+    if (params.key) {
+      const senderAddress = await getAddress(params.key);
+      senderBalance = await getBalance({ walletAddress: senderAddress });
+    };
+    if (parseInt(senderBalance) >= parseInt(params.quantity)) {
+      const txn = await arweaveMainnet.createTransaction({
+        data: params.data,
+        target: params.target,
+        quantity: params.quantity,
+      }, params.key ? params.key : 'use_wallet');
+      params.options?.tags?.map((k, i) => txn.addTag(k.name, k.value));
+      if (params.options?.signAndPostTxn) {
+        await arweaveMainnet.transactions.sign(txn, params.key);
+        const response = await arweaveMainnet.transactions.post(txn);
+        return { txn, response };
+      } else {
+        return txn;
+      }
+    } else {
+      return 'Wallet does not have sufficient balance to complete transaction.'
     }
   }
   // When neither data nor token quantity and target are provided
