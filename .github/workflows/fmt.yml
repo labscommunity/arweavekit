@@ -30,8 +30,8 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Wait for 30 seconds
-        run: sleep 30
+      - name: Wait for 1 minutes
+        run: sleep 120
       - uses: actions/checkout@v2
       - name: Run Tests
         run: yarn test
