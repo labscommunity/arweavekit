@@ -20,7 +20,7 @@ jobs:
         run: yarn
 
       - name: Arlocal
-        run: yarn arlocal
+        run: yarn arlocal:run
 
       - name: Run Tests
         run: yarn test
