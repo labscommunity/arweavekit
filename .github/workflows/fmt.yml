@@ -18,7 +18,10 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-  arlocal:
+      - name: Run Arlocal
+        run: yarn arlocal:run
+
+  test:
     runs-on: ubuntu-latest
     needs: build
 
@@ -28,18 +31,9 @@ jobs:
         with:
           node-version: '16'
 
-      - name: run arlocal
-        run: yarn arlocal:run
-
-  test:
-    runs-on: ubuntu-latest
-    needs: arlocal
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
-
       - name: Run Tests
         run: yarn test
+
+      - name: Kill All Processes
+        if: success()
+        run: killall node
