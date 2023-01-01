@@ -75,7 +75,11 @@ describe('Create Transaction', () => {
 
   it('should return object when useBundlr argument is passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { useBundlr: true } });
+    const txn = await createTransaction({
+      data: '../__tests__/testAssets/jsonTest.json',
+      key: key,
+      options: { useBundlr: true }
+    });
 
     expect(txn).toMatchObject({
       bundlr: { currency: 'arweave', address: '3pcfE9v2eRhtnHvBK95n4c2_XBzGbZuC_dwccW-BfO4' },
@@ -85,7 +89,15 @@ describe('Create Transaction', () => {
 
   it('should return object when tags are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
+    const txn = await createTransaction({
+      data: '../__tests__/testAssets/jsonTest.json',
+      key: key,
+      options: {
+        tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }]
+      }
+    });
+
+    console.log("tag txn", txn);
 
     expect(txn).toMatchObject({
       id: '',
@@ -98,7 +110,16 @@ describe('Create Transaction', () => {
 
   it('should return object when tags and useBundlr arguments are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { useBundlr: true, tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }] } });
+    const txn = await createTransaction({
+      data: '../__tests__/testAssets/jsonTest.json',
+      key: key,
+      options: {
+        useBundlr: true,
+        tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }]
+      }
+    });
+
+    console.log("tag bundlr txn", txn);
 
     expect(txn).toMatchObject({
       bundlr: { currency: 'arweave', address: '3pcfE9v2eRhtnHvBK95n4c2_XBzGbZuC_dwccW-BfO4' },
@@ -108,19 +129,41 @@ describe('Create Transaction', () => {
 
   it('should return object when signAndPostTxn argument is passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet2.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }], signAndPostTxn: true } });
+    const txn = await createTransaction({
+      data: '../__tests__/testAssets/jsonTest.json',
+      key: key,
+      options: {
+        tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }],
+        signAndPostTxn: true
+      }
+    });
+
+    console.log("tag txn sign", txn);
 
     expect(txn).toMatchObject({
-      id: '',
-      owner: key.n,
-      target: '',
-      quantity: '0',
+      response: {
+        status: 200,
+        statusText: 'OK',
+      },
+      txn: {
+        owner: key.n,
+        target: '',
+        quantity: '0',
+      },
     });
   });
 
   it('should return object when signAndPostTxn and useBundlr arguments are passed in on function call', async () => {
     const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({ data: '../__tests__/testAssets/jsonTest.json', key: key, options: { useBundlr: true, tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }], signAndPostTxn: true } });
+    const txn = await createTransaction({
+      data: '../__tests__/testAssets/jsonTest.json',
+      key: key,
+      options: {
+        useBundlr: true,
+        tags: [{ 'name': 'some_name', value: 'some_value' }, { 'name': 'some_name_2', value: 'some_value_2' }],
+        signAndPostTxn: true
+      }
+    });
 
     console.log("tag bundlr txn sign", txn);
   });
