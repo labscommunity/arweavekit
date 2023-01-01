@@ -22,5 +22,3 @@ jobs:
         run: yarn arlocal:run
         if: success()
         run: yarn test
-        if: success()
-        run: killall node
