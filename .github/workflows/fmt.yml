@@ -3,7 +3,7 @@ name: test
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,44 +18,14 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-  arlocal:
-    needs: build
-    runs-on: ubuntu-latest
+      - name: Test Wallets
+        run: yarn test:wallets
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
+      - name: Test Contracts/Create
+        run: yarn test:contracts:create
 
-      - name: Run Arlocal
-        run: yarn arlocal:run
+      - name: Test Wallets/Read
+        run: yarn test:contracts:read
 
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
-
-      - name: Wait for 2 minutes
-        run: sleep 120
-      - uses: actions/checkout@v2
-      - name: Run Tests
-        run: yarn test
-
-  kill:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16'
-
-      - name: Kill All Processes
-        run: killall node
+      - name: Test Wallets/Write
+        run: yarn test:contracts:write
