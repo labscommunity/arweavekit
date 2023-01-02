@@ -2,12 +2,13 @@ import { ArWallet, WarpFactory } from 'warp-contracts';
 import {
   CreateContractProps,
   CreateContractReturnProps,
+  ReadContractProps,
+  WriteContractProps,
 } from '../types/contract';
 
 export async function createContract(
   input: CreateContractProps
 ): Promise<CreateContractReturnProps> {
-  // configure warp
   const warp =
     input.environment === 'local'
       ? WarpFactory.forLocal()
@@ -15,7 +16,6 @@ export async function createContract(
       ? WarpFactory.forTestnet()
       : WarpFactory.forMainnet();
 
-  // function to deploy contracts using warp
   const deployContract = async (props: {
     wallet: ArWallet;
     state: string;
@@ -32,7 +32,6 @@ export async function createContract(
     return { contractTxId, contract };
   };
 
-  // create new wallet if wallet is not passed in
   if (!input.wallet) {
     const { jwk } = await warp.generateWallet();
     const wallet = jwk;
@@ -53,4 +52,20 @@ export async function createContract(
   });
 
   return { contract, contractTxId };
+}
+
+export async function writeContract(input: WriteContractProps) {
+  const contract = input.contract;
+
+  const writeContract = await input.contract.writeInteraction({
+    ...input.options,
+  });
+
+  return { contract, writeContract };
+}
+
+export async function readContractState(input: ReadContractProps) {
+  const { cachedValue, sortKey } = await input.contract.readState();
+
+  return { cachedValue, sortKey };
 }
