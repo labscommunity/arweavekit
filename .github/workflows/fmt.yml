@@ -18,6 +18,16 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+  arlocal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - needs: build
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+
       - name: Run Arlocal
         run: yarn arlocal:run
 
@@ -30,7 +40,7 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Wait for 1 minutes
+      - name: Wait for 2 minutes
         run: sleep 120
       - uses: actions/checkout@v2
       - name: Run Tests
