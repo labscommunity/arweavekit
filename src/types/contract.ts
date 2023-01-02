@@ -12,3 +12,12 @@ export interface CreateContractReturnProps {
   contractTxId: string;
   wallet?: ArWallet;
 }
+
+export interface ReadContractProps {
+  contract: Contract;
+}
+
+export interface WriteContractProps {
+  contract: Contract;
+  options: {};
+}
