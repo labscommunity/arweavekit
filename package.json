@@ -7,7 +7,10 @@
   "scripts": {
     "arlocal:run": "npx arlocal",
     "test": "jest",
-    "tests:concurrently": "concurrently --kill-others \"yarn arlocal:run\" \"yarn test\"",
+    "test:wallets": "jest --testPathPattern=wallet.spec.ts",
+    "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
+    "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
+    "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",
     "build": "rollup -c",
     "watch": "webpack --watch"
   },
