@@ -1,7 +1,10 @@
 export function handle(state, action) {
-  if (action.input === 'createPost') {
-    state.posts.push({ name: 'Hello World', type: 'Blog Post' })
+  if (action.input.function === 'initialize') {
+    state.counter = 10
+  }
+  if (action.input.function === 'fifty') {
+    state.counter = 50
   }
 
-  return { state };
+  return { state }
 }

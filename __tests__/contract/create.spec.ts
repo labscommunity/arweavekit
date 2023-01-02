@@ -1,7 +1,7 @@
 import ArLocal from 'arlocal';
 import Arweave from 'arweave/node/common';
 import { createContract } from '../../src/index';
-import { writeFileSync, unlink, readFileSync } from 'fs';
+import { writeFileSync, readFileSync } from 'fs';
 
 let arlocal: ArLocal, initState: string, contractSrc: string;
 const port = 1986;
