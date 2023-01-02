@@ -1,15 +1,11 @@
-import { exec } from 'child_process';
-import ArLocal from 'arlocal';
 import {
   createContract,
   writeContract,
-  createWallet,
-  readContract,
+  readContractState,
 } from '../../src/index';
-import { writeFileSync, readFileSync } from 'fs';
+import { configTests } from '../../src/utils';
+import { readFileSync } from 'fs';
 
-let arlocal: ArLocal;
-const port = 1986;
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
@@ -18,36 +14,12 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 
 jest.setTimeout(120000);
 
-beforeAll(async () => {
-  exec('yarn arlocal:run', (err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
-
-  arlocal = new ArLocal(port, false);
-  await arlocal.start();
-
-  const testWallet = await createWallet({ seedPhrase: false });
-
-  writeFileSync('./testWallet.json', JSON.stringify(testWallet.key));
-});
-
-afterAll(async () => {
-  arlocal.stop();
-  exec('killall node', (err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
-});
+configTests();
 
 describe('Write Contracts', () => {
   it('should create and write to contract', async () => {
-    const environment = 'testnet';
-
     const { contract: cntrct, contractTxId } = await createContract({
-      environment,
+      environment: 'testnet',
       initialState: initState,
       contractSource: contractSrc,
     });
@@ -59,10 +31,11 @@ describe('Write Contracts', () => {
       },
     });
 
-    const { cachedValue } = await readContract({
+    const { cachedValue, sortKey } = await readContractState({
       contract,
     });
 
+    expect(sortKey).toBeDefined();
     expect(cachedValue.state).toBeDefined();
     expect(cachedValue.validity).toBeDefined();
     expect(typeof contractTxId).toBe('string');
@@ -71,10 +44,8 @@ describe('Write Contracts', () => {
   });
 
   it('should update contract', async () => {
-    const environment = 'testnet';
-
     const { contract: cntrct, contractTxId } = await createContract({
-      environment,
+      environment: 'testnet',
       initialState: initState,
       contractSource: contractSrc,
     });
@@ -86,10 +57,11 @@ describe('Write Contracts', () => {
       },
     });
 
-    const { cachedValue } = await readContract({
+    const { cachedValue, sortKey } = await readContractState({
       contract,
     });
 
+    expect(sortKey).toBeDefined();
     expect(cachedValue.state).toBeDefined();
     expect(cachedValue.validity).toBeDefined();
     expect(typeof contractTxId).toBe('string');

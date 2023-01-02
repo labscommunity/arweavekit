@@ -1,15 +1,11 @@
-import { exec } from 'child_process';
-import ArLocal from 'arlocal';
 import {
-  createWallet,
   createContract,
-  readContract,
+  readContractState,
   writeContract,
 } from '../../src/index';
-import { writeFileSync, readFileSync } from 'fs';
+import { configTests } from '../../src/utils';
+import { readFileSync } from 'fs';
 
-let arlocal: ArLocal;
-const port = 1986;
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
@@ -18,29 +14,7 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 
 jest.setTimeout(120000);
 
-beforeAll(async () => {
-  exec('yarn arlocal:run', (err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
-
-  arlocal = new ArLocal(port, false);
-  await arlocal.start();
-
-  const testWallet = await createWallet({ seedPhrase: false });
-
-  writeFileSync('./testWallet.json', JSON.stringify(testWallet));
-});
-
-afterAll(async () => {
-  arlocal.stop();
-  exec('killall node', (err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
-});
+configTests();
 
 describe('Read Contract State', () => {
   it('should read initial state', async () => {
@@ -50,7 +24,7 @@ describe('Read Contract State', () => {
       contractSource: contractSrc,
     });
 
-    const { cachedValue, sortKey } = await readContract({
+    const { cachedValue, sortKey } = await readContractState({
       contract,
     });
 
@@ -77,7 +51,7 @@ describe('Read Contract State', () => {
       },
     });
 
-    const { cachedValue, sortKey } = await readContract({
+    const { cachedValue, sortKey } = await readContractState({
       contract: writeCntrct,
     });
 
