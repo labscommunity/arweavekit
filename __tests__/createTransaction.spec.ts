@@ -97,8 +97,6 @@ describe('Create Transaction', () => {
       }
     });
 
-    console.log("tag txn", txn);
-
     expect(txn).toMatchObject({
       id: '',
       owner: key.n,
@@ -119,8 +117,6 @@ describe('Create Transaction', () => {
       }
     });
 
-    console.log("tag bundlr txn", txn);
-
     expect(txn).toMatchObject({
       bundlr: { currency: 'arweave', address: '3pcfE9v2eRhtnHvBK95n4c2_XBzGbZuC_dwccW-BfO4' },
       signer: { jwk: key }
@@ -137,8 +133,6 @@ describe('Create Transaction', () => {
         signAndPostTxn: true
       }
     });
-
-    console.log("tag txn sign", txn);
 
     expect(txn).toMatchObject({
       response: {
@@ -165,6 +159,6 @@ describe('Create Transaction', () => {
       }
     });
 
-    console.log("tag bundlr txn sign", txn);
+    expect(txn).toBeDefined();
   });
 });
