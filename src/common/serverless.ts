@@ -2,35 +2,50 @@ import { Exm, ContractType } from '@execution-machine/sdk';
 import dotenv from 'dotenv';
 import {
   CreateServerlessProps,
+  CreateServerlessReturnProps,
+  ReadserverlessProps,
   WriteserverlessProps,
 } from '../types/serverless';
 
 dotenv.config();
 
-export async function createServerlessFunction(input: CreateServerlessProps) {
-  const exm = new Exm({ token: input.token });
+export async function createServerlessFunction(
+  params: CreateServerlessProps
+): Promise<CreateServerlessReturnProps> {
+  const exm = new Exm({
+    token: params.token as string,
+  });
 
-  const deployment = await exm.functions.deploy(
-    input.functionSource,
-    input.initialState,
+  const { id: functionId } = await exm.functions.deploy(
+    params.functionSource,
+    params.initialState,
     ContractType.JS
   );
 
-  return { deployment };
+  const functionUrl = `https://${functionId}.exm.run`;
+  const functionSource = `https://arweave.net/${functionId}`;
+
+  return { functionId, functionUrl, functionSource };
 }
 
-export async function writeServerlessFunction(input: WriteserverlessProps) {
-  const exm = new Exm({ token: input.token });
+export async function writeServerlessFunction(params: WriteserverlessProps) {
+  const exm = new Exm({
+    token: params.token as string,
+  });
 
-  const write = await exm.functions.write(input.functionId, input.inputs);
+  const inputs = [{ ...params.inputs }];
 
-  return { write };
+  const { status, data } = await exm.functions.write(params.functionId, inputs);
+
+  const state = data.execution.state;
+
+  return { status, data, state };
 }
 
-export async function readServerlessFunction(input: WriteserverlessProps) {
-  const exm = new Exm({ token: input.token });
+export async function readServerlessFunction(params: ReadserverlessProps) {
+  const exm = new Exm({ token: params.token });
 
-  const read = await exm.functions.read(input.functionId);
+  const state = await exm.functions.read(params.functionId);
 
-  return { read };
+  return { state };
 }
