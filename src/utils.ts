@@ -16,7 +16,7 @@ export const configTests = async () => {
 
     await arlocal.start();
 
-    const testWallet = await createWallet({ seedPhrase: false });
+    const testWallet = await createWallet({ options: { seedPhrase: false } });
     writeFileSync('./testWallet.json', JSON.stringify(testWallet));
   });
 
