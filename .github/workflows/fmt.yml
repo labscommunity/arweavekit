@@ -37,4 +37,4 @@ jobs:
         run: yarn test:serverless:write
 
       - name: Test Serverless/Read
-        run: yarn test:serverless:write
+        run: yarn test:serverless:read
