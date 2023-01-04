@@ -32,3 +32,9 @@ jobs:
 
       - name: Test Serverless/Create
         run: yarn test:serverless:create
+
+      - name: Test Serverless/Write
+        run: yarn test:serverless:write
+
+      - name: Test Serverless/Read
+        run: yarn test:serverless:write
