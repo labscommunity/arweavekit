@@ -1,10 +1,8 @@
-import { getBalance } from '../src/common/wallet';
+import { createWallet, getBalance, getAddress } from '../src/common/wallet';
 
-const { createWallet, getAddress } = require('../src/common/wallet');
+jest.setTimeout(300000); // takes a while to generate seedPhrase
 
 describe('Create Wallet', () => {
-  jest.setTimeout(300000); // takes a while to generate seedPhrase
-
   it('should create wallet without options.seedPhrase passed in', async () => {
     const generateWallet = await createWallet();
 
@@ -14,7 +12,11 @@ describe('Create Wallet', () => {
   });
 
   it('should create wallet with options.seedPhrase passed in', async () => {
-    const generateWallet = await createWallet({ seedPhrase: true });
+    const generateWallet = await createWallet({
+      options: {
+        seedPhrase: true,
+      },
+    });
 
     expect(generateWallet.key).toBeDefined();
     expect(generateWallet.seedPhrase).toBeDefined();
@@ -23,8 +25,6 @@ describe('Create Wallet', () => {
 });
 
 describe('Get Address', () => {
-  jest.setTimeout(300000);
-
   it('should return wallet address', async () => {
     const { key } = await createWallet();
 
@@ -35,17 +35,11 @@ describe('Get Address', () => {
       expect(typeof address).toBe('string');
     }
   });
-
-  it('should return error message if key is not passed in', async () => {
-    const address = await getAddress();
-
-    expect(address).toBe('enter private key as argument');
-  });
 });
 
 describe('Get Balance', () => {
   it('should return undefined when wallet address is not passed in', async () => {
-    const walletBalance = await getBalance({ walletAddress: '' });
+    const walletBalance = await getBalance('');
 
     expect(walletBalance).toEqual(
       'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).'
@@ -53,9 +47,7 @@ describe('Get Balance', () => {
   });
 
   it('should return undefined when wallet address passed in is less than 43 characters', async () => {
-    const walletBalance = await getBalance({
-      walletAddress: 'y7sDPMTIcbvIWxSXSxrDvHldL',
-    });
+    const walletBalance = await getBalance('y7sDPMTIcbvIWxSXSxrDvHldL');
 
     expect(walletBalance).toEqual(
       'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).'
@@ -63,21 +55,21 @@ describe('Get Balance', () => {
   });
 
   it('should return a balance when wallet address is passed in', async () => {
-    const walletBalance = await getBalance({
-      walletAddress: 'y7sDPMTIcbvIWxSXSxrDvHldL5iN8zh5RMrCDaTQFAM',
-    });
+    const walletBalance = await getBalance(
+      'y7sDPMTIcbvIWxSXSxrDvHldL5iN8zh5RMrCDaTQFAM'
+    );
 
     expect(typeof parseInt(walletBalance)).toEqual('number');
     expect(parseInt(walletBalance)).toBeGreaterThan(0);
   });
 
   it('should return a balance when wallet address is passed in', async () => {
-    jest.setTimeout(300000); // takes a while to generate seedPhrase
-
-    const generateWallet = await createWallet({ seedPhrase: false }); // generates fresh wallet to test 0 balance cases
-    const walletBalance = await getBalance({
-      walletAddress: generateWallet.walletAddress,
-    });
+    const generateWallet = await createWallet({
+      options: {
+        seedPhrase: false,
+      },
+    }); // generates fresh wallet to test 0 balance cases
+    const walletBalance = await getBalance(generateWallet.walletAddress);
 
     expect(typeof parseInt(walletBalance)).toEqual('number');
     expect(parseInt(walletBalance)).toEqual(0);

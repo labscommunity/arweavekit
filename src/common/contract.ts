@@ -7,12 +7,12 @@ import {
 } from '../types/contract';
 
 export async function createContract(
-  input: CreateContractProps
+  params: CreateContractProps
 ): Promise<CreateContractReturnProps> {
   const warp =
-    input.environment === 'local'
+    params.environment === 'local'
       ? WarpFactory.forLocal()
-      : input.environment === 'testnet'
+      : params.environment === 'testnet'
       ? WarpFactory.forTestnet()
       : WarpFactory.forMainnet();
 
@@ -32,40 +32,40 @@ export async function createContract(
     return { contractTxId, contract };
   };
 
-  if (!input.wallet) {
+  if (!params.wallet) {
     const { jwk } = await warp.generateWallet();
     const wallet = jwk;
 
     const { contract, contractTxId } = await deployContract({
       wallet,
-      state: input.initialState,
-      contractSource: input.contractSource,
+      state: params.initialState,
+      contractSource: params.contractSource,
     });
 
     return { wallet, contract, contractTxId };
   }
 
   const { contract, contractTxId } = await deployContract({
-    wallet: input.wallet,
-    state: input.initialState,
-    contractSource: input.contractSource,
+    wallet: params.wallet,
+    state: params.initialState,
+    contractSource: params.contractSource,
   });
 
   return { contract, contractTxId };
 }
 
-export async function writeContract(input: WriteContractProps) {
-  const contract = input.contract;
+export async function writeContract(params: WriteContractProps) {
+  const contract = params.contract;
 
-  const writeContract = await input.contract.writeInteraction({
-    ...input.options,
+  const writeContract = await params.contract.writeInteraction({
+    ...params.options,
   });
 
   return { contract, writeContract };
 }
 
-export async function readContractState(input: ReadContractProps) {
-  const { cachedValue, sortKey } = await input.contract.readState();
+export async function readContractState(params: ReadContractProps) {
+  const { cachedValue, sortKey } = await params.contract.readState();
 
   return { cachedValue, sortKey };
 }
