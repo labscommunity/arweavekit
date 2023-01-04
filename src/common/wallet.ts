@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { BalanceProps, CreateProps, CreateReturnProps } from '../types/wallet';
+import { CreateProps, CreateReturnProps } from '../types/wallet';
 
 const arweave = Arweave.init({
   host: '127.0.0.1',
@@ -21,9 +21,9 @@ const arweaveMainnet = Arweave.init({
  */
 
 export async function createWallet(
-  options: CreateProps
+  params?: CreateProps
 ): Promise<CreateReturnProps> {
-  if (options && options.seedPhrase) {
+  if (params?.options && params?.options.seedPhrase) {
     const seedPhrase = await generateMnemonic();
 
     if (seedPhrase) {
@@ -52,14 +52,9 @@ export async function createWallet(
  * @return address
  */
 export async function getAddress(key: JWKInterface): Promise<string> {
-  if (!key) {
-    return 'enter private key as argument';
-  }
-
   const address = await arweave.wallets.jwkToAddress(key);
   return address;
 }
-
 
 /**
  * create wallet
@@ -67,18 +62,16 @@ export async function getAddress(key: JWKInterface): Promise<string> {
  * @returns walletBalance: string
  */
 
-export async function getBalance(
-  options: BalanceProps
-): Promise<string> {
-  if (options.walletAddress.length === 0) {
+export async function getBalance(address: string): Promise<string> {
+  if (address.length === 0) {
     return 'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
   }
 
-  if (options.walletAddress.length > 0 && options.walletAddress.length < 43) {
-    return 'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).'
+  if (address.length > 0 && address.length < 43) {
+    return 'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
   }
 
-  const walletBalance = arweaveMainnet.wallets.getBalance(options.walletAddress)
+  const walletBalance = arweaveMainnet.wallets.getBalance(address);
 
   return walletBalance;
 }
