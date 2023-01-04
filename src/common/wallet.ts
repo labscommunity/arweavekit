@@ -58,7 +58,7 @@ export async function getAddress(key: JWKInterface): Promise<string> {
 
 /**
  * create wallet
- * @params options -> { walletAddress: string }
+ * @params address: string
  * @returns walletBalance: string
  */
 
