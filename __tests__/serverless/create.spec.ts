@@ -1,21 +1,49 @@
-import { createServerlessFunction } from '../../src/index';
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
+import { createServerlessFunction } from '../../src/index';
 
 dotenv.config();
+const token = process.env.EXM_TOKEN;
+const source = readFileSync('__tests__/serverless/data/contract.js');
 
-describe('Create Serverless Function', () => {
-  it('should create serverless function', async () => {
-    const token = process.env.TOKEN;
-    const fnSrc = readFileSync('__tests__/serverless/data/contract.js');
-    const initialState = '{ "posts": []}';
+describe('should create serverless function', () => {
+  it('should read initial state from json file', async () => {
+    const state = JSON.parse(
+      readFileSync('__tests__/contract/data/state.json', 'utf-8')
+    );
 
-    const deploy = await createServerlessFunction({
-      functionSource: fnSrc,
-      initialState,
-      token: token as string,
-    });
+    const { functionId, functionSource, functionUrl } =
+      await createServerlessFunction({
+        token: token as string,
+        functionSource: source,
+        initialState: state,
+      });
 
-    console.log(deploy);
+    expect(functionId).toBeDefined();
+    expect(functionUrl).toBeDefined();
+    expect(functionSource).toBeDefined();
+    expect(typeof functionId).toBe('string');
+    expect(typeof functionUrl).toBe('string');
+    expect(typeof functionSource).toBe('string');
+  });
+
+  it('should read initial state from javascript object', async () => {
+    const state = {
+      counter: 0,
+    };
+
+    const { functionId, functionSource, functionUrl } =
+      await createServerlessFunction({
+        token: token as string,
+        functionSource: source,
+        initialState: state,
+      });
+
+    expect(functionId).toBeDefined();
+    expect(functionUrl).toBeDefined();
+    expect(functionSource).toBeDefined();
+    expect(typeof functionId).toBe('string');
+    expect(typeof functionUrl).toBe('string');
+    expect(typeof functionSource).toBe('string');
   });
 });
