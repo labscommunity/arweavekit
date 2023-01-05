@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { CreateTransactionProps, SignTransactionProps } from '../types/transaction';
+import { CreateTransactionProps, PostTransactionProps, SignTransactionProps } from '../types/transaction';
 import { getAddress, getBalance } from './wallet';
 
 const arweaveMainnet = Arweave.init({
@@ -134,4 +134,13 @@ export async function signTransaction(
     );
     return signedTransaction;
   }
-}
+};
+
+export async function postTransaction(
+  params: PostTransactionProps) {
+  if (params.transaction) {
+    const postedTransaction = arweaveMainnet.transactions.post(
+      params.transaction
+    )
+  }
+};
