@@ -23,3 +23,8 @@ export interface SignTransactionProps {
   useBundlr?: boolean;
 }
 
+export interface PostTransactionProps {
+  transaction?: any;
+  useBundlr?: boolean;
+}
+
