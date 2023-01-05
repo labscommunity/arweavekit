@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { CreateTransactionProps } from '../types/transaction';
+import { CreateTransactionProps, SignTransactionProps } from '../types/transaction';
 import { getAddress, getBalance } from './wallet';
 
 const arweaveMainnet = Arweave.init({
@@ -123,4 +123,15 @@ export async function createTransaction(
   }
   // When neither data nor token quantity and target are provided
   return 'Pass in valid data or token quantity and target to create a transaction.'
+};
+
+export async function signTransaction(
+  params: SignTransactionProps) {
+  if (params.transaction && params.key) {
+    const signedTransaction = arweaveMainnet.transactions.sign(
+      params.transaction,
+      params.key
+    );
+    return signedTransaction;
+  }
 }
