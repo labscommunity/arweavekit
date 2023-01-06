@@ -17,6 +17,7 @@ const arweaveMainnet = Arweave.init({
 
 /**
  * create wallet
+ * @params options?: { seedPhrase: boolean }
  * @returns walletAddress, JWK, and seedPhrase if options.seedPhrase is passed in
  */
 
@@ -49,6 +50,7 @@ export async function createWallet(
 
 /**
  * get wallet address for a provate key
+ * @params JWK / Private Key
  * @return address
  */
 export async function getAddress(key: JWKInterface): Promise<string> {
@@ -57,8 +59,8 @@ export async function getAddress(key: JWKInterface): Promise<string> {
 }
 
 /**
- * create wallet
- * @params options -> { walletAddress: string }
+ * get balance of wallet address
+ * @params address: string
  * @returns walletBalance: string
  */
 
