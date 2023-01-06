@@ -12,7 +12,7 @@ export interface CreateTransactionProps {
   options?: {
     tags?: Tag[];
     useBundlr?: boolean;
-    signAndPostTxn?: boolean;
+    signAndPostTransaction?: boolean;
   };
   key?: JWKInterface;
 }
@@ -21,6 +21,7 @@ export interface SignTransactionProps {
   transaction?: any;
   key?: JWKInterface;
   useBundlr?: boolean;
+  postTransaction?: boolean;
 }
 
 export interface PostTransactionProps {
