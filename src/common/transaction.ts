@@ -127,24 +127,36 @@ export async function createTransaction(
 
 export async function signTransaction(
   params: SignTransactionProps) {
-  if (params.transaction && params.key) {
+  if (params.createdTransaction && params.key) {
     if (params.useBundlr) {
-
+      const bundlr = new Bundlr("http://node2.bundlr.network", "arweave", params.key);
+      const signedTransaction = await params.createdTransaction.sign();
+      if (params.postTransaction) {
+        const response = await params.createdTransaction.upload()
+        return { signedTransaction, response };
+      } else {
+        return signedTransaction;
+      }
     } else {
       const signedTransaction = arweaveMainnet.transactions.sign(
-        params.transaction,
+        params.createdTransaction,
         params.key
       );
-      return signedTransaction;
+      if (params.postTransaction) {
+        const response = await arweaveMainnet.transactions.post(signedTransaction);
+        return { signedTransaction, response };
+      } else {
+        return signedTransaction;
+      }
     }
   }
 };
 
 export async function postTransaction(
   params: PostTransactionProps) {
-  if (params.transaction) {
+  if (params.signedTransaction) {
     const postedTransaction = arweaveMainnet.transactions.post(
-      params.transaction
+      params.signedTransaction
     )
   }
 };

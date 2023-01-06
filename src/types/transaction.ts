@@ -18,14 +18,15 @@ export interface CreateTransactionProps {
 }
 
 export interface SignTransactionProps {
-  transaction?: any;
+  createdTransaction?: any;
   key?: JWKInterface;
   useBundlr?: boolean;
   postTransaction?: boolean;
 }
 
 export interface PostTransactionProps {
-  transaction?: any;
+  signedTransaction?: any;
+  key?: JWKInterface;
   useBundlr?: boolean;
 }
 
