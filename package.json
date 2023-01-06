@@ -5,8 +5,8 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "arlocal:run": "npx arlocal",
     "test": "jest",
+    "arlocal:run": "npx arlocal",
     "test:wallets": "jest --testPathPattern=wallet.spec.ts",
     "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
     "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
