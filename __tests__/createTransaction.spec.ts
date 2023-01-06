@@ -58,9 +58,7 @@ describe('Create Transaction', () => {
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
     });
 
-    expect(txn).toEqual(
-      'Pass in valid data or token quantity and target to create a transaction.'
-    );
+    expect(txn).toEqual('Pass in valid data or token quantity and target to create a transaction.');
   });
 
   it('should return string asking to call function with valid arguments when quantity argument is passed in on function call', async () => {
