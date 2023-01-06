@@ -8,6 +8,7 @@
     "test": "jest",
     "arlocal:run": "npx arlocal",
     "test:wallets": "jest --testPathPattern=wallet.spec.ts",
+    "test:transactions": "jest --testPathPattern=transactions",
     "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
     "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
     "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",

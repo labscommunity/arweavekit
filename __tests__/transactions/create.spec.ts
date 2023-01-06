@@ -1,6 +1,5 @@
-import { createWallet } from '../src';
 import { readFileSync, writeFileSync } from 'fs';
-import { createTransaction } from '../src/common/transaction';
+import { createWallet, createTransaction } from '../../src';
 
 let testWallet, testWallet2;
 
@@ -25,7 +24,7 @@ describe('Create Transaction', () => {
 
   it('should return empty string for owner key in transaction object when no key argument is passed in on fucntion call', async () => {
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: '../__tests__/transactions/data/test.json',
     });
 
     expect(txn).toMatchObject({
@@ -40,7 +39,7 @@ describe('Create Transaction', () => {
   it('should return part of owner key in transaction object when both data and key arguments are passed in on function call', async () => {
     const { key } = JSON.parse(readFileSync('wallet1.json').toString());
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: '../__tests__/transactions/data/test.json',
       key: key,
     });
 
@@ -58,7 +57,9 @@ describe('Create Transaction', () => {
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
     });
 
-    expect(txn).toEqual('Pass in valid data or token quantity and target to create a transaction.');
+    expect(txn).toEqual(
+      'Pass in valid data or token quantity and target to create a transaction.'
+    );
   });
 
   it('should return string asking to call function with valid arguments when quantity argument is passed in on function call', async () => {
@@ -115,7 +116,7 @@ describe('Create Transaction', () => {
       readFileSync('wallet1.json').toString()
     );
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: '../__tests__/transactions/data/test.json',
       key: key,
       options: { useBundlr: true },
     });
@@ -132,7 +133,7 @@ describe('Create Transaction', () => {
   it('should return object when tags are passed in on function call', async () => {
     const { key } = JSON.parse(readFileSync('wallet1.json').toString());
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: '../__tests__/transactions/data/test.json',
       key: key,
       options: {
         tags: [
@@ -156,7 +157,7 @@ describe('Create Transaction', () => {
       readFileSync('wallet1.json').toString()
     );
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: '../__tests__/transactions/data/test.json',
       key: key,
       options: {
         useBundlr: true,
@@ -180,7 +181,7 @@ describe('Create Transaction', () => {
   it('should return object when signAndPost argument is passed in on function call', async () => {
     const { key } = JSON.parse(readFileSync('wallet2.json').toString());
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: '../__tests__/transactions/data/test.json',
       key: key,
       options: {
         tags: [
@@ -207,7 +208,7 @@ describe('Create Transaction', () => {
   it('should return object when signAndPost and useBundlr arguments are passed in on function call', async () => {
     const { key } = JSON.parse(readFileSync('wallet1.json').toString());
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: '../__tests__/transactions/data/test.json',
       key: key,
       options: {
         useBundlr: true,
