@@ -138,15 +138,15 @@ export async function signTransaction(
         return signedTransaction;
       }
     } else {
-      const signedTransaction = arweaveMainnet.transactions.sign(
+      await arweaveMainnet.transactions.sign(
         params.createdTransaction,
         params.key
       );
       if (params.postTransaction) {
-        const postedTransaction = await arweaveMainnet.transactions.post(signedTransaction);
-        return { signedTransaction, postedTransaction };
+        const postedTransaction = await arweaveMainnet.transactions.post(params.createdTransaction);
+        return { postedTransaction };
       } else {
-        return signedTransaction;
+        return params.createdTransaction;
       }
     }
   } else {
