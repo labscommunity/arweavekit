@@ -130,12 +130,12 @@ export async function signTransaction(
   if (params.createdTransaction && params.key) {
     if (params.useBundlr) {
       const bundlr = new Bundlr("http://node2.bundlr.network", "arweave", params.key);
-      const signedTransaction = await params.createdTransaction.sign();
+      const transaction = await params.createdTransaction.sign();
       if (params.postTransaction) {
         const postedTransaction = await params.createdTransaction.upload();
-        return { signedTransaction, postedTransaction };
+        return { transaction, postedTransaction };
       } else {
-        return signedTransaction;
+        return transaction;
       }
     } else {
       await arweaveMainnet.transactions.sign(
@@ -156,13 +156,13 @@ export async function signTransaction(
 
 export async function postTransaction(
   params: PostTransactionProps) {
-  if (params.signedTransaction) {
+  if (params.transaction) {
     if (params.useBundlr) {
       const bundlr = new Bundlr("http://node2.bundlr.network", "arweave", params.key);
-      const postedTransaction = await params.signedTransaction.upload();
+      const postedTransaction = await params.transaction.upload();
       return postedTransaction;
     } else {
-      const postedTransaction = arweaveMainnet.transactions.post(params.signedTransaction);
+      const postedTransaction = arweaveMainnet.transactions.post(params.transaction);
       return postedTransaction;
     }
   } else {
