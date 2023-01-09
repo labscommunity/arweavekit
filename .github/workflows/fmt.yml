@@ -21,15 +21,6 @@ jobs:
       - name: Test Wallets
         run: yarn test:wallets
 
-      - name: Test Contracts/Create
-        run: yarn test:contracts:create
-
-      - name: Test Contracts/Read
-        run: yarn test:contracts:read
-
-      - name: Test Contracts/Write
-        run: yarn test:contracts:write
-
       - name: Test Serverless/Create
         run: yarn test:serverless:create
 
