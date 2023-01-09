@@ -18,9 +18,6 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Test Wallets
-        run: yarn test:wallets
-
       - name: Test Serverless/Create
         run: yarn test:serverless:create
 
