@@ -1,4 +1,4 @@
-import { createTransaction } from "../src/common/transaction";
+import { createTransaction } from "../../src/common/transaction";
 import { readFileSync } from 'fs';
 
 describe('Create Transaction', () => {
