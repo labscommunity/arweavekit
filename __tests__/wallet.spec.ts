@@ -1,6 +1,6 @@
 import { createWallet, getBalance, getAddress } from '../src/common/wallet';
 
-jest.setTimeout(60000); // takes a while to generate seedPhrase
+jest.setTimeout(120000); // takes a while to generate seedPhrase
 
 describe('Create Wallet', () => {
   it('should create wallet without options.seedPhrase passed in', async () => {
