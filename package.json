@@ -7,14 +7,12 @@
   "scripts": {
     "arlocal:run": "npx arlocal",
     "test": "jest",
-    "test:tests":"jest --testPathPattern=test.spec.ts",
+    "test:tests": "jest --testPathPattern=test.spec.ts",
     "test:wallets": "jest --testPathPattern=wallet.spec.ts",
+    "test:serverless": "jest --testPathPattern=serverless",
     "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
     "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
     "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",
-    "test:serverless:create": "jest --testPathPattern=serverless/create.spec.ts",
-    "test:serverless:write": "jest --testPathPattern=serverless/write.spec.ts",
-    "test:serverless:read": "jest --testPathPattern=serverless/read.spec.ts",
     "build": "rollup -c",
     "watch": "webpack --watch"
   },
