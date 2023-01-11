@@ -20,3 +20,6 @@ jobs:
 
       - name: Test Tests
         run: yarn test:tests
+
+      - name: Test Wallets
+        run: yarn test:wallets
