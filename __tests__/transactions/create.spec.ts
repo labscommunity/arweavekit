@@ -1,19 +1,19 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { createWallet, createTransaction } from '../../src';
+import { readFileSync } from 'fs';
+import { createTransaction } from '../../src';
 
 let testWallet, testWallet2;
 
-beforeAll(async () => {
-  testWallet = await createWallet();
-  testWallet2 = await createWallet();
+// beforeAll(async () => {
+//   testWallet = await createWallet();
+//   testWallet2 = await createWallet();
 
-  writeFileSync('wallet1.json', JSON.stringify(testWallet));
-  writeFileSync('wallet2.json', JSON.stringify(testWallet2));
-});
+//   writeFileSync('wallet1.json', JSON.stringify(testWallet));
+//   writeFileSync('wallet2.json', JSON.stringify(testWallet2));
+// });
+
+jest.setTimeout(300000);
 
 describe('Create Transaction', () => {
-  jest.setTimeout(300000);
-
   it('should return string asking to call function with valid arguments', async () => {
     const txn = await createTransaction();
 

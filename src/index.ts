@@ -4,7 +4,11 @@ import {
   writeContract,
   readContractState,
 } from './common/contract';
-import { createTransaction } from './common/transaction';
+import {
+  createTransaction,
+  postTransaction,
+  signTransaction,
+} from './common/transaction';
 
 export {
   createWallet,
@@ -14,4 +18,6 @@ export {
   writeContract,
   readContractState,
   createTransaction,
+  postTransaction,
+  signTransaction,
 };
