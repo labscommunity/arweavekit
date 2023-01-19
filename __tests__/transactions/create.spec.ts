@@ -1,16 +1,7 @@
 import { readFileSync } from 'fs';
 import { createTransaction } from '../../src';
 
-let testWallet, testWallet2;
-
-// beforeAll(async () => {
-//   testWallet = await createWallet();
-//   testWallet2 = await createWallet();
-
-//   writeFileSync('wallet1.json', JSON.stringify(testWallet));
-//   writeFileSync('wallet2.json', JSON.stringify(testWallet2));
-// });
-
+// todo - create test wallets and add test funds
 jest.setTimeout(300000);
 
 describe('Create Transaction', () => {
@@ -192,12 +183,13 @@ describe('Create Transaction', () => {
       },
     });
 
+    console.log('TXN', txn);
     expect(txn).toMatchObject({
-      response: {
+      postedTransaction: {
         status: 200,
         statusText: 'OK',
       },
-      txn: {
+      transaction: {
         owner: key.n,
         target: '',
         quantity: '0',
