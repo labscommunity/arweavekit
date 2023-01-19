@@ -1,10 +1,10 @@
 import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
-import { JWKInterface } from 'arweave/node/lib/wallet';
 import {
   CreateTransactionProps,
   PostTransactionProps,
   SignTransactionProps,
+  GetTransactionData,
 } from '../types/transaction';
 import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
@@ -200,4 +200,37 @@ export async function getTransactionStatus(transactionId: string) {
   const status = await arweaveMainnet.transactions.getStatus(transactionId);
 
   return status;
+}
+
+/**
+ *
+ * @returns getTransaction(id) transaction
+ * @returns getTransaction(id, { options: data: true}) only data
+ * @returns getTransaction(id, { options: tags: true}) transaction and tags
+ * @returns getTransaction(id, { options: data: true, tags: true }) only data and tags
+ */
+export async function getTransaction(input: GetTransactionData) {
+  const transaction = await arweaveMainnet.transactions.get(
+    input.transactionId
+  );
+  let txTags, txData;
+
+  if (input.options?.tags) {
+    txTags = transaction.tags.forEach((tag) => {
+      let key = tag.get('name', { decode: true, string: true });
+      let value = tag.get('value', { decode: true, string: true });
+
+      return { key, value };
+    });
+  } else if (input.options?.data) {
+    txData = await arweaveMainnet.transactions.getData(input.transactionId);
+  }
+
+  return input.options?.data
+    ? txData
+    : input.options?.tags
+    ? { transaction, tags: txTags }
+    : input.options?.data && input.options?.tags
+    ? { transactionData: txData, tags: txTags }
+    : transaction;
 }
