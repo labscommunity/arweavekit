@@ -31,3 +31,11 @@ export interface PostTransactionProps {
   useBundlr?: boolean;
   data?: string | Uint8Array | ArrayBuffer;
 }
+
+export interface GetTransactionData {
+  transactionId: string;
+  options?: {
+    data?: boolean;
+    tags?: boolean;
+  };
+}

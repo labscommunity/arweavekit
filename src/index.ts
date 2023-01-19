@@ -8,6 +8,9 @@ import {
   createTransaction,
   postTransaction,
   signTransaction,
+  getTransactionStatus,
+  getTransaction,
+
 } from './common/transaction';
 
 export {
@@ -20,4 +23,6 @@ export {
   createTransaction,
   postTransaction,
   signTransaction,
+  getTransactionStatus,
+  getTransaction
 };
