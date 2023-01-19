@@ -22,7 +22,7 @@ const arweaveMainnet = Arweave.init({
  */
 
 export async function createWallet(
-  params?: CreateProps
+  params?: CreateProps,
 ): Promise<CreateReturnProps> {
   if (params?.options && params?.options.seedPhrase) {
     const seedPhrase = await generateMnemonic();

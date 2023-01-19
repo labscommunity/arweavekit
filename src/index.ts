@@ -10,7 +10,6 @@ import {
   signTransaction,
   getTransactionStatus,
   getTransaction,
-
 } from './common/transaction';
 
 export {
@@ -24,5 +23,5 @@ export {
   postTransaction,
   signTransaction,
   getTransactionStatus,
-  getTransaction
+  getTransaction,
 };
