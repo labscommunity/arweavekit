@@ -1,56 +1,52 @@
 import { createTransaction } from '../../src';
-import { readFileSync, writeFileSync, unlink } from 'fs';
+import { readFileSync, writeFileSync, unlinkSync } from 'fs';
 
 jest.setTimeout(300000);
 
 // todo - figure out the whole TXN ID situation
 
+let txn: any;
+
+beforeAll(async () => {
+  const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+  txn = await createTransaction({
+    data: '__tests__/transactions/data/test.json',
+    key: key,
+    options: { useBundlr: true },
+  });
+});
+
 describe('Create Transaction', () => {
   it('should get transaction status with bundlr txn', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({
-      data: '__tests__/transactions/data/test.json',
-      key: key,
-      options: { useBundlr: true },
-    });
-
     writeFileSync(
       '__tests__/transactions/data/txn-bundlr.json',
       JSON.stringify(txn)
     );
 
-    const readTXN = JSON.parse(
+    const readTxn = JSON.parse(
       readFileSync('__tests__/transactions/data/txn-bundlr.json').toString()
     );
-
     // todo - get transaction
 
-    console.log('TXN', readTXN.owner);
+    console.log('TXN', readTxn);
   });
 
   it('should get transaction status with arweave txn', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
-    const txn = await createTransaction({
-      data: '__tests__/transactions/data/test.json',
-      key: key,
-    });
-
     writeFileSync(
       '__tests__/transactions/data/txn-arweave.json',
       JSON.stringify(txn)
     );
 
-    const readTXN = JSON.parse(
-      readFileSync('__tests__/transactions/data/txn-bundlr.json').toString()
+    const readTxn = JSON.parse(
+      readFileSync('__tests__/transactions/data/txn-arweave.json').toString()
     );
-
     // todo - get transaction
 
-    console.log('TXN', readTXN);
+    console.log('TXN', readTxn);
   });
 });
 
 afterAll(() => {
-  unlink('__tests__/transactions/data/txn-bundlr.json', () => {});
-  unlink('__tests__/transactions/data/txn-arweave.json', () => {});
+  unlinkSync('__tests__/transactions/data/txn-bundlr.json');
+  unlinkSync('__tests__/transactions/data/txn-arweave.json');
 });
