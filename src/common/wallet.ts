@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { CreateProps, CreateReturnProps } from '../types/wallet';
+import { CreateProps, CreateReturnProps } from '../../types/wallet';
 
 const arweave = Arweave.init({
   host: '127.0.0.1',
@@ -17,11 +17,12 @@ const arweaveMainnet = Arweave.init({
 
 /**
  * create wallet
+ * @params options?: { seedPhrase: boolean }
  * @returns walletAddress, JWK, and seedPhrase if options.seedPhrase is passed in
  */
 
 export async function createWallet(
-  params?: CreateProps
+  params?: CreateProps,
 ): Promise<CreateReturnProps> {
   if (params?.options && params?.options.seedPhrase) {
     const seedPhrase = await generateMnemonic();
@@ -49,6 +50,7 @@ export async function createWallet(
 
 /**
  * get wallet address for a provate key
+ * @params JWK / Private Key
  * @return address
  */
 export async function getAddress(key: JWKInterface): Promise<string> {
@@ -57,8 +59,8 @@ export async function getAddress(key: JWKInterface): Promise<string> {
 }
 
 /**
- * create wallet
- * @params options -> { walletAddress: string }
+ * get balance of wallet address
+ * @params address: string
  * @returns walletBalance: string
  */
 

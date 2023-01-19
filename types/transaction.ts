@@ -1,6 +1,6 @@
-import BundlrTransaction from "@bundlr-network/client/build/common/transaction";
-import Transaction from "arweave/node/lib/transaction";
-import { JWKInterface } from "arweave/node/lib/wallet";
+import BundlrTransaction from '@bundlr-network/client/build/common/transaction';
+import Transaction from 'arweave/node/lib/transaction';
+import { JWKInterface } from 'arweave/node/lib/wallet';
 
 interface Tag {
   name: string;
@@ -13,7 +13,7 @@ export interface CreateTransactionProps {
   options?: {
     tags?: Tag[];
     useBundlr?: boolean;
-    signAndPostTransaction?: boolean;
+    signAndPost?: boolean;
   };
   key?: JWKInterface;
 }
@@ -29,5 +29,13 @@ export interface PostTransactionProps {
   transaction: Transaction | BundlrTransaction;
   key?: JWKInterface;
   useBundlr?: boolean;
+  data?: string | Uint8Array | ArrayBuffer;
 }
 
+export interface GetTransactionData {
+  transactionId: string;
+  options?: {
+    data?: boolean;
+    tags?: boolean;
+  };
+}
