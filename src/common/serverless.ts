@@ -5,12 +5,12 @@ import {
   CreateServerlessReturnProps,
   ReadserverlessProps,
   WriteserverlessProps,
-} from '../types/serverless';
+} from '../../types/serverless';
 
 dotenv.config();
 
 export async function createServerlessFunction(
-  params: CreateServerlessProps
+  params: CreateServerlessProps,
 ): Promise<CreateServerlessReturnProps> {
   const exm = new Exm({
     token: params.token as string,
@@ -19,7 +19,7 @@ export async function createServerlessFunction(
   const { id: functionId } = await exm.functions.deploy(
     params.functionSource,
     params.initialState,
-    ContractType.JS
+    ContractType.JS,
   );
 
   const functionUrl = `https://${functionId}.exm.run`;

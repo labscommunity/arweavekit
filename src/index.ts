@@ -32,5 +32,5 @@ export {
   getTransactionStatus,
   createServerlessFunction,
   writeServerlessFunction,
-  readServerlessFunction
+  readServerlessFunction,
 };

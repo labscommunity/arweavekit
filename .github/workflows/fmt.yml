@@ -19,7 +19,10 @@ jobs:
         run: yarn
 
       - name: Format Code
-        run: yarn prettier
+        run: yarn format
 
       - name: Test Wallets
-        run: yarn test:wallets
+        run: yarn test:wallet
+
+      - name: Test Serverless
+        run: yarn test:serverless

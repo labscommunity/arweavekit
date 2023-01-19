@@ -6,10 +6,10 @@
   "type": "module",
   "scripts": {
     "test": "jest",
-    "prettier": "prettier --write src/*.ts",
-    "test:wallets": "jest --testPathPattern=wallet",
+    "format": "prettier --write src/*.ts",
+    "test:wallet": "jest --testPathPattern=wallet",
     "test:serverless": "jest --testPathPattern=serverless",
-    "test:transactions": "jest --testPathPattern=transactions",
+    "test:transaction": "jest --testPathPattern=transactions",
     "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
     "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
     "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",
