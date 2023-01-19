@@ -23,7 +23,7 @@ describe('Create Transaction', () => {
       readFileSync('__tests__/transactions/data/txn-bundlr.json').toString()
     );
 
-    // todo - get transaction status
+    // todo - get transaction
 
     console.log('TXN', readTXN.owner);
   });
@@ -44,7 +44,7 @@ describe('Create Transaction', () => {
       readFileSync('__tests__/transactions/data/txn-bundlr.json').toString()
     );
 
-    // todo - get transaction status
+    // todo - get transaction
 
     console.log('TXN', readTXN);
   });
