@@ -8,7 +8,7 @@
     "test": "jest",
     "prettier": "prettier --write src/*.ts",
     "arlocal:run": "npx arlocal",
-    "test:wallets": "jest --testPathPattern=wallet.spec.ts",
+    "test:wallets": "jest --testPathPattern=wallet",
     "test:transactions": "jest --testPathPattern=transactions",
     "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
     "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
