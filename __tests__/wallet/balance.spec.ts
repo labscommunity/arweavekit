@@ -1,3 +1,4 @@
+<<<<<<< HEAD:__tests__/wallet.spec.ts
 import { createWallet, getBalance, getAddress } from '../src/common/wallet';
 
 jest.setTimeout(120000); // takes a while to generate seedPhrase
@@ -36,6 +37,9 @@ describe('Get Address', () => {
     }
   });
 });
+=======
+import { createWallet, getBalance } from '../../src/common/wallet';
+>>>>>>> main:__tests__/wallet/balance.spec.ts
 
 describe('Get Balance', () => {
   it('should return undefined when wallet address is not passed in', async () => {

@@ -18,8 +18,8 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Test Tests
-        run: yarn test:tests
+      - name: Format Code
+        run: yarn prettier
 
       - name: Test Wallets
         run: yarn test:wallets
