@@ -5,6 +5,12 @@ import {
   readContractState,
 } from './common/contract';
 import {
+  createServerlessFunction,
+  writeServerlessFunction,
+  readServerlessFunction,
+} from './common/serverless';
+
+import {
   createTransaction,
   postTransaction,
   signTransaction,
@@ -22,6 +28,9 @@ export {
   createTransaction,
   postTransaction,
   signTransaction,
-  getTransactionStatus,
   getTransaction,
+  getTransactionStatus,
+  createServerlessFunction,
+  writeServerlessFunction,
+  readServerlessFunction,
 };

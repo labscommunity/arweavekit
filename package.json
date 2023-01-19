@@ -6,10 +6,10 @@
   "type": "module",
   "scripts": {
     "test": "jest",
-    "prettier": "prettier --write src/*.ts",
-    "arlocal:run": "npx arlocal",
-    "test:wallets": "jest --testPathPattern=wallet",
-    "test:transactions": "jest --testPathPattern=transactions",
+    "format": "prettier --write src/*.ts",
+    "test:wallet": "jest --testPathPattern=wallet",
+    "test:serverless": "jest --testPathPattern=serverless",
+    "test:transaction": "jest --testPathPattern=transactions",
     "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
     "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
     "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",
@@ -42,11 +42,13 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
+    "@execution-machine/sdk": "^0.1.6",
     "@bundlr-network/client": "^0.9.11",
     "@types/human-crypto-keys": "^0.1.0",
     "arweave": "^1.11.8",
     "arweave-mnemonic-keys": "^0.0.9",
     "concurrently": "^7.6.0",
+    "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "warp-contracts": "^1.2.42"
   },

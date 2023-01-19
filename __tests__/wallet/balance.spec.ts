@@ -1,11 +1,11 @@
-import { createWallet, getBalance } from '../../src/common/wallet';
+import { createWallet, getBalance } from '../../src';
 
 describe('Get Balance', () => {
   it('should return undefined when wallet address is not passed in', async () => {
     const walletBalance = await getBalance('');
 
     expect(walletBalance).toEqual(
-      'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).'
+      'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).',
     );
   });
 
@@ -13,13 +13,13 @@ describe('Get Balance', () => {
     const walletBalance = await getBalance('y7sDPMTIcbvIWxSXSxrDvHldL');
 
     expect(walletBalance).toEqual(
-      'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).'
+      'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).',
     );
   });
 
   it('should return a balance when wallet address is passed in', async () => {
     const walletBalance = await getBalance(
-      'y7sDPMTIcbvIWxSXSxrDvHldL5iN8zh5RMrCDaTQFAM'
+      'y7sDPMTIcbvIWxSXSxrDvHldL5iN8zh5RMrCDaTQFAM',
     );
 
     expect(typeof parseInt(walletBalance)).toEqual('number');
