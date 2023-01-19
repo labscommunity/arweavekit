@@ -1,41 +1,4 @@
-import { createWallet, getBalance, getAddress } from '../src/common/wallet';
-
-jest.setTimeout(300000); // takes a while to generate seedPhrase
-
-describe('Create Wallet', () => {
-  it('should create wallet without options.seedPhrase passed in', async () => {
-    const generateWallet = await createWallet();
-
-    expect(generateWallet.key).toBeDefined();
-    expect(generateWallet.seedPhrase).toBeNull;
-    expect(generateWallet.walletAddress).toBeDefined();
-  });
-
-  it('should create wallet with options.seedPhrase passed in', async () => {
-    const generateWallet = await createWallet({
-      options: {
-        seedPhrase: true,
-      },
-    });
-
-    expect(generateWallet.key).toBeDefined();
-    expect(generateWallet.seedPhrase).toBeDefined();
-    expect(generateWallet.walletAddress).toBeDefined();
-  });
-});
-
-describe('Get Address', () => {
-  it('should return wallet address', async () => {
-    const { key } = await createWallet();
-
-    if (key) {
-      const address = await getAddress(key);
-
-      expect(address).toBeDefined();
-      expect(typeof address).toBe('string');
-    }
-  });
-});
+import { createWallet, getBalance } from '../../src/common/wallet';
 
 describe('Get Balance', () => {
   it('should return undefined when wallet address is not passed in', async () => {
