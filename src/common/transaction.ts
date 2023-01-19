@@ -5,7 +5,7 @@ import {
   PostTransactionProps,
   SignTransactionProps,
   GetTransactionData,
-} from '../types/transaction';
+} from '../../types/transaction';
 import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
 

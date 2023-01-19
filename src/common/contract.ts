@@ -4,7 +4,7 @@ import {
   CreateContractReturnProps,
   ReadContractProps,
   WriteContractProps,
-} from '../types/contract';
+} from '../../types/contract';
 
 export async function createContract(
   params: CreateContractProps

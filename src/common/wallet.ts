@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { CreateProps, CreateReturnProps } from '../types/wallet';
+import { CreateProps, CreateReturnProps } from '../../types/wallet';
 
 const arweave = Arweave.init({
   host: '127.0.0.1',
