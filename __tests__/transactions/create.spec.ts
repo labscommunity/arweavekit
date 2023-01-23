@@ -29,7 +29,7 @@ describe('Create Transaction', () => {
   });
 
   it('should return part of owner key in transaction object when both data and key arguments are passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
     const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
       data: data,
@@ -120,7 +120,7 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when tags are passed in on function call', async () => {
-    const key = JSON.parse(readFileSync('wallet2.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
     const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
       data: data,
@@ -142,7 +142,7 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when tags and useBundlr arguments are passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet2.json').toString());
+    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
     const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
       data: data,
