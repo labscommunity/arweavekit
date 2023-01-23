@@ -31,7 +31,6 @@ const arweaveMainnet = Arweave.init({
  */
 
 /* 
-
 Rethinking logic defaulting to bundlr
 - Data vs Wallet to Wallet transactions
 - use Arweave
@@ -47,11 +46,23 @@ export async function createTransaction(params?: CreateTransactionProps) {
       const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
-        params.key,
+        params.key
       );
+
+      const allTags = params.options.tags && [
+        {
+          name: 'transaction source',
+          value: 'permawebjs',
+        },
+        ...params.options.tags,
+      ];
       const transaction = bundlr.createTransaction(
         JSON.stringify(params.data),
-        { tags: params.options.tags },
+        {
+          tags: allTags
+            ? allTags
+            : [{ name: 'transaction source', value: 'permawebjs' }],
+        }
       );
       if (params.options?.signAndPost) {
         await transaction.sign();
@@ -65,13 +76,18 @@ export async function createTransaction(params?: CreateTransactionProps) {
         {
           data: params.data,
         },
-        params.key ? params.key : 'use_wallet',
+        params.key ? params.key : 'use_wallet'
       );
-      params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      if (params.options?.tags) {
+        transaction.addTag('transaction source', 'permawebjs');
+        params.options?.tags?.map((k, i) =>
+          transaction.addTag(k.name, k.value)
+        );
+      }
       if (params.options?.signAndPost) {
         await arweaveMainnet.transactions.sign(transaction, params.key);
         const postedTransaction = await arweaveMainnet.transactions.post(
-          transaction,
+          transaction
         );
         return { transaction, postedTransaction };
       } else {
@@ -90,13 +106,13 @@ export async function createTransaction(params?: CreateTransactionProps) {
           target: params.target,
           quantity: params.quantity,
         },
-        params.key ? params.key : 'use_wallet',
+        params.key ? params.key : 'use_wallet'
       );
       params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       if (params.options?.signAndPost) {
         await arweaveMainnet.transactions.sign(transaction, params.key);
         const postedTransaction = await arweaveMainnet.transactions.post(
-          transaction,
+          transaction
         );
         return { transaction, postedTransaction };
       } else {
@@ -118,13 +134,13 @@ export async function createTransaction(params?: CreateTransactionProps) {
           target: params.target,
           quantity: params.quantity,
         },
-        params.key ? params.key : 'use_wallet',
+        params.key ? params.key : 'use_wallet'
       );
       params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       if (params.options?.signAndPost) {
         await arweaveMainnet.transactions.sign(transaction, params.key);
         const postedTransaction = await arweaveMainnet.transactions.post(
-          transaction,
+          transaction
         );
         return { transaction, postedTransaction };
       } else {
@@ -147,7 +163,7 @@ export async function signTransaction(params: SignTransactionProps) {
       const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
-        params.key,
+        params.key
       );
       const transaction = await params.createdTransaction.sign();
       if (params.postTransaction) {
@@ -159,11 +175,11 @@ export async function signTransaction(params: SignTransactionProps) {
     } else {
       await arweaveMainnet.transactions.sign(
         params.createdTransaction as Transaction,
-        params.key,
+        params.key
       );
       if (params.postTransaction) {
         const postedTransaction = await arweaveMainnet.transactions.post(
-          params.createdTransaction,
+          params.createdTransaction
         );
         return { postedTransaction };
       } else {
@@ -181,13 +197,13 @@ export async function postTransaction(params: PostTransactionProps) {
       const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
-        params.key,
+        params.key
       );
       const postedTransaction = await params.transaction.upload();
       return postedTransaction;
     } else {
       const postedTransaction = arweaveMainnet.transactions.post(
-        params.transaction,
+        params.transaction
       );
       return postedTransaction;
     }
@@ -211,7 +227,7 @@ export async function getTransactionStatus(transactionId: string) {
  */
 export async function getTransaction(input: GetTransactionData) {
   const transaction = await arweaveMainnet.transactions.get(
-    input.transactionId,
+    input.transactionId
   );
   let txTags, txData;
 
