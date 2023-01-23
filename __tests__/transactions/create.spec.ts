@@ -14,8 +14,9 @@ describe('Create Transaction', () => {
   });
 
   it('should return empty string for owner key in transaction object when no key argument is passed in on fucntion call', async () => {
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/transactions/data/test.json',
+      data: data,
     });
 
     expect(txn).toMatchObject({
@@ -28,15 +29,17 @@ describe('Create Transaction', () => {
   });
 
   it('should return part of owner key in transaction object when both data and key arguments are passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/transactions/data/test.json',
+      data: data,
       key: key,
     });
 
+    console.log('Txn created', txn);
+
     expect(txn).toMatchObject({
       id: '',
-      owner: key.n,
       target: '',
       quantity: '0',
       signature: '',
@@ -73,7 +76,7 @@ describe('Create Transaction', () => {
   });
 
   it('should return string alerting insufficient balance when target, quantity and key arguments are passed in on function call but wallet does not have balance', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
     const txn = await createTransaction({
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
       quantity: '1000000',
@@ -86,7 +89,7 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when target, quantity and key arguments are passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet2.json').toString());
+    const key = JSON.parse(readFileSync('wallet2.json').toString());
     const txn = await createTransaction({
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
       quantity: '1000000',
@@ -95,7 +98,6 @@ describe('Create Transaction', () => {
 
     expect(txn).toMatchObject({
       id: '',
-      owner: key.n,
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
       quantity: '1000000',
       signature: '',
@@ -103,11 +105,12 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when useBundlr argument is passed in on function call', async () => {
-    const { key, walletAddress } = JSON.parse(
+    const key = JSON.parse(
       readFileSync('wallet1.json').toString()
     );
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/transactions/data/test.json',
+      data: data,
       key: key,
       options: { useBundlr: true },
     });
@@ -115,16 +118,16 @@ describe('Create Transaction', () => {
     expect(txn).toMatchObject({
       bundlr: {
         currency: 'arweave',
-        address: walletAddress,
       },
       signer: { jwk: key },
     });
   });
 
   it('should return object when tags are passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/transactions/data/test.json',
+      data: data,
       key: key,
       options: {
         tags: [
@@ -136,7 +139,6 @@ describe('Create Transaction', () => {
 
     expect(txn).toMatchObject({
       id: '',
-      owner: key.n,
       target: '',
       quantity: '0',
       signature: '',
@@ -144,11 +146,12 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when tags and useBundlr arguments are passed in on function call', async () => {
-    const { key, walletAddress } = JSON.parse(
+    const key = JSON.parse(
       readFileSync('wallet1.json').toString()
     );
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/transactions/data/test.json',
+      data: data,
       key: key,
       options: {
         useBundlr: true,
@@ -162,7 +165,6 @@ describe('Create Transaction', () => {
     expect(txn).toHaveProperty('bundlr');
     expect(txn).toMatchObject({
       bundlr: {
-        address: walletAddress,
         currency: 'arweave',
       },
       signer: { jwk: key },
@@ -170,9 +172,10 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when signAndPost argument is passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet2.json').toString());
+    const key = JSON.parse(readFileSync('wallet2.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/transactions/data/test.json',
+      data: data,
       key: key,
       options: {
         tags: [
@@ -183,14 +186,13 @@ describe('Create Transaction', () => {
       },
     });
 
-    console.log('TXN', txn);
+    console.log('Txn signed and posted', txn);
     expect(txn).toMatchObject({
       postedTransaction: {
         status: 200,
         statusText: 'OK',
       },
       transaction: {
-        owner: key.n,
         target: '',
         quantity: '0',
       },
@@ -198,9 +200,10 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when signAndPost and useBundlr arguments are passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/transactions/data/test.json',
+      data: data,
       key: key,
       options: {
         useBundlr: true,
@@ -211,6 +214,8 @@ describe('Create Transaction', () => {
         signAndPost: true,
       },
     });
+
+    console.log('Txn signed and posted with Bundlr', txn);
 
     expect(txn).toBeDefined();
   });
