@@ -7,7 +7,7 @@ import {
 } from '../../types/contract';
 
 export async function createContract(
-  params: CreateContractProps,
+  params: CreateContractProps
 ): Promise<CreateContractReturnProps> {
   const warp =
     params.environment === 'local'

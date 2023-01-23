@@ -17,8 +17,10 @@ import {
   getTransactionStatus,
   getTransaction,
 } from './common/transaction';
+import { auth } from './web/auth';
 
 export {
+  auth,
   createWallet,
   getAddress,
   getBalance,
