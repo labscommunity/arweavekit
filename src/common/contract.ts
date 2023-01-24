@@ -28,9 +28,7 @@ export async function createContract(
   if (contract && contract.contractTxId != '' && contract.srcTxId != '') {
     status = 200;
     statusText = "SUCCESSFUL";
-  }
-
-  // const contract = warp.contract(contractTxId).connect(params.contractData.wallet);
+  };
 
   return {
     contract, result: { status, statusText }
