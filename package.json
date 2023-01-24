@@ -5,6 +5,7 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
+    "yarn arlocal:run": "npx arlocal",
     "test": "jest",
     "format": "prettier --write src/*.ts",
     "test:wallet": "jest --testPathPattern=wallet",

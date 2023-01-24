@@ -1,16 +1,13 @@
-import { ArWallet, Contract } from 'warp-contracts';
+import { ArWallet, Contract, ContractData, ContractDeploy } from 'warp-contracts';
 
 export interface CreateContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
-  wallet?: ArWallet;
-  initialState: string;
-  contractSource: string;
+  contractData: ContractData;
 }
 
 export interface CreateContractReturnProps {
-  contract: Contract;
-  contractTxId: string;
-  wallet?: ArWallet;
+  contract: ContractDeploy;
+  result: object;
 }
 
 export interface ReadContractProps {
