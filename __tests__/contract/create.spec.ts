@@ -18,7 +18,7 @@ describe('Create Contract', () => {
     // SUPER IMPORTANT TO PARSE - MENTION IN DOCS
     const wallet2 = JSON.parse(readFileSync('wallet2.json', 'utf-8'));
 
-    const contract = await createContract({
+    const { contract, result } = await createContract({
       environment: 'mainnet',
       contractData: {
         wallet: wallet2,
@@ -27,6 +27,10 @@ describe('Create Contract', () => {
       }
     });
 
-    console.log("===================New contract deploy return test===================", contract);
+    expect(contract).toBeDefined();
+    expect(typeof contract).toEqual("object");
+    expect(result).toBeDefined();
+    expect(typeof result).toEqual("object");
+    expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
   });
 });
