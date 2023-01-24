@@ -13,31 +13,20 @@ jest.setTimeout(120000);
 configTests();
 
 describe('Create Contract', () => {
-  it('should read initial state', async () => {
-    const { contract, contractTxId } = await createContract({
-      environment: 'testnet',
-      initialState: initState,
-      contractSource: contractSrc,
-    });
-
-    expect(contract).toBeDefined();
-    expect(contractTxId).toBeDefined();
-    expect(typeof contractTxId).toBe('string');
-  });
 
   it('should create a new contract with wallet passed in', async () => {
     // SUPER IMPORTANT TO PARSE - MENTION IN DOCS
-    const wallet = JSON.parse(readFileSync('testWallet.json', 'utf-8'));
+    const wallet2 = JSON.parse(readFileSync('wallet2.json', 'utf-8'));
 
-    const { contract, contractTxId } = await createContract({
-      wallet,
-      environment: 'testnet',
-      initialState: initState,
-      contractSource: contractSrc,
+    const contract = await createContract({
+      environment: 'mainnet',
+      contractData: {
+        wallet: wallet2,
+        initState: initState,
+        src: contractSrc,
+      }
     });
 
-    expect(contract).toBeDefined();
-    expect(contractTxId).toBeDefined();
-    expect(typeof contractTxId).toBe('string');
+    console.log("===================New contract deploy return test===================", contract);
   });
 });

@@ -13,45 +13,28 @@ export async function createContract(
     params.environment === 'local'
       ? WarpFactory.forLocal()
       : params.environment === 'testnet'
-      ? WarpFactory.forTestnet()
-      : WarpFactory.forMainnet();
+        ? WarpFactory.forTestnet()
+        : WarpFactory.forMainnet();
 
-  const deployContract = async (props: {
-    wallet: ArWallet;
-    state: string;
-    contractSource: string;
-  }) => {
-    const { contractTxId } = await warp.deploy({
-      wallet: props.wallet,
-      initState: props.state,
-      src: props.contractSource,
-    });
-
-    const contract = warp.contract(contractTxId).connect(props.wallet);
-
-    return { contractTxId, contract };
-  };
-
-  if (!params.wallet) {
-    const { jwk } = await warp.generateWallet();
-    const wallet = jwk;
-
-    const { contract, contractTxId } = await deployContract({
-      wallet,
-      state: params.initialState,
-      contractSource: params.contractSource,
-    });
-
-    return { wallet, contract, contractTxId };
-  }
-
-  const { contract, contractTxId } = await deployContract({
-    wallet: params.wallet,
-    state: params.initialState,
-    contractSource: params.contractSource,
+  const contract = await warp.deploy({
+    wallet: params.contractData.wallet,
+    initState: params.contractData.initState,
+    src: params.contractData.src,
   });
 
-  return { contract, contractTxId };
+  let status: number = 400;
+  let statusText: string = "UNSUCCESSFUL";
+
+  if (contract && contract.contractTxId != '' && contract.srcTxId != '') {
+    status = 200;
+    statusText = "SUCCESSFUL";
+  }
+
+  // const contract = warp.contract(contractTxId).connect(params.contractData.wallet);
+
+  return {
+    contract, result: { status, statusText }
+  };
 }
 
 export async function writeContract(params: WriteContractProps) {
