@@ -43,10 +43,10 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@execution-machine/sdk": "^0.1.6",
     "@bundlr-network/client": "^0.9.11",
+    "@execution-machine/sdk": "^0.1.6",
     "@types/human-crypto-keys": "^0.1.0",
-    "arweave": "^1.11.8",
+    "arweave": "^1.12.4",
     "arweave-mnemonic-keys": "^0.0.9",
     "concurrently": "^7.6.0",
     "dotenv": "^16.0.3",

@@ -4,9 +4,9 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 import { CreateProps, CreateReturnProps, GetBalanceProps } from '../../types/wallet';
 
 const arweave = Arweave.init({
-  host: '127.0.0.1',
-  port: 8080,
-  protocol: 'http',
+  host: 'localhost',
+  port: 1984,
+  protocol: 'http'
 });
 
 const arweaveMainnet = Arweave.init({
@@ -17,14 +17,17 @@ const arweaveMainnet = Arweave.init({
 
 /**
  * create wallet
- * @params options?: { seedPhrase: boolean }
- * @returns walletAddress, JWK, and seedPhrase if options.seedPhrase is passed in
+ * @params seedPhrase: boolean (optional)
+ * @params environment: 'local' | 'mainnet' (optional)
+ * @returns walletAddress
+ * @returns JWK
+ * @returns seedPhrase if options.seedPhrase is passed in
  */
 
 export async function createWallet(
   params?: CreateProps,
 ): Promise<CreateReturnProps> {
-  if (params?.options && params?.options.seedPhrase) {
+  if (params?.seedPhrase) {
     const seedPhrase = await generateMnemonic();
 
     if (seedPhrase) {
@@ -42,8 +45,9 @@ export async function createWallet(
   const key = await arweave.wallets.generate();
   const walletAddress = await arweave.wallets.jwkToAddress(key);
 
-  if (params?.options?.environment == 'local') {
-    await arweave.api.get(`mint/${walletAddress}/1000000000000`);
+  if (params?.environment == 'local') {
+    await arweave.api.get(`mint/${walletAddress}/1000000000000`)
+      .catch(e => console.log("Error", e.message));
   }
 
   return {
@@ -53,7 +57,7 @@ export async function createWallet(
 }
 
 /**
- * get wallet address for a provate key
+ * get wallet address for a private key
  * @params JWK / Private Key
  * @return address
  */
@@ -65,10 +69,11 @@ export async function getAddress(key: JWKInterface): Promise<string> {
 /**
  * get balance of wallet address
  * @params address: string
+ * @params environment: 'local' | 'mainnet' (optional)
  * @returns walletBalance: string
  */
 
-export async function getBalance(params: GetBalanceProps): Promise<string | object | void> {
+export async function getBalance(params: GetBalanceProps): Promise<string> {
   if (params?.address.length === 0) {
     return 'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
   }
@@ -77,8 +82,8 @@ export async function getBalance(params: GetBalanceProps): Promise<string | obje
     return 'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
   }
 
-  if (params.options?.environment == 'local') {
-    const walletBalance = arweave.wallets.getBalance(params.address).catch(e => { return e.message });
+  if (params.environment == 'local') {
+    const walletBalance = arweave.wallets.getBalance(params.address);
     return walletBalance;
   }
 
