@@ -42,6 +42,10 @@ export async function createWallet(
   const key = await arweave.wallets.generate();
   const walletAddress = await arweave.wallets.jwkToAddress(key);
 
+  if (params?.options?.environment == 'local') {
+    await arweave.api.get(`mint/${walletAddress}/1000000000000`);
+  }
+
   return {
     key,
     walletAddress,
