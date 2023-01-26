@@ -1,7 +1,7 @@
 import Arweave from 'arweave';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { CreateProps, CreateReturnProps } from '../../types/wallet';
+import { CreateProps, CreateReturnProps, GetBalanceProps } from '../../types/wallet';
 
 const arweave = Arweave.init({
   host: '127.0.0.1',
@@ -64,16 +64,21 @@ export async function getAddress(key: JWKInterface): Promise<string> {
  * @returns walletBalance: string
  */
 
-export async function getBalance(address: string): Promise<string> {
-  if (address.length === 0) {
+export async function getBalance(params: GetBalanceProps): Promise<string | object | void> {
+  if (params?.address.length === 0) {
     return 'Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
   }
 
-  if (address.length > 0 && address.length < 43) {
+  if (params?.address.length > 0 && params?.address.length < 43) {
     return 'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ walletAddress: "WALLET_ADDRESS" }).';
   }
 
-  const walletBalance = arweaveMainnet.wallets.getBalance(address);
+  if (params.options?.environment == 'local') {
+    const walletBalance = arweave.wallets.getBalance(params.address).catch(e => { return e.message });
+    return walletBalance;
+  }
+
+  const walletBalance = arweaveMainnet.wallets.getBalance(params.address);
 
   return walletBalance;
 }
