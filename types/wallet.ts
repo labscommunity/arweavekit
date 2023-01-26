@@ -10,3 +10,7 @@ export interface CreateReturnProps {
   walletAddress: string;
   seedPhrase?: string;
 }
+export interface GetBalanceProps {
+  address: string;
+  environment?: 'local' | 'mainnet';
+}
