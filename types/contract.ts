@@ -1,4 +1,4 @@
-import { ArWallet, Contract, ContractData, ContractDeploy } from 'warp-contracts';
+import { ArWallet, ContractData, ContractDeploy, CustomSignature } from 'warp-contracts';
 
 export interface CreateContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
@@ -11,10 +11,14 @@ export interface CreateContractReturnProps {
 }
 
 export interface ReadContractProps {
-  contract: Contract;
+  environment: 'local' | 'testnet' | 'mainnet';
+  contractTxId: string;
+  wallet: ArWallet | CustomSignature;
 }
 
 export interface WriteContractProps {
-  contract: Contract;
+  environment: 'local' | 'testnet' | 'mainnet';
+  contractTxId: string;
+  wallet: ArWallet | CustomSignature;
   options: {};
 }

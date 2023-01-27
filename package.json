@@ -51,6 +51,7 @@
     "concurrently": "^7.6.0",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
+    "warp": "^5.0.3",
     "warp-contracts": "^1.2.42"
   },
   "jest": {

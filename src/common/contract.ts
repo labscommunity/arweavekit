@@ -1,4 +1,4 @@
-import { WarpFactory } from 'warp-contracts';
+import { defaultCacheOptions, WarpFactory } from 'warp-contracts';
 import {
   CreateContractProps,
   CreateContractReturnProps,
@@ -32,8 +32,11 @@ export async function createContract(
         ? WarpFactory.forTestnet()
         : WarpFactory.forMainnet();
 
+  let status: number = 400;
+  let statusText: string = "UNSUCCESSFUL";
+
   if (params.environment == 'local' || params.environment == 'testnet') {
-    warp.testing.addFunds(params.contractData.wallet as JWKInterface)
+    await warp.testing.addFunds(params.contractData.wallet as JWKInterface)
       .catch(e => console.log('ERROR', e.message));
   }
 
@@ -42,10 +45,7 @@ export async function createContract(
     initState: params.contractData.initState,
     src: params.contractData.src,
     tags: [{ 'name': 'Library-Used', 'value': 'PermawebJS' }],
-  }).catch(e => console.log('ERROR', e.message));
-
-  let status: number = 400;
-  let statusText: string = "UNSUCCESSFUL";
+  })
 
   if (contract && contract.contractTxId != '' && contract.srcTxId != '') {
     status = 200;
@@ -57,17 +57,20 @@ export async function createContract(
   };
 }
 
+/**
+ * write to contract with warp
+ * @params environment: 'local' | 'testnet' | 'mainnet'
+ * @params contractTxId: string
+ * @params wallet: ArWallet | CustomSignature (data types from 'warp-contracts')
+ * @params options: {} 
+ * @returns writeContract: WriteInteraction (data type from 'warp-contracts') | null
+ * @returns state: object
+ * @returns result: object
+ *            status: nummber
+ *            statusText: string
+ */
+
 export async function writeContract(params: WriteContractProps) {
-  // const contract = params.contract;
-
-  // const writeContract = await params.contract.writeInteraction({
-  //   ...params.options,
-  // });
-
-  // return { contract, writeContract };
-}
-
-export async function readContractState(params: ReadContractProps) {
   const warp =
     params.environment === 'local'
       ? WarpFactory.forLocal()
@@ -75,7 +78,42 @@ export async function readContractState(params: ReadContractProps) {
         ? WarpFactory.forTestnet()
         : WarpFactory.forMainnet();
 
-  const contract = warp.contract(params.contract.contractTxId).connect(params.wallet);
+  let status: number = 400;
+  let statusText: string = "UNSUCCESSFUL";
 
-  return { contract, warp };
+  const contract = warp.contract(params.contractTxId).connect(params.wallet);
+
+  const writeContract = await contract.writeInteraction(params.options);
+
+  const readState = await contract.readState();
+
+  if (writeContract?.originalTxId != '') {
+    status = 200;
+    statusText = "SUCCESSFUL"
+  };
+
+  return { writeContract, state: readState.cachedValue.state, result: { status, statusText } };
+}
+
+export async function readContractState(params: ReadContractProps) {
+  const warp =
+    params.environment === 'local'
+      ? WarpFactory.forLocal()
+      : params.environment === 'testnet'
+        ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
+        : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
+
+  let status: number = 400;
+  let statusText: string = "UNSUCCESSFUL";
+
+  const contract = warp.contract(params.contractTxId).connect(params.wallet);
+
+  const readContract = await contract.readState();
+
+  if (readContract.sortKey && readContract.cachedValue) {
+    status = 200;
+    statusText = "SUCCESSFUL"
+  };
+
+  return { readContract, result: { status, statusText } };
 }

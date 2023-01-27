@@ -82,7 +82,7 @@ export async function createTransaction(params?: CreateTransactionProps) {
     let senderBalance: string = '';
     if (params.key) {
       const senderAddress = await getAddress(params.key);
-      senderBalance = await getBalance(senderAddress);
+      senderBalance = await getBalance({ address: senderAddress });
     }
     if (parseInt(senderBalance) >= parseInt(params.quantity)) {
       const transaction = await arweaveMainnet.createTransaction(
@@ -109,7 +109,7 @@ export async function createTransaction(params?: CreateTransactionProps) {
     let senderBalance: string = '';
     if (params.key) {
       const senderAddress = await getAddress(params.key);
-      senderBalance = await getBalance(senderAddress);
+      senderBalance = await getBalance({ address: senderAddress });
     }
     if (parseInt(senderBalance) >= parseInt(params.quantity)) {
       const transaction = await arweaveMainnet.createTransaction(
@@ -229,8 +229,8 @@ export async function getTransaction(input: GetTransactionData) {
   return input.options?.data
     ? txData
     : input.options?.tags
-    ? { transaction, tags: txTags }
-    : input.options?.data && input.options?.tags
-    ? { transactionData: txData, tags: txTags }
-    : transaction;
+      ? { transaction, tags: txTags }
+      : input.options?.data && input.options?.tags
+        ? { transactionData: txData, tags: txTags }
+        : transaction;
 }
