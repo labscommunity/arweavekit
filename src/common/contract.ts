@@ -5,9 +5,22 @@ import {
   ReadContractProps,
   WriteContractProps,
 } from '../../types/contract';
-import { writeFileSync, readFileSync } from 'fs';
-import { getAddress, getBalance } from './wallet';
 import { JWKInterface } from 'arweave/node/lib/wallet';
+
+/**
+ * create contract with warp
+ * @params environment: 'local' | 'testnet' | 'mainnet'
+ * @params contractData: ContractData (data type from 'warp-contracts)
+ *            wallet: Arwallet | CustomSignature
+ *            initState: string
+ *            src: string | Buffer
+ * @returns contract: ContractDeploy (data type from 'warp-contracts') | void
+ *            contractTxId: string
+ *            srcTxId: string
+ * @returns result: object
+ *            status: nummber
+ *            statusText: string
+ */
 
 export async function createContract(
   params: CreateContractProps
