@@ -44,7 +44,7 @@ export async function createContract(
     wallet: params.contractData.wallet,
     initState: params.contractData.initState,
     src: params.contractData.src,
-    tags: [{ 'name': 'Library-Used', 'value': 'PermawebJS' }],
+    tags: [{ 'name': 'PermawebJS', 'value': '1.0.0' }],
   })
 
   if (contract && contract.contractTxId != '' && contract.srcTxId != '') {
@@ -83,7 +83,7 @@ export async function writeContract(params: WriteContractProps) {
 
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
-  const writeContract = await contract.writeInteraction(params.options);
+  const writeContract = await contract.writeInteraction(params.options, { tags: [{ 'name': 'PermawebJS', 'value': '1.0.0' }] });
 
   const readState = await contract.readState();
 
@@ -94,6 +94,18 @@ export async function writeContract(params: WriteContractProps) {
 
   return { writeContract, state: readState.cachedValue.state, result: { status, statusText } };
 }
+
+/**
+ * read from contract with warp
+ * @params environment: 'local' | 'testnet' | 'mainnet'
+ * @params contractTxId: string
+ * @params wallet: ArWallet | CustomSignature (data types from 'warp-contracts')
+ * @returns writeContract: WriteInteraction (data type from 'warp-contracts') | null
+ * @returns readContract: SortKeyCacheResult (data type from 'warp-contracts')
+ * @returns result: object
+ *            status: nummber
+ *            statusText: string
+ */
 
 export async function readContractState(params: ReadContractProps) {
   const warp =
