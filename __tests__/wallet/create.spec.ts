@@ -13,9 +13,7 @@ describe('Create Wallet', () => {
 
   it('should create wallet with options.seedPhrase passed in', async () => {
     const generateWallet = await createWallet({
-      options: {
-        seedPhrase: true,
-      },
+      seedPhrase: true
     });
 
     expect(generateWallet.key).toBeDefined();
