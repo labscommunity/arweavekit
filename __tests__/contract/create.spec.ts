@@ -1,7 +1,9 @@
 import { createContract, createWallet } from '../../src/index';
-import { configTests } from '../../src/utils';
 import { readFileSync } from 'fs';
 import ArLocal from 'arlocal';
+
+// Please note that wallet1.json is an empty pre-created wallet stored in the root dir (not pushed to github)
+// Please note that wallet2.json is a pre-funded pre-created wallet stored in the root dir (not pushed to github)
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',

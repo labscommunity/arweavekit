@@ -6,6 +6,9 @@ import {
 } from '../../src/index';
 import { readFileSync } from 'fs';
 
+// Please note that wallet1.json is an empty pre-created wallet stored in the root dir (not pushed to github)
+// Please note that wallet2.json is a pre-funded pre-created wallet stored in the root dir (not pushed to github)
+
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
