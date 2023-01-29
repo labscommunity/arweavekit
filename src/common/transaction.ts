@@ -30,14 +30,6 @@ const arweaveMainnet = Arweave.init({
  * @returns Arweave Transaction
  */
 
-/* 
-Rethinking logic defaulting to bundlr
-- Data vs Wallet to Wallet transactions
-- use Arweave
-- sign and post transactions
-- tags
-*/
-
 export async function createTransaction(params?: CreateTransactionProps) {
   // Check is transaction is for data or wallet to wallet
   if (params?.data) {
@@ -51,17 +43,15 @@ export async function createTransaction(params?: CreateTransactionProps) {
 
       const allTags = params.options.tags && [
         {
-          name: 'transaction source',
-          value: 'permawebjs',
+          name: 'PermawebJS',
+          value: '1.0.0',
         },
         ...params.options.tags,
       ];
       const transaction = bundlr.createTransaction(
         JSON.stringify(params.data),
         {
-          tags: allTags
-            ? allTags
-            : [{ name: 'transaction source', value: 'permawebjs' }],
+          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.0' }],
         }
       );
       if (params.options?.signAndPost) {
@@ -79,7 +69,7 @@ export async function createTransaction(params?: CreateTransactionProps) {
         params.key ? params.key : 'use_wallet'
       );
       if (params.options?.tags) {
-        transaction.addTag('transaction source', 'permawebjs');
+        transaction.addTag('PermawebJS', '1.0.0');
         params.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
         );
