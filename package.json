@@ -1,9 +1,16 @@
 {
   "name": "permawebjs",
   "version": "1.0.0",
-  "description": "Deploy Full Stack permaweb apps in as few clicks and little deep library knowledge as possible",
-  "main": "index.ts",
+  "description": "Utility library to build full stack permaweb applications",
+  "main": "dist/index.js",
+  "private": false,
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "yarn arlocal:run": "npx arlocal",
     "test": "jest",
@@ -14,8 +21,8 @@
     "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
     "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
     "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",
-    "build": "rollup -c",
-    "watch": "webpack --watch"
+    "build": "rollup -c --bundleConfigAsCjs",
+    "dev": "rollup -c -w"
   },
   "repository": {
     "type": "git",
@@ -28,6 +35,10 @@
   },
   "homepage": "https://github.com/labscommunity/permawebjs#readme",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/human-crypto-keys": "^0.1.0",
     "@types/jest": "^29.2.4",
     "arlocal": "^1.1.59",
     "husky": "^8.0.3",
@@ -42,17 +53,13 @@
     "ts-jest": "^29.0.3",
     "typescript": "^4.9.3"
   },
-  "dependencies": {
-    "@bundlr-network/client": "^0.9.11",
+  "peerDependencies": {
+    "@bundlr-network/client": "^0.10.1",
     "@execution-machine/sdk": "^0.1.6",
-    "@types/human-crypto-keys": "^0.1.0",
     "arweave": "^1.12.4",
     "arweave-mnemonic-keys": "^0.0.9",
-    "concurrently": "^7.6.0",
     "dotenv": "^16.0.3",
-    "lodash": "^4.17.21",
-    "warp": "^5.0.3",
-    "warp-contracts": "^1.2.42"
+    "warp-contracts": "^1.2.49"
   },
   "jest": {
     "preset": "ts-jest",
@@ -70,5 +77,13 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "dependencies": {
+    "@bundlr-network/client": "^0.10.1",
+    "@execution-machine/sdk": "^0.1.6",
+    "arweave": "^1.12.4",
+    "arweave-mnemonic-keys": "^0.0.9",
+    "dotenv": "^16.0.3",
+    "warp-contracts": "^1.2.49"
   }
 }
