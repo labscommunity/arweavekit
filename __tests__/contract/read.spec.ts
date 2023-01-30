@@ -1,10 +1,13 @@
 import {
   createContract,
+  createWallet,
   readContractState,
   writeContract,
 } from '../../src/index';
-import { configTests } from '../../src/utils';
 import { readFileSync } from 'fs';
+
+// Please note that wallet1.json is an empty pre-created wallet stored in the root dir (not pushed to github)
+// Please note that wallet2.json is a pre-funded pre-created wallet stored in the root dir (not pushed to github)
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
@@ -14,52 +17,69 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 
 jest.setTimeout(120000);
 
-configTests();
-
 describe('Read Contract State', () => {
   it('should read initial state', async () => {
-    const { contract, contractTxId } = await createContract({
+    const { key: wallet } = await createWallet({ environment: 'local' });
+
+    const { contract } = await createContract({
       environment: 'testnet',
-      initialState: initState,
-      contractSource: contractSrc,
+      contractData: {
+        wallet: wallet,
+        initState: initState,
+        src: contractSrc,
+      }
     });
 
-    const { cachedValue, sortKey } = await readContractState({
-      contract,
+    const { readContract } = await readContractState({
+      environment: 'testnet',
+      contractTxId: contract.contractTxId,
+      wallet: wallet,
     });
 
-    expect(JSON.stringify(cachedValue.state)).toBe('{"counter":0}');
-    expect(sortKey).toBeDefined();
-    expect(cachedValue.state).toBeDefined();
-    expect(cachedValue.validity).toBeDefined();
-    expect(typeof contractTxId).toBe('string');
-    expect(typeof cachedValue.state).toBe('object');
-    expect(typeof cachedValue.validity).toBe('object');
+    console.log("This is readContract from test", readContract);
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect(readContract.cachedValue.state).toEqual({ counter: 0 });
   });
 
   it('should read updated state', async () => {
-    const { contract, contractTxId } = await createContract({
+    const { key: wallet } = await createWallet({ environment: 'local' });
+
+    const { contract } = await createContract({
       environment: 'testnet',
-      initialState: initState,
-      contractSource: contractSrc,
+      contractData: {
+        wallet: wallet,
+        initState: initState,
+        src: contractSrc,
+      }
     });
 
-    const { contract: writeCntrct } = await writeContract({
-      contract,
+    await writeContract({
+      environment: 'testnet',
+      contractTxId: contract.contractTxId,
+      wallet: wallet,
       options: {
         function: 'fifty',
       },
     });
 
-    const { cachedValue, sortKey } = await readContractState({
-      contract: writeCntrct,
+    const { readContract } = await readContractState({
+      environment: 'testnet',
+      contractTxId: contract.contractTxId,
+      wallet: wallet,
     });
 
-    expect(sortKey).toBeDefined();
-    expect(cachedValue.state).toBeDefined();
-    expect(cachedValue.validity).toBeDefined();
-    expect(typeof contractTxId).toBe('string');
-    expect(typeof cachedValue.state).toBe('object');
-    expect(typeof cachedValue.validity).toBe('object');
+    console.log("This is readContract from test", readContract);
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 });

@@ -1,6 +1,9 @@
-import { createContract } from '../../src/index';
-import { configTests } from '../../src/utils';
+import { createContract, createWallet } from '../../src/index';
 import { readFileSync } from 'fs';
+import ArLocal from 'arlocal';
+
+// Please note that wallet1.json is an empty pre-created wallet stored in the root dir (not pushed to github)
+// Please note that wallet2.json is a pre-funded pre-created wallet stored in the root dir (not pushed to github)
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
@@ -10,18 +13,15 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 
 jest.setTimeout(120000);
 
-configTests();
-
 describe('Create Contract', () => {
 
-  it('should create a new contract with wallet passed in', async () => {
-    // SUPER IMPORTANT TO PARSE - MENTION IN DOCS
-    const wallet2 = JSON.parse(readFileSync('wallet2.json', 'utf-8'));
+  it('should create a new contract with wallet passed in on testnet', async () => {
+    const wallet = JSON.parse(readFileSync('wallet2.json', 'utf-8'));
 
     const { contract, result } = await createContract({
-      environment: 'mainnet',
+      environment: 'testnet',
       contractData: {
-        wallet: wallet2,
+        wallet: wallet,
         initState: initState,
         src: contractSrc,
       }
@@ -32,5 +32,30 @@ describe('Create Contract', () => {
     expect(result).toBeDefined();
     expect(typeof result).toEqual("object");
     expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
+  });
+
+  it('should create a new contract with wallet passed in on localhost', async () => {
+    const port = 1984;
+    const arlocal = new ArLocal(port, false);
+
+    await arlocal.start();
+    const { key } = await createWallet({ environment: 'local' });
+
+    const { contract, result } = await createContract({
+      environment: 'local',
+      contractData: {
+        wallet: key,
+        initState: initState,
+        src: contractSrc,
+      }
+    });
+
+    expect(contract).toBeDefined();
+    expect(typeof contract).toEqual("object");
+    expect(result).toBeDefined();
+    expect(typeof result).toEqual("object");
+    expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
+
+    arlocal.stop();
   });
 });
