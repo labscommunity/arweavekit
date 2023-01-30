@@ -12,6 +12,7 @@
     "access": "public"
   },
   "scripts": {
+    "yarn arlocal:run": "npx arlocal",
     "test": "jest",
     "format": "prettier --write src/*.ts",
     "test:wallet": "jest --testPathPattern=wallet",
@@ -53,12 +54,12 @@
     "typescript": "^4.9.3"
   },
   "peerDependencies": {
-    "@bundlr-network/client": "^0.9.11",
+    "@bundlr-network/client": "^0.10.1",
     "@execution-machine/sdk": "^0.1.6",
-    "arweave": "^1.12.2",
+    "arweave": "^1.12.4",
     "arweave-mnemonic-keys": "^0.0.9",
     "dotenv": "^16.0.3",
-    "warp-contracts": "^1.2.48"
+    "warp-contracts": "^1.2.49"
   },
   "jest": {
     "preset": "ts-jest",
@@ -78,11 +79,11 @@
     ]
   },
   "dependencies": {
-    "@bundlr-network/client": "^0.9.11",
+    "@bundlr-network/client": "^0.10.1",
     "@execution-machine/sdk": "^0.1.6",
-    "arweave": "^1.12.2",
+    "arweave": "^1.12.4",
     "arweave-mnemonic-keys": "^0.0.9",
     "dotenv": "^16.0.3",
-    "warp-contracts": "^1.2.48"
+    "warp-contracts": "^1.2.49"
   }
 }
