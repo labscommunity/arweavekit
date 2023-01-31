@@ -40,11 +40,16 @@ const arweaveMainnet = Arweave.init({
 export async function createTransaction(params?: CreateTransactionProps) {
   if (params?.data) {
     if (params.options?.useBundlr) {
-      const bundlr = new Bundlr(
-        'http://node2.bundlr.network',
-        'arweave',
-        params.key
-      );
+      let bundlr: Bundlr;
+      if (params.key) {
+        bundlr = new Bundlr(
+          'http://node2.bundlr.network',
+          'arweave',
+          params.key
+        );
+      } else {
+        return 'Please entire valid private key for using Bundlr.';
+      };
 
       const allTags = params.options.tags && [
         {
