@@ -7,6 +7,10 @@ export interface CreateServerlessReturnProps {
   functionId: string;
   functionUrl: string;
   functionSource: string;
+  result: {
+    status: number;
+    statusText: string;
+  };
 }
 export interface ReadserverlessProps {
   token: string;

@@ -9,23 +9,55 @@ import {
 
 dotenv.config();
 
+jest.setTimeout(30000);
+
 export async function createServerlessFunction(
-  params: CreateServerlessProps,
+  params: CreateServerlessProps
 ): Promise<CreateServerlessReturnProps> {
-  const exm = new Exm({
-    token: params.token as string,
+  let initialState = '{}';
+
+  if (params.initialState) {
+    if (typeof params.initialState === 'object') {
+      initialState = JSON.stringify(params.initialState);
+    } else {
+      initialState = String(params.initialState);
+    }
+  }
+
+  const body = {
+    initState: initialState,
+    contractOwner: '',
+    contentType: 'application/javascript',
+    contractSrc: Array.from(params.functionSource.values()),
+  };
+
+  const url = `https://api.exm.dev/api/contract/deploy?token=${params.token}`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
   });
 
-  const { id: functionId } = await exm.functions.deploy(
-    params.functionSource,
-    params.initialState,
-    ContractType.JS,
-  );
+  const { id: functionId } = await response.json();
+
+  let result = {
+    status: 404,
+    statusText: 'UNSUCCESSFUL',
+  };
+  if (functionId) {
+    result = {
+      status: 200,
+      statusText: 'SUCCESSFUL',
+    };
+  }
 
   const functionUrl = `https://${functionId}.exm.run`;
   const functionSource = `https://arweave.net/${functionId}`;
 
-  return { functionId, functionUrl, functionSource };
+  return { functionId, functionUrl, functionSource, result };
 }
 
 export async function writeServerlessFunction(params: WriteserverlessProps) {
