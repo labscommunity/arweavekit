@@ -79,6 +79,16 @@ export async function createTransaction(params?: CreateTransactionProps) {
         return transaction;
       }
     } else {
+      let senderBalance: string = '';
+      let senderAddress: string = '';
+      if (params.key) {
+        senderAddress = await getAddress(params.key);
+        senderBalance = await getBalance({ address: senderAddress });
+      };
+      if (parseInt(senderBalance) <= 1000000 && params.options?.environment == 'local' && params.options.signAndPost) {
+        await arweaveLocal.api.get(`mint/${await getAddress(params.key as JWKInterface)}/1000000000000`)
+          .catch(e => console.log("Error", e.message));
+      };
       let transaction: Transaction;
       if (params.options?.environment == 'local') {
         transaction = await arweaveLocal.createTransaction(
@@ -104,8 +114,6 @@ export async function createTransaction(params?: CreateTransactionProps) {
           data: any;
         }
         if (params.options?.environment == 'local') {
-          await arweaveLocal.api.get(`mint/${await getAddress(params.key as JWKInterface)}/1000000000000`)
-            .catch(e => console.log("Error", e.message));
           await arweaveLocal.transactions.sign(transaction, params.key);
           postedTransaction = await arweaveLocal.transactions.post(transaction);
           return { transaction, postedTransaction };
