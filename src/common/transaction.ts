@@ -106,11 +106,9 @@ export async function createTransaction(params?: CreateTransactionProps) {
         );
       };
 
+      transaction.addTag('PermawebJS', '1.0.0');
       if (params.options?.tags) {
-        transaction.addTag('PermawebJS', '1.0.0');
-        params.options?.tags?.map((k, i) =>
-          transaction.addTag(k.name, k.value)
-        );
+        params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       };
 
       if (params.options?.signAndPost) {
@@ -163,7 +161,10 @@ export async function createTransaction(params?: CreateTransactionProps) {
         );
       };
 
-      params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      transaction.addTag('PermawebJS', '1.0.0');
+      if (params.options?.tags) {
+        params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      };
 
       if (params.options?.signAndPost) {
         let postedTransaction: {
@@ -217,7 +218,10 @@ export async function createTransaction(params?: CreateTransactionProps) {
         );
       };
 
-      params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      transaction.addTag('PermawebJS', '1.0.0');
+      if (params.options?.tags) {
+        params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      };
 
       if (params.options?.signAndPost) {
         let postedTransaction: {
