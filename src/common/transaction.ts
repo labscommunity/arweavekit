@@ -13,7 +13,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 const arweaveLocal = Arweave.init({
   host: 'localhost',
   port: 1984,
-  protocol: 'http'
+  protocol: 'http',
 });
 
 const arweaveMainnet = Arweave.init({
@@ -40,22 +40,11 @@ const arweaveMainnet = Arweave.init({
 export async function createTransaction(params?: CreateTransactionProps) {
   if (params?.data) {
     if (params.options?.useBundlr) {
-      let bundlr: Bundlr;
-
-      if (params.options.environment == 'local') {
-        bundlr = new Bundlr(
-          'https://devnet.bundlr.network',
-          'arweave',
-          params.key,
-          { providerUrl: '' },
-        );
-      } else {
-        bundlr = new Bundlr(
-          'http://node2.bundlr.network',
-          'arweave',
-          params.key
-        );
-      };
+      const bundlr = new Bundlr(
+        'http://node2.bundlr.network',
+        'arweave',
+        params.key
+      );
 
       const allTags = params.options.tags && [
         {
@@ -97,12 +86,12 @@ export async function createTransaction(params?: CreateTransactionProps) {
       if (params.options?.environment == 'local') {
         transaction = await arweaveLocal.createTransaction(
           { data: params.data, },
-          params.key ? params.key : 'use_wallet'
+          params.key ? params.key : 'use_wallet',
         );
       } else {
         transaction = await arweaveMainnet.createTransaction(
           { data: params.data, },
-          params.key ? params.key : 'use_wallet'
+          params.key ? params.key : 'use_wallet',
         );
       };
 
