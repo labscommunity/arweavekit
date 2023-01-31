@@ -133,20 +133,40 @@ export async function createTransaction(params?: CreateTransactionProps) {
       senderBalance = await getBalance({ address: senderAddress });
     }
     if (parseInt(senderBalance) >= parseInt(params.quantity)) {
-      const transaction = await arweaveMainnet.createTransaction(
-        {
-          target: params.target,
-          quantity: params.quantity,
-        },
-        params.key ? params.key : 'use_wallet'
-      );
+      let transaction: Transaction;
+      if (params.options?.environment == 'local') {
+        transaction = await arweaveLocal.createTransaction(
+          {
+            target: params.target,
+            quantity: params.quantity,
+          },
+          params.key ? params.key : 'use_wallet'
+        );
+      } else {
+        transaction = await arweaveMainnet.createTransaction(
+          {
+            target: params.target,
+            quantity: params.quantity,
+          },
+          params.key ? params.key : 'use_wallet'
+        );
+      }
       params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       if (params.options?.signAndPost) {
-        await arweaveMainnet.transactions.sign(transaction, params.key);
-        const postedTransaction = await arweaveMainnet.transactions.post(
-          transaction
-        );
-        return { transaction, postedTransaction };
+        let postedTransaction: {
+          status: number;
+          statusText: string;
+          data: any;
+        }
+        if (params.options?.environment == 'local') {
+          await arweaveLocal.transactions.sign(transaction, params.key);
+          postedTransaction = await arweaveLocal.transactions.post(transaction);
+          return { transaction, postedTransaction };
+        } else {
+          await arweaveMainnet.transactions.sign(transaction, params.key);
+          postedTransaction = await arweaveMainnet.transactions.post(transaction);
+          return { transaction, postedTransaction };
+        }
       } else {
         return transaction;
       }
@@ -160,21 +180,46 @@ export async function createTransaction(params?: CreateTransactionProps) {
       senderBalance = await getBalance({ address: senderAddress });
     }
     if (parseInt(senderBalance) >= parseInt(params.quantity)) {
-      const transaction = await arweaveMainnet.createTransaction(
-        {
-          data: params.data,
-          target: params.target,
-          quantity: params.quantity,
-        },
-        params.key ? params.key : 'use_wallet'
-      );
+      let transaction: Transaction;
+      if (params.options?.environment == 'local') {
+        transaction = await arweaveLocal.createTransaction(
+          {
+            data: params.data,
+            target: params.target,
+            quantity: params.quantity,
+          },
+          params.key ? params.key : 'use_wallet'
+        );
+      } else {
+        transaction = await arweaveMainnet.createTransaction(
+          {
+            data: params.data,
+            target: params.target,
+            quantity: params.quantity,
+          },
+          params.key ? params.key : 'use_wallet'
+        );
+      }
       params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       if (params.options?.signAndPost) {
-        await arweaveMainnet.transactions.sign(transaction, params.key);
-        const postedTransaction = await arweaveMainnet.transactions.post(
-          transaction
-        );
-        return { transaction, postedTransaction };
+        let postedTransaction: {
+          status: number;
+          statusText: string;
+          data: any;
+        }
+        if (params.options?.environment == 'local') {
+          await arweaveLocal.transactions.sign(transaction, params.key);
+          postedTransaction = await arweaveLocal.transactions.post(
+            transaction
+          );
+          return { transaction, postedTransaction };
+        } else {
+          await arweaveMainnet.transactions.sign(transaction, params.key);
+          postedTransaction = await arweaveMainnet.transactions.post(
+            transaction
+          );
+          return { transaction, postedTransaction };
+        }
       } else {
         return transaction;
       }
