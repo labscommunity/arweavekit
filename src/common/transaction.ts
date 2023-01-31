@@ -8,6 +8,13 @@ import {
 } from '../../types/transaction';
 import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
+import { JWKInterface } from 'arweave/node/lib/wallet';
+
+const arweaveLocal = Arweave.init({
+  host: 'localhost',
+  port: 1984,
+  protocol: 'http'
+});
 
 const arweaveMainnet = Arweave.init({
   host: 'arweave.net',
@@ -40,7 +47,8 @@ export async function createTransaction(params?: CreateTransactionProps) {
         bundlr = new Bundlr(
           'https://devnet.bundlr.network',
           'arweave',
-          params.key
+          params.key,
+          { providerUrl: '' },
         );
       } else {
         bundlr = new Bundlr(
@@ -71,12 +79,18 @@ export async function createTransaction(params?: CreateTransactionProps) {
         return transaction;
       }
     } else {
-      const transaction = await arweaveMainnet.createTransaction(
-        {
-          data: params.data,
-        },
-        params.key ? params.key : 'use_wallet'
-      );
+      let transaction: Transaction;
+      if (params.options?.environment == 'local') {
+        transaction = await arweaveLocal.createTransaction(
+          { data: params.data, },
+          params.key ? params.key : 'use_wallet'
+        );
+      } else {
+        transaction = await arweaveMainnet.createTransaction(
+          { data: params.data, },
+          params.key ? params.key : 'use_wallet'
+        );
+      }
       if (params.options?.tags) {
         transaction.addTag('PermawebJS', '1.0.0');
         params.options?.tags?.map((k, i) =>
@@ -84,11 +98,22 @@ export async function createTransaction(params?: CreateTransactionProps) {
         );
       }
       if (params.options?.signAndPost) {
-        await arweaveMainnet.transactions.sign(transaction, params.key);
-        const postedTransaction = await arweaveMainnet.transactions.post(
-          transaction
-        );
-        return { transaction, postedTransaction };
+        let postedTransaction: {
+          status: number;
+          statusText: string;
+          data: any;
+        }
+        if (params.options?.environment == 'local') {
+          await arweaveLocal.api.get(`mint/${await getAddress(params.key as JWKInterface)}/1000000000000`)
+            .catch(e => console.log("Error", e.message));
+          await arweaveLocal.transactions.sign(transaction, params.key);
+          postedTransaction = await arweaveLocal.transactions.post(transaction);
+          return { transaction, postedTransaction };
+        } else {
+          await arweaveMainnet.transactions.sign(transaction, params.key);
+          postedTransaction = await arweaveMainnet.transactions.post(transaction);
+          return { transaction, postedTransaction };
+        }
       } else {
         return transaction;
       }
@@ -159,7 +184,7 @@ export async function signTransaction(params: SignTransactionProps) {
       const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
-        params.key
+        params.key,
       );
       const transaction = await params.createdTransaction.sign();
       if (params.postTransaction) {
