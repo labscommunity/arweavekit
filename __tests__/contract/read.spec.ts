@@ -73,8 +73,6 @@ describe('Read Contract State', () => {
       wallet: wallet,
     });
 
-    console.log("This is readContract from test", readContract);
-
     expect(readContract.sortKey).toBeDefined();
     expect(readContract.cachedValue.state).toBeDefined();
     expect(readContract.cachedValue.validity).toBeDefined();
