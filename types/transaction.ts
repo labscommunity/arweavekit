@@ -14,6 +14,7 @@ export interface CreateTransactionProps {
     tags?: Tag[];
     useBundlr?: boolean;
     signAndPost?: boolean;
+    environment?: 'local' | 'mainnet'
   };
   key?: JWKInterface;
 }

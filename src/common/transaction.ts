@@ -35,11 +35,20 @@ export async function createTransaction(params?: CreateTransactionProps) {
   if (params?.data) {
     // Check whether to use @bundlr-network/client or arweave
     if (params.options?.useBundlr) {
-      const bundlr = new Bundlr(
-        'http://node2.bundlr.network',
-        'arweave',
-        params.key
-      );
+      let bundlr: Bundlr;
+      if (params.options.environment == 'local') {
+        bundlr = new Bundlr(
+          'https://devnet.bundlr.network',
+          'arweave',
+          params.key
+        );
+      } else {
+        bundlr = new Bundlr(
+          'http://node2.bundlr.network',
+          'arweave',
+          params.key
+        );
+      }
 
       const allTags = params.options.tags && [
         {
@@ -140,11 +149,8 @@ export async function createTransaction(params?: CreateTransactionProps) {
       return 'Wallet does not have sufficient balance to complete transaction.';
     }
   } else {
-    // When neither data nor token quantity and target are provided
     return 'Pass in valid data or token quantity and target to create a transaction.';
   }
-  // When neither data nor token quantity and target are provided
-  return 'Pass in valid data or token quantity and target to create a transaction.';
 }
 
 export async function signTransaction(params: SignTransactionProps) {
