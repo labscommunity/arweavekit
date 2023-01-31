@@ -11,6 +11,8 @@ dotenv.config();
 
 jest.setTimeout(30000);
 
+const URL = 'https://api.exm.dev';
+
 export async function createServerlessFunction(
   params: CreateServerlessProps
 ): Promise<CreateServerlessReturnProps> {
@@ -31,7 +33,7 @@ export async function createServerlessFunction(
     contractSrc: Array.from(params.functionSource.values()),
   };
 
-  const url = `https://api.exm.dev/api/contract/deploy?token=${params.token}`;
+  const url = `${URL}/api/contract/deploy?token=${params.token}`;
 
   const response = await fetch(url, {
     method: 'POST',
@@ -61,23 +63,56 @@ export async function createServerlessFunction(
 }
 
 export async function writeServerlessFunction(params: WriteserverlessProps) {
-  const exm = new Exm({
-    token: params.token as string,
-  });
-
+  const url = `${URL}/api/transactions?token=${params.token}`;
   const inputs = [{ ...params.inputs }];
 
-  const { status, data } = await exm.functions.write(params.functionId, inputs);
+  const body = {
+    functionId: params.functionId,
+    inputs: [
+      {
+        input: JSON.stringify(inputs),
+        tags: [],
+      },
+    ],
+  };
 
-  const state = data.execution.state;
+  const response = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
 
-  return { status, data, state };
+  let result = {
+    status: 404,
+    statusText: 'UNSUCCESSFUL',
+  };
+
+  const { status, data } = await response.json();
+
+  if (status === 'SUCCESS') {
+    result = {
+      status: 200,
+      statusText: 'SUCCESSFUL',
+    };
+  }
+
+  return { data, result };
 }
 
 export async function readServerlessFunction(params: ReadserverlessProps) {
-  const exm = new Exm({ token: params.token });
+  const url = `${URL}/read/${params.functionId}`;
 
-  const state = await exm.functions.read(params.functionId);
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-  return { state };
+  const state = await response.json();
+
+  return state;
 }

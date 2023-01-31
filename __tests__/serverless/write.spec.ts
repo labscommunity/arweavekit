@@ -22,7 +22,7 @@ describe('should write to serverless function', () => {
       initialState: initState,
     });
 
-    const { status, data, state } = await writeServerlessFunction({
+    const { data, result } = await writeServerlessFunction({
       token,
       functionId,
       inputs: {
@@ -34,10 +34,11 @@ describe('should write to serverless function', () => {
       },
     });
 
-    expect(state).toBeDefined();
-    expect(typeof state).toBe('object');
     expect(data).toBeDefined();
-    expect(status).toBe('SUCCESS');
+    expect(typeof data).toBe('object');
+    expect(data).toBeDefined();
+    expect(result.statusText).toBe('SUCCESSFUL');
+    expect(result.status).toBe(200);
     expect(typeof data).toBe('object');
     expect(data.execution.state).toBeDefined();
     expect(typeof data.execution.state).toBe('object');
