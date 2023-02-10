@@ -39,34 +39,34 @@ const arweaveMainnet = Arweave.init({
 
 export async function createTransaction(params?: CreateTransactionProps) {
   if (params?.data) {
-    if (params.options?.useBundlr) {
+    if (params?.options?.useBundlr) {
       let bundlr: Bundlr;
-      if (params.key) {
+      if (params?.key) {
         bundlr = new Bundlr(
           'http://node2.bundlr.network',
           'arweave',
-          params.key
+          params?.key
         );
       } else {
         return 'Please entire valid private key for using Bundlr.';
       };
 
-      const allTags = params.options.tags && [
+      const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
           value: '1.0.0',
         },
-        ...params.options.tags,
+        ...params?.options.tags,
       ];
 
       const transaction = bundlr.createTransaction(
-        JSON.stringify(params.data),
+        JSON.stringify(params?.data),
         {
           tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.0' }],
         }
       );
 
-      if (params.options?.signAndPost) {
+      if (params?.options?.signAndPost) {
         await transaction.sign();
         const postedTransaction = await transaction.upload();
         return postedTransaction;
@@ -77,47 +77,49 @@ export async function createTransaction(params?: CreateTransactionProps) {
       let senderBalance: string = '';
       let senderAddress: string = '';
 
-      if (params.key) {
-        senderAddress = await getAddress(params.key);
+      if (params?.key) {
+        senderAddress = await getAddress(params?.key);
         senderBalance = await getBalance({ address: senderAddress });
       };
 
-      if (parseInt(senderBalance) <= 1000000 && params.options?.environment == 'local' && params.options.signAndPost) {
-        await arweaveLocal.api.get(`mint/${await getAddress(params.key as JWKInterface)}/1000000000000`)
+      if (parseInt(senderBalance) <= 1000000 && params?.options?.environment == 'local' && params?.options?.signAndPost) {
+        await arweaveLocal.api.get(`mint/${await getAddress(params?.key as JWKInterface)}/1000000000000`)
           .catch(e => console.log("Error", e.message));
       };
 
       let transaction: Transaction;
-      if (params.options?.environment == 'local') {
+      if (params?.options?.environment == 'local') {
         transaction = await arweaveLocal.createTransaction(
-          { data: params.data, },
-          params.key ? params.key : 'use_wallet',
+          { data: params?.data, },
+          params?.key ? params?.key : 'use_wallet',
         );
       } else {
         transaction = await arweaveMainnet.createTransaction(
-          { data: params.data, },
-          params.key ? params.key : 'use_wallet',
+          { data: params?.data, },
+          params?.key ? params?.key : 'use_wallet',
         );
       };
 
       transaction.addTag('PermawebJS', '1.0.0');
-      if (params.options?.tags) {
-        params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      if (params?.options?.tags) {
+        params?.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       };
 
-      if (params.options?.signAndPost) {
+      if (params?.options?.signAndPost) {
         let postedTransaction: {
           status: number;
           statusText: string;
           data: any;
         };
 
-        if (params.options?.environment == 'local') {
-          await arweaveLocal.transactions.sign(transaction, params.key);
+        if (params?.options?.environment == 'local') {
+          await arweaveLocal.transactions.sign(transaction, params?.key);
+          await arweaveLocal.api.get(`mint/${await getAddress(params?.key as JWKInterface)}/1000000000000`)
+            .catch(e => console.log("Error", e.message));
           postedTransaction = await arweaveLocal.transactions.post(transaction);
           return { transaction, postedTransaction };
         } else {
-          await arweaveMainnet.transactions.sign(transaction, params.key);
+          await arweaveMainnet.transactions.sign(transaction, params?.key);
           postedTransaction = await arweaveMainnet.transactions.post(transaction);
           return { transaction, postedTransaction };
         };
@@ -129,50 +131,50 @@ export async function createTransaction(params?: CreateTransactionProps) {
   } else if (params?.target && params?.quantity) {
     let senderBalance: string = '';
 
-    if (params.key) {
-      const senderAddress = await getAddress(params.key);
+    if (params?.key) {
+      const senderAddress = await getAddress(params?.key);
       senderBalance = await getBalance({ address: senderAddress });
     };
 
-    if (parseInt(senderBalance) >= parseInt(params.quantity)) {
+    if (parseInt(senderBalance) >= parseInt(params?.quantity)) {
       let transaction: Transaction;
 
-      if (params.options?.environment == 'local') {
+      if (params?.options?.environment == 'local') {
         transaction = await arweaveLocal.createTransaction(
           {
-            target: params.target,
-            quantity: params.quantity,
+            target: params?.target,
+            quantity: params?.quantity,
           },
-          params.key ? params.key : 'use_wallet'
+          params?.key ? params?.key : 'use_wallet'
         );
       } else {
         transaction = await arweaveMainnet.createTransaction(
           {
-            target: params.target,
-            quantity: params.quantity,
+            target: params?.target,
+            quantity: params?.quantity,
           },
-          params.key ? params.key : 'use_wallet'
+          params?.key ? params?.key : 'use_wallet'
         );
       };
 
       transaction.addTag('PermawebJS', '1.0.0');
-      if (params.options?.tags) {
-        params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      if (params?.options?.tags) {
+        params?.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       };
 
-      if (params.options?.signAndPost) {
+      if (params?.options?.signAndPost) {
         let postedTransaction: {
           status: number;
           statusText: string;
           data: any;
         };
 
-        if (params.options?.environment == 'local') {
-          await arweaveLocal.transactions.sign(transaction, params.key);
+        if (params?.options?.environment == 'local') {
+          await arweaveLocal.transactions.sign(transaction, params?.key);
           postedTransaction = await arweaveLocal.transactions.post(transaction);
           return { transaction, postedTransaction };
         } else {
-          await arweaveMainnet.transactions.sign(transaction, params.key);
+          await arweaveMainnet.transactions.sign(transaction, params?.key);
           postedTransaction = await arweaveMainnet.transactions.post(transaction);
           return { transaction, postedTransaction };
         }
@@ -180,56 +182,56 @@ export async function createTransaction(params?: CreateTransactionProps) {
         return transaction;
       };
     } else {
-      return 'Wallet does not have sufficient balance to complete transaction.';
+      return 'Wallet not provided or does not have sufficient balance to complete transaction.';
     };
   } else if (params?.data && params?.target && params?.quantity) {
     let senderBalance: string = '';
 
-    if (params.key) {
-      const senderAddress = await getAddress(params.key);
+    if (params?.key) {
+      const senderAddress = await getAddress(params?.key);
       senderBalance = await getBalance({ address: senderAddress });
     };
-    if (parseInt(senderBalance) >= parseInt(params.quantity)) {
+    if (parseInt(senderBalance) >= parseInt(params?.quantity)) {
       let transaction: Transaction;
 
-      if (params.options?.environment == 'local') {
+      if (params?.options?.environment == 'local') {
         transaction = await arweaveLocal.createTransaction(
           {
-            data: params.data,
-            target: params.target,
-            quantity: params.quantity,
+            data: params?.data,
+            target: params?.target,
+            quantity: params?.quantity,
           },
-          params.key ? params.key : 'use_wallet'
+          params?.key ? params?.key : 'use_wallet'
         );
       } else {
         transaction = await arweaveMainnet.createTransaction(
           {
-            data: params.data,
-            target: params.target,
-            quantity: params.quantity,
+            data: params?.data,
+            target: params?.target,
+            quantity: params?.quantity,
           },
-          params.key ? params.key : 'use_wallet'
+          params?.key ? params?.key : 'use_wallet'
         );
       };
 
       transaction.addTag('PermawebJS', '1.0.0');
-      if (params.options?.tags) {
-        params.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
+      if (params?.options?.tags) {
+        params?.options?.tags?.map((k, i) => transaction.addTag(k.name, k.value));
       };
 
-      if (params.options?.signAndPost) {
+      if (params?.options?.signAndPost) {
         let postedTransaction: {
           status: number;
           statusText: string;
           data: any;
         };
 
-        if (params.options?.environment == 'local') {
-          await arweaveLocal.transactions.sign(transaction, params.key);
+        if (params?.options?.environment == 'local') {
+          await arweaveLocal.transactions.sign(transaction, params?.key);
           postedTransaction = await arweaveLocal.transactions.post(transaction);
           return { transaction, postedTransaction };
         } else {
-          await arweaveMainnet.transactions.sign(transaction, params.key);
+          await arweaveMainnet.transactions.sign(transaction, params?.key);
           postedTransaction = await arweaveMainnet.transactions.post(transaction);
           return { transaction, postedTransaction };
         };
@@ -237,7 +239,7 @@ export async function createTransaction(params?: CreateTransactionProps) {
         return transaction;
       };
     } else {
-      return 'Wallet does not have sufficient balance to complete transaction.';
+      return 'Wallet not provided or does not have sufficient balance to complete transaction.';
     };
   } else {
     return 'Pass in valid data or token quantity and target to create a transaction.';
@@ -245,32 +247,32 @@ export async function createTransaction(params?: CreateTransactionProps) {
 };
 
 export async function signTransaction(params: SignTransactionProps) {
-  if (params.createdTransaction && params.key) {
-    if (params.useBundlr) {
+  if (params?.createdTransaction && params?.key) {
+    if (params?.useBundlr) {
       const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
-        params.key,
+        params?.key,
       );
-      const transaction = await params.createdTransaction.sign();
-      if (params.postTransaction) {
-        const postedTransaction = await params.createdTransaction.upload();
+      const transaction = await params?.createdTransaction.sign();
+      if (params?.postTransaction) {
+        const postedTransaction = await params?.createdTransaction.upload();
         return { transaction, postedTransaction };
       } else {
         return transaction;
       }
     } else {
       await arweaveMainnet.transactions.sign(
-        params.createdTransaction as Transaction,
-        params.key
+        params?.createdTransaction as Transaction,
+        params?.key
       );
-      if (params.postTransaction) {
+      if (params?.postTransaction) {
         const postedTransaction = await arweaveMainnet.transactions.post(
-          params.createdTransaction
+          params?.createdTransaction
         );
         return { postedTransaction };
       } else {
-        return params.createdTransaction;
+        return params?.createdTransaction;
       }
     }
   } else {
@@ -279,18 +281,18 @@ export async function signTransaction(params: SignTransactionProps) {
 }
 
 export async function postTransaction(params: PostTransactionProps) {
-  if (params.transaction) {
-    if (params.useBundlr) {
+  if (params?.transaction) {
+    if (params?.useBundlr) {
       const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
-        params.key
+        params?.key
       );
-      const postedTransaction = await params.transaction.upload();
+      const postedTransaction = await params?.transaction.upload();
       return postedTransaction;
     } else {
       const postedTransaction = arweaveMainnet.transactions.post(
-        params.transaction
+        params?.transaction
       );
       return postedTransaction;
     }
