@@ -31,10 +31,11 @@ const arweaveMainnet = Arweave.init({
  * options?: {
     tags?: Tag[];
     useBundlr?: boolean;
-    signAndPost: boolean
+    signAndPost?: boolean;
+    environment?: 'local' | 'mainnet'
   };
  * key?: JWKInterface;
- * @returns Arweave Transaction
+ * @returns transaction data (Data types from Arweave or Bundlr) | string
  */
 
 export async function createTransaction(params?: CreateTransactionProps) {
@@ -254,22 +255,42 @@ export async function signTransaction(params: SignTransactionProps) {
         'arweave',
         params?.key,
       );
+
       const transaction = await params?.createdTransaction.sign();
+
       if (params?.postTransaction) {
         const postedTransaction = await params?.createdTransaction.upload();
         return { transaction, postedTransaction };
       } else {
         return transaction;
-      }
+      };
     } else {
-      await arweaveMainnet.transactions.sign(
-        params?.createdTransaction as Transaction,
-        params?.key
-      );
-      if (params?.postTransaction) {
-        const postedTransaction = await arweaveMainnet.transactions.post(
-          params?.createdTransaction
+      if (params?.environment == 'local') {
+        await arweaveLocal.transactions.sign(
+          params?.createdTransaction as Transaction,
+          params?.key);
+      } else {
+        await arweaveMainnet.transactions.sign(
+          params?.createdTransaction as Transaction,
+          params?.key
         );
+      };
+      if (params?.postTransaction) {
+        let postedTransaction: {
+          status: number;
+          statusText: string;
+          data: any;
+        };
+
+        if (params?.environment == 'local') {
+          postedTransaction = await arweaveMainnet.transactions.post(
+            params?.createdTransaction
+          );
+        } else {
+          postedTransaction = await arweaveMainnet.transactions.post(
+            params?.createdTransaction
+          );
+        }
         return { postedTransaction };
       } else {
         return params?.createdTransaction;
@@ -291,10 +312,22 @@ export async function postTransaction(params: PostTransactionProps) {
       const postedTransaction = await params?.transaction.upload();
       return postedTransaction;
     } else {
-      const postedTransaction = arweaveMainnet.transactions.post(
-        params?.transaction
-      );
-      return postedTransaction;
+      let postedTransaction: {
+        status: number;
+        statusText: string;
+        data: any;
+      };
+
+      if (params?.environment == 'local') {
+        postedTransaction = await arweaveMainnet.transactions.post(
+          params?.transaction
+        );
+      } else {
+        postedTransaction = await arweaveMainnet.transactions.post(
+          params?.transaction
+        );
+      }
+      return { postedTransaction };
     }
   } else {
     return 'Pass in valid signed transaction.';
@@ -314,28 +347,28 @@ export async function getTransactionStatus(transactionId: string) {
  * @returns getTransaction(id, { options: tags: true}) transaction and tags
  * @returns getTransaction(id, { options: data: true, tags: true }) only data and tags
  */
-export async function getTransaction(input: GetTransactionData) {
+export async function getTransaction(params: GetTransactionData) {
   const transaction = await arweaveMainnet.transactions.get(
-    input.transactionId
+    params?.transactionId
   );
   let txTags, txData;
 
-  if (input.options?.tags) {
+  if (params?.options?.tags) {
     txTags = transaction.tags.forEach((tag) => {
       let key = tag.get('name', { decode: true, string: true });
       let value = tag.get('value', { decode: true, string: true });
 
       return { key, value };
     });
-  } else if (input.options?.data) {
-    txData = await arweaveMainnet.transactions.getData(input.transactionId);
+  } else if (params?.options?.data) {
+    txData = await arweaveMainnet.transactions.getData(params?.transactionId);
   }
 
-  return input.options?.data
+  return params?.options?.data
     ? txData
-    : input.options?.tags
+    : params?.options?.tags
       ? { transaction, tags: txTags }
-      : input.options?.data && input.options?.tags
+      : params?.options?.data && params?.options?.tags
         ? { transactionData: txData, tags: txTags }
         : transaction;
 }
