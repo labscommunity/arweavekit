@@ -302,7 +302,7 @@ export async function signTransaction(params: SignTransactionProps) {
             params?.createdTransaction
           );
         }
-        return { postedTransaction };
+        return postedTransaction;
       } else {
         return params?.createdTransaction;
       }
@@ -348,7 +348,7 @@ export async function postTransaction(params: PostTransactionProps) {
           params?.transaction
         );
       }
-      return { postedTransaction };
+      return postedTransaction;
     }
   } else {
     return 'Pass in valid signed transaction.';

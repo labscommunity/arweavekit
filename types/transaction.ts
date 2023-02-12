@@ -31,7 +31,7 @@ export interface PostTransactionProps {
   transaction: Transaction | BundlrTransaction;
   key?: JWKInterface;
   useBundlr?: boolean;
-  environment: 'local' | 'mainnet';
+  environment?: 'local' | 'mainnet';
 }
 
 export interface GetTransactionData {

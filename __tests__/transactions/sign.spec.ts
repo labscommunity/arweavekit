@@ -99,10 +99,10 @@ describe('Sign Arweave Transaction', () => {
       environment: 'local',
     });
 
-    expect(signedTxn.postedTransaction).toBeDefined();
-    expect(typeof signedTxn.postedTransaction).toEqual('object');
-    expect(signedTxn.postedTransaction.status).toEqual(200);
-    expect(signedTxn.postedTransaction.statusText).toEqual('OK');
+    expect(signedTxn).toBeDefined();
+    expect(typeof signedTxn).toEqual('object');
+    expect(signedTxn.status).toEqual(200);
+    expect(signedTxn.statusText).toEqual('OK');
   });
 
   it('should post a data transaction using bundlr', async () => {
