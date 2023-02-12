@@ -23,7 +23,7 @@ const arweaveMainnet = Arweave.init({
 });
 
 /**
- * create wallet
+ * create transaction
  * @params
  * data?: string | Uint8Array | ArrayBuffer;
  * quantity?: string;
@@ -247,6 +247,17 @@ export async function createTransaction(params?: CreateTransactionProps) {
   };
 };
 
+/**
+ * sign transaction
+ * @params
+ * createdTransaction: Transaction (Data type from Arweave) | BundlrTransaction (Data type from Bundlr)
+ * key?: JWKInterface
+ * useBundlr?: boolean
+ * postTransaction?: boolean
+ * environment?: 'local' | 'mainnet'
+ * @returns transaction data (Data types from Arweave or Bundlr) | string
+ */
+
 export async function signTransaction(params: SignTransactionProps) {
   if (params?.createdTransaction && params?.key) {
     if (params?.useBundlr) {
@@ -300,6 +311,16 @@ export async function signTransaction(params: SignTransactionProps) {
     return 'Pass in valid created transaction and the key with which it was created.';
   }
 }
+
+/**
+ * post transaction
+ * @params
+ * transaction: Transaction (Data type from Arweave) | BundlrTransaction (Data type from Bundlr)
+ * key?: JWKInterface
+ * useBundlr?: boolean
+ * environment?: 'local' | 'mainnet'
+ * @returns transaction data (Data types from Arweave or Bundlr) | string
+ */
 
 export async function postTransaction(params: PostTransactionProps) {
   if (params?.transaction) {
