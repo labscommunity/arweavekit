@@ -355,8 +355,13 @@ export async function postTransaction(params: PostTransactionProps) {
   }
 }
 
-export async function getTransactionStatus(transactionId: string) {
-  const status = await arweaveMainnet.transactions.getStatus(transactionId);
+export async function getTransactionStatus(params: { transactionId: string, environment?: 'local' | 'mainnet' }) {
+  let status: any;
+  if (params?.environment == 'local') {
+    status = await arweaveLocal.transactions.getStatus(params?.transactionId);
+  } else {
+    status = await arweaveMainnet.transactions.getStatus(params?.transactionId);
+  }
 
   return status;
 }
