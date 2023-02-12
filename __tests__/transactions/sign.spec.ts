@@ -10,15 +10,20 @@ jest.setTimeout(30000);
 describe('Sign Arweave Transaction', () => {
   it('should sign a data transaction', async () => {
     // TODO
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '__tests__/transactions/data/test.json',
+      data: data,
       key: key,
+      options: {
+        environment: 'local',
+      },
     });
 
     const signedTxn = await signTransaction({
       createdTransaction: txn as Transaction,
       key: key,
+      environment: 'local',
     });
 
     expect(signedTxn.data).toBeDefined();
@@ -30,16 +35,20 @@ describe('Sign Arweave Transaction', () => {
   it('should sign a wallet to wallet transaction', async () => {
     // TODO - ADD FUNDS TO WALLET 2
 
-    const { key } = JSON.parse(readFileSync('wallet2.json').toString());
+    const key = JSON.parse(readFileSync('wallet2.json').toString());
     const txn = await createTransaction({
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
       quantity: '1000000',
       key: key,
+      options: {
+        environment: 'local',
+      },
     });
 
     const signedTxn = await signTransaction({
       createdTransaction: txn as Transaction,
       key: key,
+      environment: 'local',
     });
 
     expect(signedTxn.signature).toBeDefined();
@@ -53,9 +62,10 @@ describe('Sign Arweave Transaction', () => {
   });
 
   it('should sign a data transaction using bundlr', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '__tests__/transactions/data/test.json',
+      data: data,
       key: key,
       options: { useBundlr: true },
     });
@@ -72,16 +82,21 @@ describe('Sign Arweave Transaction', () => {
   it('should post a data transaction', async () => {
     // TODO - ADD FUNDS TO WALLET 2
 
-    const { key } = JSON.parse(readFileSync('wallet2.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '__tests__/transactions/data/test.json',
+      data: data,
       key: key,
+      options: {
+        environment: 'local',
+      },
     });
 
     const signedTxn = await signTransaction({
       createdTransaction: txn as Transaction,
       key: key,
       postTransaction: true,
+      environment: 'local',
     });
 
     expect(signedTxn.postedTransaction).toBeDefined();
@@ -91,9 +106,10 @@ describe('Sign Arweave Transaction', () => {
   });
 
   it('should post a data transaction using bundlr', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '__tests__/transactions/data/test.jsonn',
+      data: data,
       key: key,
       options: { useBundlr: true },
     });

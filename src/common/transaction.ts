@@ -294,7 +294,7 @@ export async function signTransaction(params: SignTransactionProps) {
         };
 
         if (params?.environment == 'local') {
-          postedTransaction = await arweaveMainnet.transactions.post(
+          postedTransaction = await arweaveLocal.transactions.post(
             params?.createdTransaction
           );
         } else {
@@ -340,7 +340,7 @@ export async function postTransaction(params: PostTransactionProps) {
       };
 
       if (params?.environment == 'local') {
-        postedTransaction = await arweaveMainnet.transactions.post(
+        postedTransaction = await arweaveLocal.transactions.post(
           params?.transaction
         );
       } else {
