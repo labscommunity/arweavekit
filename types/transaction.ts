@@ -14,6 +14,7 @@ export interface CreateTransactionProps {
     tags?: Tag[];
     useBundlr?: boolean;
     signAndPost?: boolean;
+    environment?: 'local' | 'mainnet';
   };
   key?: JWKInterface;
 }
@@ -23,13 +24,14 @@ export interface SignTransactionProps {
   key: JWKInterface;
   useBundlr?: boolean;
   postTransaction?: boolean;
+  environment?: 'local' | 'mainnet';
 }
 
 export interface PostTransactionProps {
   transaction: Transaction | BundlrTransaction;
   key?: JWKInterface;
   useBundlr?: boolean;
-  data?: string | Uint8Array | ArrayBuffer;
+  environment?: 'local' | 'mainnet';
 }
 
 export interface GetTransactionData {

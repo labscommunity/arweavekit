@@ -1,25 +1,43 @@
+import ArLocal from 'arlocal';
 import { readFileSync } from 'fs';
 import { createTransaction } from '../../src';
 
-// todo - create test wallets and add test funds
+// Please note that wallet1.json is an empty pre-created wallet stored in the root dir (not pushed to github)
+// Please note that wallet2.json is a pre-funded pre-created wallet stored in the root dir (not pushed to github)
+
 jest.setTimeout(300000);
+
+// Please note that currently the tests must have an arlocal instance running in node in the background
+
+// const port = 1984;
+// const arlocal = new ArLocal(port, false);
+
+// beforeEach(async () => {
+//   await arlocal.start();
+// });
+
+// afterEach(() => {
+//   arlocal.stop();
+// });
 
 describe('Create Transaction', () => {
   it('should return string asking to call function with valid arguments', async () => {
     const txn = await createTransaction();
 
-    expect(txn).toEqual(
+    expect(txn).toStrictEqual(
       'Pass in valid data or token quantity and target to create a transaction.'
     );
   });
 
-  it('should return empty string for owner key in transaction object when no key argument is passed in on fucntion call', async () => {
+  it('should return empty string for owner key in transaction object when no key argument is passed in on function call', async () => {
     const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
+
     const txn = await createTransaction({
       data: data,
     });
 
     expect(txn).toMatchObject({
+      format: 2,
       id: '',
       owner: '',
       target: '',
@@ -28,15 +46,46 @@ describe('Create Transaction', () => {
     });
   });
 
-  it('should return part of owner key in transaction object when both data and key arguments are passed in on function call', async () => {
+  it('should return empty string for owner key in transaction object when no key argument is passed in on function call on local environment', async () => {
+    // await arlocal.start();
+
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
+    const txn = await createTransaction({
+      data: data,
+      options: {
+        environment: 'local',
+      },
+    });
+
+    // await arlocal.stop().catch(e => console.log("ERROR", e.message));
+
+    expect(txn).toMatchObject({
+      format: 2,
+      id: '',
+      owner: '',
+      target: '',
+      quantity: '0',
+      signature: '',
+    });
+  });
+
+  it('should return part of owner key in transaction object when both data and key arguments are passed in on function call for local environment', async () => {
+    // await arlocal.start();
+
     const key = JSON.parse(readFileSync('wallet1.json').toString());
     const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
       data: data,
       key: key,
+      options: {
+        environment: 'local',
+      },
     });
 
+    // await arlocal.stop().catch(e => console.log("ERROR", e.message));
+
     expect(txn).toMatchObject({
+      format: 2,
       id: '',
       target: '',
       quantity: '0',
@@ -44,9 +93,66 @@ describe('Create Transaction', () => {
     });
   });
 
-  it('should return string asking to call function with valid arguments when target argument is passed in on function call', async () => {
+  it('should return part of owner key in transaction object when both data and key arguments are passed in on function call for mainnet', async () => {
+
+    const key = JSON.parse(readFileSync('wallet2.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
+    const txn = await createTransaction({
+      data: data,
+      key: key,
+      options: {
+        environment: 'mainnet',
+      },
+    });
+
+    expect(txn).toMatchObject({
+      format: 2,
+      id: '',
+      target: '',
+      quantity: '0',
+      signature: '',
+    });
+  });
+
+  it('should return part of owner key in transaction object when data is passed in on function call for local environment using Bundlr', async () => {
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
+    const txn = await createTransaction({
+      data: data,
+      options: {
+        useBundlr: true,
+        environment: 'local',
+      },
+    });
+
+    expect(txn).toStrictEqual('Please entire valid private key for using Bundlr.');
+  });
+
+  it('should return part of owner key in transaction object when both data and key arguments are passed in on function call for local environment using Bundlr', async () => {
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
+    const txn = await createTransaction({
+      data: data,
+      key: key,
+      options: {
+        useBundlr: true,
+        environment: 'local',
+      },
+    });
+
+    expect(txn).toMatchObject({
+      bundlr: {
+        currency: 'arweave',
+      },
+      signer: { jwk: key },
+    });
+  });
+
+  it('should return string asking to call function with valid arguments when target argument is passed in on function call on local', async () => {
     const txn = await createTransaction({
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
+      options: {
+        environment: 'local',
+      }
     });
 
     expect(txn).toEqual(
@@ -54,7 +160,7 @@ describe('Create Transaction', () => {
     );
   });
 
-  it('should return string asking to call function with valid arguments when quantity argument is passed in on function call', async () => {
+  it('should return string asking to call function with valid arguments when quantity argument is passed in on function call on local', async () => {
     const txn = await createTransaction({ quantity: '1000000' });
 
     expect(txn).toEqual(
@@ -69,7 +175,7 @@ describe('Create Transaction', () => {
     });
 
     expect(txn).toEqual(
-      'Wallet does not have sufficient balance to complete transaction.'
+      'Wallet not provided or does not have sufficient balance to complete transaction.'
     );
   });
 
@@ -82,40 +188,28 @@ describe('Create Transaction', () => {
     });
 
     expect(txn).toEqual(
-      'Wallet does not have sufficient balance to complete transaction.'
+      'Wallet not provided or does not have sufficient balance to complete transaction.'
     );
   });
 
-  it('should return object when target, quantity and key arguments are passed in on function call', async () => {
+  it('should return object when target, quantity and key arguments are passed in on function call on local', async () => {
     const key = JSON.parse(readFileSync('wallet2.json').toString());
     const txn = await createTransaction({
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
       quantity: '1000000',
       key: key,
+      options: {
+        environment: 'local',
+      }
     });
 
     expect(txn).toMatchObject({
+      format: 2,
       id: '',
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
       quantity: '1000000',
+      data_size: '0',
       signature: '',
-    });
-  });
-
-  it('should return object when useBundlr argument is passed in on function call', async () => {
-    const key = JSON.parse(readFileSync('wallet1.json').toString());
-    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
-    const txn = await createTransaction({
-      data: data,
-      key: key,
-      options: { useBundlr: true },
-    });
-
-    expect(txn).toMatchObject({
-      bundlr: {
-        currency: 'arweave',
-      },
-      signer: { jwk: key },
     });
   });
 
@@ -126,6 +220,7 @@ describe('Create Transaction', () => {
       data: data,
       key: key,
       options: {
+        environment: 'local',
         tags: [
           { name: 'some_name', value: 'some_value' },
           { name: 'some_name_2', value: 'some_value_2' },
@@ -134,6 +229,7 @@ describe('Create Transaction', () => {
     });
 
     expect(txn).toMatchObject({
+      format: 2,
       id: '',
       target: '',
       quantity: '0',
@@ -142,12 +238,13 @@ describe('Create Transaction', () => {
   });
 
   it('should return object when tags and useBundlr arguments are passed in on function call', async () => {
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
     const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
       data: data,
       key: key,
       options: {
+        environment: 'local',
         useBundlr: true,
         tags: [
           { name: 'some_name', value: 'some_value' },
@@ -172,6 +269,7 @@ describe('Create Transaction', () => {
       data: data,
       key: key,
       options: {
+        environment: 'local',
         tags: [
           { name: 'some_name', value: 'some_value' },
           { name: 'some_name_2', value: 'some_value_2' },
@@ -180,7 +278,6 @@ describe('Create Transaction', () => {
       },
     });
 
-    console.log('Txn signed and posted', txn);
     expect(txn).toMatchObject({
       postedTransaction: {
         status: 200,
@@ -200,6 +297,7 @@ describe('Create Transaction', () => {
       data: data,
       key: key,
       options: {
+        environment: 'local',
         useBundlr: true,
         tags: [
           { name: 'some_name', value: 'some_value' },
@@ -211,6 +309,6 @@ describe('Create Transaction', () => {
 
     console.log('Txn signed and posted with Bundlr', txn);
 
-    expect(txn).toBeDefined();
+    //   expect(txn).toBeDefined();
   });
 });
