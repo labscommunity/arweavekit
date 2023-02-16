@@ -5,7 +5,7 @@ import {
   PostTransactionProps,
   SignTransactionProps,
   GetTransactionData,
-} from '../../types/transaction';
+} from '../types/transaction';
 import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
 
@@ -210,10 +210,7 @@ export async function getTransactionStatus(transactionId: string) {
 
 /**
  *
- * @returns getTransaction(id) transaction
- * @returns getTransaction(id, { options: data: true}) only data
- * @returns getTransaction(id, { options: tags: true}) transaction and tags
- * @returns getTransaction(id, { options: data: true, tags: true }) only data and tags
+ * todo - better description
  */
 export async function getTransaction(input: GetTransactionData) {
   const transaction = await arweaveMainnet.transactions.get(
@@ -235,8 +232,8 @@ export async function getTransaction(input: GetTransactionData) {
   return input.options?.data
     ? txData
     : input.options?.tags
-      ? { transaction, tags: txTags }
-      : input.options?.data && input.options?.tags
-        ? { transactionData: txData, tags: txTags }
-        : transaction;
+    ? { transaction, tags: txTags }
+    : input.options?.data && input.options?.tags
+    ? { transactionData: txData, tags: txTags }
+    : transaction;
 }
