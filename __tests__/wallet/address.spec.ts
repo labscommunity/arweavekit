@@ -1,4 +1,4 @@
-import { getAddress, createWallet } from '../../src/common/wallet';
+import { getAddress, createWallet } from '../../src';
 
 jest.setTimeout(300000);
 

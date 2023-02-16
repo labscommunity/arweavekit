@@ -1,4 +1,4 @@
-import { createWallet } from '../../src/common/wallet';
+import { createWallet } from '../../src';
 
 jest.setTimeout(300000);
 
@@ -13,7 +13,7 @@ describe('Create Wallet', () => {
 
   it('should create wallet with options.seedPhrase passed in', async () => {
     const generateWallet = await createWallet({
-      seedPhrase: true
+      seedPhrase: true,
     });
 
     expect(generateWallet.key).toBeDefined();
