@@ -5,6 +5,7 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "typings": "dist/**/*.d.ts",
+  "module": "esnext",
   "files": [
     "dist/**/*"
   ],
@@ -14,6 +15,12 @@
   "scripts": {
     "build": "rimraf ./dist && rimraf ./lib && tsc",
     "test": "jest --config jestconfig.json",
+    "test:wallet": "jest --testPathPattern=wallet",
+    "test:serverless": "jest --testPathPattern=serverless",
+    "test:transaction": "jest --testPathPattern=transactions",
+    "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
+    "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
+    "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",
     "lint": "tslint -p  tsconfig.json",
     "format": "prettier --write src/*.ts"
   },
@@ -48,9 +55,9 @@
     "warp-contracts": "^1.2.52"
   },
   "exports": {
+    "./auth": "./dist/lib/auth.js",
     "./wallet": "./dist/lib/wallet.js",
-    "./transaction": "./dist/lib/transaction.js",
     "./serverless": "./dist/lib/serverless.js",
-    "./auth": "./dist/lib/auth.js"
+    "./transaction": "./dist/lib/transaction.js"
   }
 }
