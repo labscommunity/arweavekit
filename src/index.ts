@@ -8,4 +8,8 @@ export {
   getTransactionStatus,
 } from './lib/transaction';
 export { createFunction, writeFunction, readFunction } from './lib/serverless';
-export { createContract, creatoContracto } from './lib/contract';
+export {
+  createContract,
+  writeContract,
+  readContractState,
+} from './lib/contract';
