@@ -6,6 +6,9 @@
   "main": "dist/index.js",
   "module": "esnext",
   "files": [
+    "dist/*.js",
+    "dist/*.d.ts",
+    "dist/*.js.map",
     "dist/lib/*.js",
     "dist/lib/*.d.ts",
     "dist/lib/*.js.map"
@@ -14,14 +17,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rimraf ./dist && rimraf ./lib && tsc",
+    "build": "rimraf ./dist && tsc",
     "test": "jest --config jestconfig.json",
     "test:wallet": "jest --testPathPattern=wallet",
     "test:serverless": "jest --testPathPattern=serverless",
     "test:transaction": "jest --testPathPattern=transactions",
-    "test:contracts:create": "jest --testPathPattern=contract/create.spec.ts",
-    "test:contracts:read": "jest --testPathPattern=contract/read.spec.ts",
-    "test:contracts:write": "jest --testPathPattern=contract/write.spec.ts",
     "lint": "tslint -p  tsconfig.json",
     "format": "prettier --write src/*.ts"
   },
@@ -45,19 +45,14 @@
     "ts-jest": "^29.0.5",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.9.5",
-    "webpack-cli": "^5.0.1"
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "@bundlr-network/client": "^0.10.3",
     "@execution-machine/sdk": "^0.1.6",
     "arweave": "^1.13.0",
     "arweave-mnemonic-keys": "^0.0.9",
-    "awesome-typescript-loader": "^5.2.1",
-    "lodash": "^4.17.21",
-    "shx": "^0.3.4",
-    "warp-contracts": "^1.2.52",
-    "webpack": "^5.75.0"
+    "warp-contracts": "^1.2.52"
   },
   "exports": {
     "./auth": "./dist/lib/auth.js",

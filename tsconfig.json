@@ -6,7 +6,7 @@
     "module": "commonjs",
     "outDir": "dist",
     "strict": true,
-    "lib": ["es2019", "DOM"],
+    "lib": ["es2015", "DOM"],
     "esModuleInterop": true,
     "sourceMap": true,
     "allowJs": true
