@@ -43,8 +43,8 @@ export async function createContract(
 
   const contract = await warp.deploy({
     wallet: params.contractData.wallet,
-    initState: params.contractData.initState,
-    src: params.contractData.src,
+    initState: params.contractData.initialState,
+    src: params.contractData.contractSource,
     tags: [{ name: 'PermawebJS', value: '1.0.0' }],
   });
 
