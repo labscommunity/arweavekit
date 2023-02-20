@@ -1,8 +1,10 @@
-export { createWallet, getAddress, getBalance } from './common/wallet';
+export { ArConnect } from './lib/auth';
+export { createWallet, getAddress, getBalance } from './lib/wallet';
 export {
   createTransaction,
   signTransaction,
   postTransaction,
   getTransaction,
   getTransactionStatus,
-} from './common/transaction';
+} from './lib/transaction';
+export { createFunction, writeFunction, readFunction } from './lib/serverless';
