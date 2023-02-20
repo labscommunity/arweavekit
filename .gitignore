@@ -1,9 +1,4 @@
 node_modules
-.env
-dist
-cache/
-logs
-wallet1.json
-wallet2.json
-testWallet.json
-coverage
+/lib
+/dist
+map.mdx

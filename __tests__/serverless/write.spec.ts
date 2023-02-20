@@ -1,7 +1,4 @@
-import {
-  createServerlessFunction,
-  writeServerlessFunction,
-} from '../../src/index';
+import { createFunction, writeFunction } from '../../src/index';
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 
@@ -16,13 +13,13 @@ describe('should write to serverless function', () => {
       readFileSync('__tests__/contract/data/state.json', 'utf-8')
     );
 
-    const { functionId } = await createServerlessFunction({
+    const { functionId } = await createFunction({
       token: token,
       functionSource: source,
       initialState: initState,
     });
 
-    const { data, result } = await writeServerlessFunction({
+    const { data, result } = await writeFunction({
       token,
       functionId,
       inputs: {

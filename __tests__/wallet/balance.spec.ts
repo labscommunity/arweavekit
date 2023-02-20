@@ -23,9 +23,8 @@ describe('Get Balance', () => {
   });
 
   it('should return a balance when wallet address is passed in', async () => {
-    const { walletAddress } = await createWallet();
     const walletBalance = await getBalance({
-      address: walletAddress,
+      address: 'y7sDPMTIcbvIWxSXSxrDvHldL5iN8zh5RMrCDaTQFAM',
     });
 
     expect(typeof parseInt(walletBalance)).toEqual('number');
@@ -35,16 +34,23 @@ describe('Get Balance', () => {
   it('should return a balance when wallet address is passed in with local environment', async () => {
     const port = 1984;
     const arlocal = new ArLocal(port, false);
+
     await arlocal.start();
+
     const generateWallet = await createWallet({
       seedPhrase: false,
       environment: 'local',
     });
+
     const walletBalance = await getBalance({
       address: generateWallet.walletAddress,
       environment: 'local',
     });
+    console.log('Wallet Balance', walletBalance);
+
     expect(typeof parseInt(walletBalance)).toEqual('number');
     expect(parseInt(walletBalance)).toEqual(1000000000000);
+
+    await arlocal.stop();
   });
 });

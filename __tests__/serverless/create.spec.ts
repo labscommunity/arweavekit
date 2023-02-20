@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
-import { createServerlessFunction } from '../../src/index';
+import { createFunction } from '../../src';
 
 dotenv.config();
 const token = process.env.EXM_TOKEN;
@@ -13,7 +13,7 @@ describe('should create serverless function', () => {
     );
 
     const { functionId, functionSource, functionUrl, result } =
-      await createServerlessFunction({
+      await createFunction({
         token: token as string,
         functionSource: source,
         initialState: state,
@@ -35,7 +35,7 @@ describe('should create serverless function', () => {
     };
 
     const { functionId, functionSource, functionUrl, result } =
-      await createServerlessFunction({
+      await createFunction({
         token: token as string,
         functionSource: source,
         initialState: state,

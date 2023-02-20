@@ -1,8 +1,4 @@
-import {
-  createServerlessFunction,
-  readServerlessFunction,
-  writeServerlessFunction,
-} from '../../src/index';
+import { createFunction, readFunction, writeFunction } from '../../src/index';
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 
@@ -16,13 +12,13 @@ it('should read the state of function', async () => {
     readFileSync('__tests__/serverless/data/state.json', 'utf-8')
   );
 
-  const { functionId } = await createServerlessFunction({
+  const { functionId } = await createFunction({
     token: token,
     functionSource: source,
     initialState: initState,
   });
 
-  const { result } = await writeServerlessFunction({
+  const { result } = await writeFunction({
     token,
     functionId,
     inputs: {
@@ -35,7 +31,7 @@ it('should read the state of function', async () => {
   });
 
   if (result.status === 200 && result.statusText === 'SUCCESSFUL') {
-    const state = await readServerlessFunction({
+    const state = await readFunction({
       token,
       functionId,
     });
