@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "ES2015",
-    "declaration": true,
-    "outDir": "./dist",
-    "strict": true,
     "moduleResolution": "node",
+    "declaration": true,
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "dist",
+    "strict": true,
     "lib": ["es2019", "DOM"],
     "esModuleInterop": true,
     "sourceMap": true,
     "allowJs": true
-  }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "__tests__/*"]
 }
