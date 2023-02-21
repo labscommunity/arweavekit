@@ -1,6 +1,6 @@
 {
   "name": "permawebjs",
-  "version": "0.0.95",
+  "version": "0.0.96",
   "description": "Utility library to build full stack permaweb applications",
   "type": "commonjs",
   "main": "dist/index.js",
