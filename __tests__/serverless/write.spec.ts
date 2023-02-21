@@ -1,4 +1,4 @@
-import { createFunction, writeFunction } from '../../src/index';
+import { createFunction, writeFunction } from '../../src';
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 

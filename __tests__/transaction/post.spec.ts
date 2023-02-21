@@ -1,8 +1,4 @@
-import {
-  createTransaction,
-  postTransaction,
-  signTransaction,
-} from '../../src/common/transaction';
+import { createTransaction, postTransaction, signTransaction } from '../../src';
 import { readFileSync } from 'fs';
 import Transaction from 'arweave/node/lib/transaction';
 

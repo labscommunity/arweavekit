@@ -82,14 +82,6 @@ export async function getBalance(
 ): Promise<string> {
   let walletBalance: Promise<string>;
 
-  if (params?.address.length === 0) {
-    return 'Enter a valid wallet address as getBalance({ address: "WALLET_ADDRESS" }).';
-  }
-
-  if (params?.address.length > 0 && params?.address.length < 43) {
-    return 'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ address: "WALLET_ADDRESS" }).';
-  }
-
   if (params.environment === 'local') {
     walletBalance = arweave.wallets.getBalance(params.address);
     return walletBalance;

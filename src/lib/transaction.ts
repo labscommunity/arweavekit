@@ -31,9 +31,7 @@ const arweaveMainnet = Arweave.init({
  */
 
 export async function createTransaction(params?: CreateTransactionProps) {
-  // Check is transaction is for data or wallet to wallet
   if (params?.data) {
-    // Check whether to use @bundlr-network/client or arweave
     if (params.options?.useBundlr) {
       const bundlr = new Bundlr(
         'http://node2.bundlr.network',
@@ -143,65 +141,60 @@ export async function createTransaction(params?: CreateTransactionProps) {
     // When neither data nor token quantity and target are provided
     return 'Pass in valid data or token quantity and target to create a transaction.';
   }
-  // When neither data nor token quantity and target are provided
-  return 'Pass in valid data or token quantity and target to create a transaction.';
 }
 
 export async function signTransaction(params: SignTransactionProps) {
-  if (params.createdTransaction && params.key) {
-    if (params.useBundlr) {
-      const bundlr = new Bundlr(
-        'http://node2.bundlr.network',
-        'arweave',
-        params.key
-      );
-      const transaction = await params.createdTransaction.sign();
-      if (params.postTransaction) {
-        const postedTransaction = await params.createdTransaction.upload();
-        return { transaction, postedTransaction };
-      } else {
-        return transaction;
-      }
+  if (params.useBundlr) {
+    const bundlr = new Bundlr(
+      'http://node2.bundlr.network',
+      'arweave',
+      params.key
+    );
+    const transaction = await params.createdTransaction.sign();
+    if (params.postTransaction) {
+      const postedTransaction = await params.createdTransaction.upload();
+      return { transaction, postedTransaction };
     } else {
-      await arweaveMainnet.transactions.sign(
-        params.createdTransaction as Transaction,
-        params.key
-      );
-      if (params.postTransaction) {
-        const postedTransaction = await arweaveMainnet.transactions.post(
-          params.createdTransaction
-        );
-        return { postedTransaction };
-      } else {
-        return params.createdTransaction;
-      }
+      return transaction;
     }
   } else {
-    return 'Pass in valid created transaction and the key with which it was created.';
+    await arweaveMainnet.transactions.sign(
+      params.createdTransaction as Transaction,
+      params.key
+    );
+    if (params.postTransaction) {
+      const postedTransaction = await arweaveMainnet.transactions.post(
+        params.createdTransaction
+      );
+      return { postedTransaction };
+    } else {
+      return params.createdTransaction;
+    }
   }
 }
 
 export async function postTransaction(params: PostTransactionProps) {
-  if (params.transaction) {
-    if (params.useBundlr) {
-      const bundlr = new Bundlr(
-        'http://node2.bundlr.network',
-        'arweave',
-        params.key
-      );
-      const postedTransaction = await params.transaction.upload();
-      return postedTransaction;
-    } else {
-      const postedTransaction = arweaveMainnet.transactions.post(
-        params.transaction
-      );
-      return postedTransaction;
-    }
+  if (params.useBundlr) {
+    const bundlr = new Bundlr(
+      'http://node2.bundlr.network',
+      'arweave',
+      params.key
+    );
+    const postedTransaction = await params.transaction.upload();
+    return postedTransaction;
   } else {
-    return 'Pass in valid signed transaction.';
+    const postedTransaction = arweaveMainnet.transactions.post(
+      params.transaction
+    );
+    return postedTransaction;
   }
 }
 
+/**
+ *
+ * @param transactionId
+ * @returns TransactionStatusResponse
+ */
 export async function getTransactionStatus(transactionId: string) {
   const status = await arweaveMainnet.transactions.getStatus(transactionId);
 
@@ -210,7 +203,9 @@ export async function getTransactionStatus(transactionId: string) {
 
 /**
  *
- * todo - better description
+ * @params transactionId
+ * @params options { data:boolean, tags: boolean}
+ * @returns Transaction
  */
 export async function getTransaction(input: GetTransactionData) {
   const transaction = await arweaveMainnet.transactions.get(

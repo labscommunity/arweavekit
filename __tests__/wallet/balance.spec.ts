@@ -4,24 +4,6 @@ import { createWallet, getBalance } from '../../src';
 jest.setTimeout(120000);
 
 describe('Get Balance', () => {
-  it('should return undefined when wallet address is not passed in', async () => {
-    const walletBalance = await getBalance({ address: '' });
-
-    expect(walletBalance).toEqual(
-      'Enter a valid wallet address as getBalance({ address: "WALLET_ADDRESS" }).'
-    );
-  });
-
-  it('should return undefined when wallet address passed in is less than 43 characters', async () => {
-    const walletBalance = await getBalance({
-      address: 'y7sDPMTIcbvIWxSXSxrDvHldL',
-    });
-
-    expect(walletBalance).toEqual(
-      'Entered wallet address is less than 43 characters. Enter a valid wallet address as getBalance({ address: "WALLET_ADDRESS" }).'
-    );
-  });
-
   it('should return a balance when wallet address is passed in', async () => {
     const walletBalance = await getBalance({
       address: 'y7sDPMTIcbvIWxSXSxrDvHldL5iN8zh5RMrCDaTQFAM',
