@@ -7,9 +7,5 @@ export {
   getTransaction,
   getTransactionStatus,
 } from './lib/transaction';
+export { createContract, getContract } from './lib/contract';
 export { createFunction, writeFunction, readFunction } from './lib/serverless';
-export {
-  createContract,
-  writeContract,
-  readContractState,
-} from './lib/contract';

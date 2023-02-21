@@ -1,31 +1,12 @@
-import { defaultCacheOptions, WarpFactory } from 'warp-contracts';
-import {
-  CreateContractProps,
-  CreateContractReturnProps,
-  ReadContractProps,
-  WriteContractProps,
-} from '../types/contract';
+import { WarpFactory } from 'warp-contracts';
 import { JWKInterface } from 'arweave/node/lib/wallet';
+import { CreateProps, CreateReturnProps } from '../types/contract';
 
-/**
- * create contract with warp
- * @params environment: 'local' | 'testnet' | 'mainnet'
- * @params contractData: ContractData (data type from 'warp-contracts)
- *            wallet: Arwallet | CustomSignature
- *            initState: string
- *            src: string | Buffer
- * @returns contract: ContractDeploy (data type from 'warp-contracts') | void
- *            contractTxId: string
- *            srcTxId: string
- * @returns result: object
- *            status: nummber
- *            statusText: string
- */
-
-export async function createContract(params: CreateContractProps) {
+export async function createContract(
+  params: CreateProps
+): Promise<CreateReturnProps> {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
-
   const warp =
     params.environment === 'local'
       ? WarpFactory.forLocal()
@@ -33,104 +14,40 @@ export async function createContract(params: CreateContractProps) {
       ? WarpFactory.forTestnet()
       : WarpFactory.forMainnet();
 
-  if (params.environment == 'local' || params.environment == 'testnet') {
+  if (params.environment === 'local' || params.environment === 'testnet') {
     await warp.testing
-      .addFunds(params.contractData.wallet as JWKInterface)
+      .addFunds(params.wallet as JWKInterface)
       .catch((e) => console.log('ERROR', e.message));
   }
-
-  // if (contract && contract.contractTxId != '' && contract.srcTxId != '') {
-  //   status = 200;
-  //   statusText = 'SUCCESSFUL';
-  // }
-
-  const contract = await warp.deploy({
-    wallet: params.contractData.wallet,
-    initState: params.contractData.initialState,
-    src: params.contractData.contractSource,
-    tags: [{ name: 'PermawebJS', value: '1.0.0' }],
+  const { contractTxId } = await warp.deploy({
+    wallet: params.wallet,
+    initState: params.initialState,
+    src: params.contractSource,
   });
+  const contract = warp.contract(contractTxId).connect(params.wallet);
+
+  if (contractTxId !== '') {
+    status = 200;
+    statusText = 'SUCCESSFUL';
+  }
 
   return {
     contract,
+    contractTxId,
+    status: {
+      code: status,
+      message: statusText,
+    },
   };
 }
 
-/**
- * write to contract with warp
- * @params environment: 'local' | 'testnet' | 'mainnet'
- * @params contractTxId: string
- * @params wallet: ArWallet | CustomSignature (data types from 'warp-contracts')
- * @params options: {}
- * @returns writeContract: WriteInteraction (data type from 'warp-contracts') | null
- * @returns state: object
- * @returns result: object
- *            status: nummber
- *            statusText: string
- */
+export async function getContract(contractTxId: string) {
+  const url = 'https://gateway.warp.cc/gateway';
 
-export async function writeContract(params: WriteContractProps) {
-  const warp =
-    params.environment === 'local'
-      ? WarpFactory.forLocal()
-      : params.environment === 'testnet'
-      ? WarpFactory.forTestnet()
-      : WarpFactory.forMainnet();
-
-  let status: number = 400;
-  let statusText: string = 'UNSUCCESSFUL';
-
-  const contract = warp.contract(params.contractTxId).connect(params.wallet);
-
-  const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.0.0' }],
+  const getContract = await fetch(`${url}/contract?txId=${contractTxId}`, {
+    method: 'GET',
   });
 
-  const readState = await contract.readState();
-
-  if (writeContract?.originalTxId != '') {
-    status = 200;
-    statusText = 'SUCCESSFUL';
-  }
-
-  return {
-    writeContract,
-    state: readState.cachedValue.state,
-    result: { status, statusText },
-  };
-}
-
-/**
- * read from contract with warp
- * @params environment: 'local' | 'testnet' | 'mainnet'
- * @params contractTxId: string
- * @params wallet: ArWallet | CustomSignature (data types from 'warp-contracts')
- * @returns writeContract: WriteInteraction (data type from 'warp-contracts') | null
- * @returns readContract: SortKeyCacheResult (data type from 'warp-contracts')
- * @returns result: object
- *            status: nummber
- *            statusText: string
- */
-
-export async function readContractState(params: ReadContractProps) {
-  const warp =
-    params.environment === 'local'
-      ? WarpFactory.forLocal()
-      : params.environment === 'testnet'
-      ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
-      : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
-
-  let status: number = 400;
-  let statusText: string = 'UNSUCCESSFUL';
-
-  const contract = warp.contract(params.contractTxId).connect(params.wallet);
-
-  const readContract = await contract.readState();
-
-  if (readContract.sortKey && readContract.cachedValue) {
-    status = 200;
-    statusText = 'SUCCESSFUL';
-  }
-
-  return { readContract, result: { status, statusText } };
+  const contract = await getContract.json();
+  return { contract };
 }
