@@ -4,19 +4,25 @@ import Transaction from 'arweave/node/lib/transaction';
 
 describe('Post Arweave Transaction', () => {
   it('should post a data transaction', async () => {
-    const { key } = JSON.parse(readFileSync('wallet2.json').toString());
+    const key = JSON.parse(readFileSync('wallet2.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '../__tests__/testAssets/jsonTest.json',
+      data: data,
       key: key,
+      options: {
+        environment: 'local',
+      },
     });
 
     const signedTxn = await signTransaction({
       createdTransaction: txn as Transaction,
       key: key,
+      environment: 'local',
     });
 
     const postedTxn = await postTransaction({
       transaction: signedTxn,
+      environment: 'local',
     });
 
     expect(postedTxn).toBeDefined();
@@ -27,14 +33,15 @@ describe('Post Arweave Transaction', () => {
 
   it('should post a data transaction using bundlr', async () => {
     // TODO
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const key = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transactions/data/test.json', 'utf-8');
     const txn = await createTransaction({
-      data: '__tests__/transactions/data/test.json',
+      data: data,
       key: key,
       options: { useBundlr: true },
     });
 
-    const signedTxn = await signTransaction({
+    await signTransaction({
       createdTransaction: txn as Transaction,
       key: key,
       useBundlr: true,
