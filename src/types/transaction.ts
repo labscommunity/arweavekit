@@ -20,6 +20,7 @@ export interface CreateTransactionProps {
 }
 
 export interface SignTransactionProps {
+  createdTransaction: Transaction | BundlrTransaction;
   key: JWKInterface;
   useBundlr?: boolean;
   postTransaction?: boolean;
