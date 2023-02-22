@@ -12,7 +12,7 @@ describe('should create serverless function', () => {
       readFileSync('__tests__/contract/data/state.json', 'utf-8')
     );
 
-    const { functionId, functionSource, functionUrl } =
+    const { functionId, functionSource, functionUrl, result } =
       await createServerlessFunction({
         token: token as string,
         functionSource: source,
@@ -25,6 +25,8 @@ describe('should create serverless function', () => {
     expect(typeof functionId).toBe('string');
     expect(typeof functionUrl).toBe('string');
     expect(typeof functionSource).toBe('string');
+    expect(result.status).toBe(200);
+    expect(result.statusText).toBe('SUCCESSFUL');
   });
 
   it('should read initial state from javascript object', async () => {
@@ -32,7 +34,7 @@ describe('should create serverless function', () => {
       counter: 0,
     };
 
-    const { functionId, functionSource, functionUrl } =
+    const { functionId, functionSource, functionUrl, result } =
       await createServerlessFunction({
         token: token as string,
         functionSource: source,
@@ -44,6 +46,7 @@ describe('should create serverless function', () => {
     expect(functionSource).toBeDefined();
     expect(typeof functionId).toBe('string');
     expect(typeof functionUrl).toBe('string');
-    expect(typeof functionSource).toBe('string');
+    expect(result.status).toBe(200);
+    expect(result.statusText).toBe('SUCCESSFUL');
   });
 });
