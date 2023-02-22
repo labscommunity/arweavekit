@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
-import { createServerlessFunction } from '../../src/index';
+import { createServerlessFunction } from '../../src';
 
 dotenv.config();
 const token = process.env.EXM_TOKEN;

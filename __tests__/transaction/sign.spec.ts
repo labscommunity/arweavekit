@@ -1,7 +1,4 @@
-import {
-  createTransaction,
-  signTransaction,
-} from '../../src/common/transaction';
+import { createTransaction, signTransaction } from '../../src';
 import { readFileSync } from 'fs';
 import Transaction from 'arweave/node/lib/transaction';
 
@@ -33,9 +30,13 @@ describe('Sign Arweave Transaction', () => {
   });
 
   it('should sign a wallet to wallet transaction', async () => {
+<<<<<<< HEAD:__tests__/transaction/sign.spec.ts
+    const { key } = JSON.parse(readFileSync('wallet2.json').toString());
+=======
     // TODO - ADD FUNDS TO WALLET 2
 
     const key = JSON.parse(readFileSync('wallet2.json').toString());
+>>>>>>> main:__tests__/transactions/sign.spec.ts
     const txn = await createTransaction({
       target: 'fiIvi9c6Oat86wvWuYMPU1ssSxLRDr2zOUiTV-asxmY',
       quantity: '1000000',

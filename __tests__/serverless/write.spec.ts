@@ -1,7 +1,4 @@
-import {
-  createServerlessFunction,
-  writeServerlessFunction,
-} from '../../src/index';
+import { createServerlessFunction, writeServerlessFunction } from '../../src';
 import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 
@@ -36,7 +33,7 @@ describe('should write to serverless function', () => {
 
     expect(data).toBeDefined();
     expect(typeof data).toBe('object');
-    expect(data).toBeDefined();
+    // expect(data).toBeDefined();
     expect(result.statusText).toBe('SUCCESSFUL');
     expect(result.status).toBe(200);
     expect(typeof data).toBe('object');

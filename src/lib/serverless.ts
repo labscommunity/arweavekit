@@ -1,15 +1,12 @@
-import { Exm, ContractType } from '@execution-machine/sdk';
 import dotenv from 'dotenv';
 import {
   CreateServerlessProps,
   CreateServerlessReturnProps,
   ReadserverlessProps,
   WriteserverlessProps,
-} from '../../types/serverless';
+} from '../types/serverless';
 
 dotenv.config();
-
-jest.setTimeout(30000);
 
 const URL = 'https://api.exm.dev';
 

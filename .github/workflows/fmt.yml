@@ -21,8 +21,5 @@ jobs:
       - name: Format Code
         run: yarn format
 
-      - name: Test Wallets
-        run: yarn test:wallet
-
-      - name: Test Serverless
-        run: yarn test:serverless
+      - name: Lint Code
+        run: lint

@@ -3,6 +3,7 @@ export interface CreateServerlessProps {
   functionSource: Uint8Array;
   initialState: string | object;
 }
+
 export interface CreateServerlessReturnProps {
   functionId: string;
   functionUrl: string;

@@ -1,4 +1,4 @@
-import { ConnectProps } from '../../types/auth';
+import { ConnectProps } from '../types/auth';
 
 export async function connect(params: ConnectProps) {
   return await window.arweaveWallet.connect(
@@ -49,15 +49,13 @@ export async function isInstalled() {
   return arweaveWallet ? true : false;
 }
 
-export const auth = {
-  ArConnect: {
-    connect,
-    disconnect,
-    getActiveAddress,
-    getPermissions,
-    getWalletNames,
-    getAllAddresses,
-    getActivePublicKey,
-    isInstalled,
-  },
+export const ArConnect = {
+  connect,
+  disconnect,
+  getActiveAddress,
+  getPermissions,
+  getWalletNames,
+  getAllAddresses,
+  getActivePublicKey,
+  isInstalled,
 };

@@ -1,11 +1,11 @@
 import Arweave from 'arweave';
-import Bundlr from '@bundlr-network/client';
+import Bundlr from '@bundlr-network/client'
 import {
   CreateTransactionProps,
   PostTransactionProps,
   SignTransactionProps,
   GetTransactionData,
-} from '../../types/transaction';
+} from '../types/transaction';
 import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
@@ -40,17 +40,12 @@ const arweaveMainnet = Arweave.init({
 
 export async function createTransaction(params?: CreateTransactionProps) {
   if (params?.data) {
-    if (params?.options?.useBundlr) {
-      let bundlr: Bundlr;
-      if (params?.key) {
-        bundlr = new Bundlr(
-          'http://node2.bundlr.network',
-          'arweave',
-          params?.key
-        );
-      } else {
-        return 'Please entire valid private key for using Bundlr.';
-      };
+    if (params.options?.useBundlr) {
+      const bundlr = new Bundlr(
+        'http://node2.bundlr.network',
+        'arweave',
+        params.key
+      );
 
       const allTags = params?.options.tags && [
         {
@@ -308,7 +303,18 @@ export async function signTransaction(params: SignTransactionProps) {
       }
     }
   } else {
-    return 'Pass in valid created transaction and the key with which it was created.';
+    await arweaveMainnet.transactions.sign(
+      params.createdTransaction as Transaction,
+      params.key
+    );
+    if (params.postTransaction) {
+      const postedTransaction = await arweaveMainnet.transactions.post(
+        params.createdTransaction
+      );
+      return { postedTransaction };
+    } else {
+      return params.createdTransaction;
+    }
   }
 }
 
@@ -351,7 +357,10 @@ export async function postTransaction(params: PostTransactionProps) {
       return postedTransaction;
     }
   } else {
-    return 'Pass in valid signed transaction.';
+    const postedTransaction = arweaveMainnet.transactions.post(
+      params.transaction
+    );
+    return postedTransaction;
   }
 }
 
@@ -368,10 +377,9 @@ export async function getTransactionStatus(params: { transactionId: string, envi
 
 /**
  *
- * @returns getTransaction(id) transaction
- * @returns getTransaction(id, { options: data: true}) only data
- * @returns getTransaction(id, { options: tags: true}) transaction and tags
- * @returns getTransaction(id, { options: data: true, tags: true }) only data and tags
+ * @params transactionId
+ * @params options { data:boolean, tags: boolean}
+ * @returns Transaction
  */
 export async function getTransaction(params: GetTransactionData) {
   const transaction = await arweaveMainnet.transactions.get(

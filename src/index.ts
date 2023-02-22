@@ -1,38 +1,15 @@
-import { createWallet, getAddress, getBalance } from './common/wallet';
-import {
-  createContract,
-  writeContract,
-  readContractState,
-} from './common/contract';
-import {
-  createServerlessFunction,
-  writeServerlessFunction,
-  readServerlessFunction,
-} from './common/serverless';
-
-import {
-  createTransaction,
-  postTransaction,
-  signTransaction,
-  getTransactionStatus,
-  getTransaction,
-} from './common/transaction';
-import { auth } from './web/auth';
-
+ export { ArConnect } from './lib/auth';
+export { createWallet, getAddress, getBalance } from './lib/wallet';
 export {
-  auth,
-  createWallet,
-  getAddress,
-  getBalance,
-  createContract,
-  writeContract,
-  readContractState,
   createTransaction,
-  postTransaction,
   signTransaction,
+  postTransaction,
   getTransaction,
   getTransactionStatus,
+} from './lib/transaction';
+export { createContract, getContract } from './lib/contract';
+export {
   createServerlessFunction,
   writeServerlessFunction,
   readServerlessFunction,
-};
+} from './lib/serverless';
