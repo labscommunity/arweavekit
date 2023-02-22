@@ -1,4 +1,3 @@
-import { Exm, ContractType } from '@execution-machine/sdk';
 import dotenv from 'dotenv';
 import {
   CreateServerlessProps,
@@ -11,7 +10,7 @@ dotenv.config();
 
 const URL = 'https://api.exm.dev';
 
-export async function createFunction(
+export async function createServerlessFunction(
   params: CreateServerlessProps
 ): Promise<CreateServerlessReturnProps> {
   let initialState = '{}';
@@ -60,7 +59,7 @@ export async function createFunction(
   return { functionId, functionUrl, functionSource, result };
 }
 
-export async function writeFunction(params: WriteserverlessProps) {
+export async function writeServerlessFunction(params: WriteserverlessProps) {
   const url = `${URL}/api/transactions?token=${params.token}`;
   const inputs = [{ ...params.inputs }];
 
@@ -100,7 +99,7 @@ export async function writeFunction(params: WriteserverlessProps) {
   return { data, result };
 }
 
-export async function readFunction(params: ReadserverlessProps) {
+export async function readServerlessFunction(params: ReadserverlessProps) {
   const url = `${URL}/read/${params.functionId}`;
 
   const response = await fetch(url, {

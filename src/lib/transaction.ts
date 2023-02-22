@@ -1,5 +1,5 @@
 import Arweave from 'arweave';
-import Bundlr from '@bundlr-network/client';
+import Bundlr from '@bundlr-network/client'
 import {
   CreateTransactionProps,
   PostTransactionProps,

@@ -1,4 +1,4 @@
-export { ArConnect } from './lib/auth';
+ export { ArConnect } from './lib/auth';
 export { createWallet, getAddress, getBalance } from './lib/wallet';
 export {
   createTransaction,
@@ -8,4 +8,8 @@ export {
   getTransactionStatus,
 } from './lib/transaction';
 export { createContract, getContract } from './lib/contract';
-export { createFunction, writeFunction, readFunction } from './lib/serverless';
+export {
+  createServerlessFunction,
+  writeServerlessFunction,
+  readServerlessFunction,
+} from './lib/serverless';
