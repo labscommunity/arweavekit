@@ -1,4 +1,4 @@
- export { ArConnect } from './lib/auth';
+export { ArConnect } from './lib/auth';
 export { createWallet, getAddress, getBalance } from './lib/wallet';
 export {
   createTransaction,
