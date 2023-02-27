@@ -1,12 +1,9 @@
-import dotenv from 'dotenv';
 import {
   CreateServerlessProps,
   CreateServerlessReturnProps,
   ReadserverlessProps,
   WriteserverlessProps,
 } from '../types/serverless';
-
-dotenv.config();
 
 const URL = 'https://api.exm.dev';
 
