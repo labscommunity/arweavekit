@@ -34,7 +34,7 @@ export interface PostTransactionProps {
   useBundlr?: boolean;
 }
 
-export interface GetTransactionData {
+export interface GetTransactionProps {
   transactionId: string;
   environment: 'testnet' | 'mainnet';
   options?: {

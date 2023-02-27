@@ -4,16 +4,13 @@ import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 
 /**
  * create wallet
- * @params seedPhrase: boolean (optional)
- * @params environment: 'local' | 'mainnet' (optional)
- * @returns walletAddress
- * @returns JWK
- * @returns seedPhrase if options.seedPhrase is passed in
+ * @params CreateWalletProps
+ * @returns CreateWalletReturnProps
  */
 
 export async function createWallet(
-  params: Types.CreateProps
-): Promise<Types.CreateReturnProps> {
+  params: Types.CreateWalletProps
+): Promise<Types.CreateWalletReturnProps> {
   const arweave = initArweave(params.environment);
 
   if (params?.seedPhrase) {
@@ -23,6 +20,12 @@ export async function createWallet(
       const key = await getKeyFromMnemonic(seedPhrase);
       const walletAddress = await arweave.wallets.jwkToAddress(key);
 
+      if (params.environment === 'testnet') {
+        await arweave.api
+          .get(`mint/${walletAddress}/1000000000000`)
+          .catch((error) => console.error(error));
+      }
+
       return {
         key,
         walletAddress,
@@ -30,8 +33,15 @@ export async function createWallet(
       };
     }
   }
+
   const key = await arweave.wallets.generate();
   const walletAddress = await arweave.wallets.jwkToAddress(key);
+
+  if (params.environment === 'testnet') {
+    await arweave.api
+      .get(`mint/${walletAddress}/1000000000000`)
+      .catch((error) => console.error(error));
+  }
 
   return {
     key,
@@ -41,8 +51,8 @@ export async function createWallet(
 
 /**
  * get wallet address for a private key
- * @params JWK / Private Key
- * @return address
+ * @params GetAddress Props
+ * @return wallet address
  */
 export async function getAddress(
   params: Types.GetAddressProps
@@ -54,18 +64,22 @@ export async function getAddress(
 
 /**
  * get balance of wallet address
- * @params address: string
- * @params environment: 'local' | 'mainnet' (optional)
- * @returns walletBalance: string
+ * @params GetBalanceProps
+ * @returns balance of given address in AR or Winston
  */
 
 export async function getBalance(
   params: Types.GetBalanceProps
 ): Promise<string> {
+  let walletBalance;
   const arweave = initArweave(params.environment);
   const winstonBalance = await arweave.wallets.getBalance(params.address);
 
-  const walletBalance = arweave.ar.winstonToAr(winstonBalance);
+  if (params.options?.winston) {
+    walletBalance = winstonBalance;
+    return walletBalance;
+  }
 
+  walletBalance = arweave.ar.winstonToAr(winstonBalance);
   return walletBalance;
 }

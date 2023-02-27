@@ -1,30 +1,15 @@
 import Bundlr from '@bundlr-network/client';
 import { initArweave } from '../utils';
-import {
-  CreateTransactionProps,
-  PostTransactionProps,
-  SignTransactionProps,
-  GetTransactionData,
-} from '../types/transaction';
+import * as Types from '../types/transaction';
 import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
 
 /**
  * create transaction
- * @params
- * data?: string | Uint8Array | ArrayBuffer;
- * quantity?: string;
- * target?: string;
- * options?: {
-    tags?: Tag[];
-    useBundlr?: boolean;
-    signAndPost?: boolean;
-    environment?: 'local' | 'mainnet'
-  };
- * key: JWKInterface;
- * @returns transaction data (Data types from Arweave or Bundlr) | string
+ * @params CreateTransactionProps
+ * @returns Transaction | Bundlr Transaction
  */
-export async function createTransaction(params: CreateTransactionProps) {
+export async function createTransaction(params: Types.CreateTransactionProps) {
   // check and default env to mainnet
   const arweave = initArweave(params.environment);
 
@@ -144,16 +129,11 @@ export async function createTransaction(params: CreateTransactionProps) {
 
 /**
  * sign transaction
- * @params
- * createdTransaction: Transaction (Data type from Arweave) | BundlrTransaction (Data type from Bundlr)
- * key?: JWKInterface
- * useBundlr?: boolean
- * postTransaction?: boolean
- * environment?: 'local' | 'mainnet'
- * @returns transaction data (Data types from Arweave or Bundlr) | string
+ * @params SignTransactionProps
+ * @returns SignedTransaction
  */
 
-export async function signTransaction(params: SignTransactionProps) {
+export async function signTransaction(params: Types.SignTransactionProps) {
   const arweave = initArweave(params.environment);
 
   if (params?.useBundlr) {
@@ -183,15 +163,11 @@ export async function signTransaction(params: SignTransactionProps) {
 
 /**
  * post transaction
- * @params
- * transaction: Transaction (Data type from Arweave) | BundlrTransaction (Data type from Bundlr)
- * key?: JWKInterface
- * useBundlr?: boolean
- * environment?: 'local' | 'mainnet'
- * @returns transaction data (Data types from Arweave or Bundlr) | string
+ * @params PostTransactionProps
+ * @returns PostedTransaction
  */
 
-export async function postTransaction(params: PostTransactionProps) {
+export async function postTransaction(params: Types.PostTransactionProps) {
   const arweave = initArweave(params.environment);
 
   if (params?.useBundlr) {
@@ -219,11 +195,10 @@ export async function getTransactionStatus(params: {
 
 /**
  *
- * @params transactionId
- * @params options { data:boolean, tags: boolean}
+ * @params GetTransactionProps
  * @returns Transaction
  */
-export async function getTransaction(params: GetTransactionData) {
+export async function getTransaction(params: Types.GetTransactionProps) {
   const arweave = initArweave(params.environment);
   const transaction = await arweave.transactions.get(params.transactionId);
   let txTags, txData;
