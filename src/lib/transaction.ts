@@ -1,5 +1,5 @@
-import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
+import { initArweave } from '../utils';
 import {
   CreateTransactionProps,
   PostTransactionProps,
@@ -8,19 +8,6 @@ import {
 } from '../types/transaction';
 import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
-import { JWKInterface } from 'arweave/node/lib/wallet';
-
-const arweaveLocal = Arweave.init({
-  host: 'localhost',
-  port: 1984,
-  protocol: 'http',
-});
-
-const arweaveMainnet = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-});
 
 /**
  * create transaction
@@ -39,18 +26,7 @@ const arweaveMainnet = Arweave.init({
  */
 export async function createTransaction(params: CreateTransactionProps) {
   // check and default env to mainnet
-  const arweave =
-    !params.options?.environment || params.options.environment === 'mainnet'
-      ? Arweave.init({
-          host: 'arweave.net',
-          port: 443,
-          protocol: 'https',
-        })
-      : Arweave.init({
-          host: 'localhost',
-          port: 1984,
-          protocol: 'http',
-        });
+  const arweave = initArweave(params.environment);
 
   if (params.type === 'data') {
     // use useBundlr
@@ -76,19 +52,22 @@ export async function createTransaction(params: CreateTransactionProps) {
         }
       );
 
-      if (params?.options?.signAndPost) {
+      if (params.options.signAndPost === false) {
+        return { transaction };
+      } else {
         await transaction.sign();
         const postedTransaction = await transaction.upload();
-        return postedTransaction;
-      } else {
-        return transaction;
+        return { transaction, postedTransaction };
       }
     } else {
-      // fund wallet if environment is local
-      if (params.options?.environment === 'local') {
+      // fund wallet if environment is testnet
+      if (params.environment === 'testnet') {
         await arweave.api
           .get(
-            `mint/${await getAddress(params.key as JWKInterface)}/1000000000000`
+            `mint/${await getAddress({
+              key: params.key,
+              environment: 'testnet',
+            })}/1000000000000`
           )
           .catch((error) => console.error(error));
       }
@@ -112,7 +91,7 @@ export async function createTransaction(params: CreateTransactionProps) {
       }
 
       // sign and post
-      if (params.options?.signAndPost) {
+      if (!params.options?.signAndPost) {
         await arweave.transactions.sign(transaction, params.key);
         const postedTransaction = await arweave.transactions.post(transaction);
         return { transaction, postedTransaction };
@@ -122,12 +101,13 @@ export async function createTransaction(params: CreateTransactionProps) {
     }
   } else {
     // wallet transactions
-    const senderAddress = await getAddress(params.key as JWKInterface);
+    const senderAddress = await getAddress({
+      key: params.key,
+      environment: 'testnet',
+    });
     const senderBalance = await getBalance({
       address: senderAddress,
-      environment: params.options?.environment
-        ? params.options.environment
-        : 'mainnet',
+      environment: 'testnet',
     });
 
     if (parseInt(senderBalance) >= parseInt(params?.quantity as string)) {
@@ -174,65 +154,27 @@ export async function createTransaction(params: CreateTransactionProps) {
  */
 
 export async function signTransaction(params: SignTransactionProps) {
-  if (params?.createdTransaction && params?.key) {
-    if (params?.useBundlr) {
-      const bundlr = new Bundlr(
-        'http://node2.bundlr.network',
-        'arweave',
-        params?.key
-      );
+  const arweave = initArweave(params.environment);
 
-      const transaction = await params?.createdTransaction.sign();
+  if (params?.useBundlr) {
+    const transaction = await params?.createdTransaction.sign();
 
-      if (params?.postTransaction) {
-        const postedTransaction = await params?.createdTransaction.upload();
-        return { transaction, postedTransaction };
-      } else {
-        return transaction;
-      }
+    if (params?.postTransaction) {
+      const postedTransaction = await params?.createdTransaction.upload();
+      return { transaction, postedTransaction };
     } else {
-      if (params?.environment == 'local') {
-        await arweaveLocal.transactions.sign(
-          params?.createdTransaction as Transaction,
-          params?.key
-        );
-      } else {
-        await arweaveMainnet.transactions.sign(
-          params?.createdTransaction as Transaction,
-          params?.key
-        );
-      }
-      if (params?.postTransaction) {
-        let postedTransaction: {
-          status: number;
-          statusText: string;
-          data: any;
-        };
-
-        if (params?.environment == 'local') {
-          postedTransaction = await arweaveLocal.transactions.post(
-            params?.createdTransaction
-          );
-        } else {
-          postedTransaction = await arweaveMainnet.transactions.post(
-            params?.createdTransaction
-          );
-        }
-        return postedTransaction;
-      } else {
-        return params?.createdTransaction;
-      }
+      return transaction;
     }
   } else {
-    await arweaveMainnet.transactions.sign(
+    await arweave.transactions.sign(
       params.createdTransaction as Transaction,
       params.key
     );
-    if (params.postTransaction) {
-      const postedTransaction = await arweaveMainnet.transactions.post(
+    if (params?.postTransaction) {
+      const postedTransaction = await arweave.transactions.post(
         params.createdTransaction
       );
-      return { postedTransaction };
+      return postedTransaction;
     } else {
       return params.createdTransaction;
     }
@@ -250,52 +192,28 @@ export async function signTransaction(params: SignTransactionProps) {
  */
 
 export async function postTransaction(params: PostTransactionProps) {
-  if (params?.transaction) {
-    if (params?.useBundlr) {
-      const bundlr = new Bundlr(
-        'http://node2.bundlr.network',
-        'arweave',
-        params?.key
-      );
-      const postedTransaction = await params?.transaction.upload();
-      return postedTransaction;
-    } else {
-      let postedTransaction: {
-        status: number;
-        statusText: string;
-        data: any;
-      };
+  const arweave = initArweave(params.environment);
 
-      if (params?.environment == 'local') {
-        postedTransaction = await arweaveLocal.transactions.post(
-          params?.transaction
-        );
-      } else {
-        postedTransaction = await arweaveMainnet.transactions.post(
-          params?.transaction
-        );
-      }
-      return postedTransaction;
-    }
+  if (params?.useBundlr) {
+    const postedTransaction = await params.transaction.upload();
+    return postedTransaction;
   } else {
-    const postedTransaction = arweaveMainnet.transactions.post(
+    const postedTransaction = await arweave.transactions.post(
       params.transaction
     );
+
     return postedTransaction;
   }
 }
 
 export async function getTransactionStatus(params: {
   transactionId: string;
-  environment?: 'local' | 'mainnet';
+  environment: 'testnet' | 'mainnet';
 }) {
-  let status: any;
-  if (params?.environment == 'local') {
-    status = await arweaveLocal.transactions.getStatus(params?.transactionId);
-  } else {
-    status = await arweaveMainnet.transactions.getStatus(params?.transactionId);
-  }
+  const arweave = initArweave(params.environment);
 
+  let status: any;
+  status = await arweave.transactions.getStatus(params.transactionId);
   return status;
 }
 
@@ -306,23 +224,22 @@ export async function getTransactionStatus(params: {
  * @returns Transaction
  */
 export async function getTransaction(params: GetTransactionData) {
-  const transaction = await arweaveMainnet.transactions.get(
-    params?.transactionId
-  );
+  const arweave = initArweave(params.environment);
+  const transaction = await arweave.transactions.get(params.transactionId);
   let txTags, txData;
 
-  if (params?.options?.tags) {
+  if (params.options?.tags) {
     txTags = transaction.tags.forEach((tag) => {
       let key = tag.get('name', { decode: true, string: true });
       let value = tag.get('value', { decode: true, string: true });
 
       return { key, value };
     });
-  } else if (params?.options?.data) {
-    txData = await arweaveMainnet.transactions.getData(params?.transactionId);
+  } else if (params.options?.data) {
+    txData = await arweave.transactions.getData(params?.transactionId);
   }
 
-  return params?.options?.data
+  return params.options?.data
     ? txData
     : params?.options?.tags
     ? { transaction, tags: txTags }

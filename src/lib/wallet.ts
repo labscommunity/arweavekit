@@ -1,24 +1,7 @@
-import Arweave from 'arweave';
-import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 import * as Types from '../types/wallet';
+import { initArweave } from '../utils';
+import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 
-const initArweave = (env: 'testnet' | 'mainnet') => {
-  let arweave;
-  if (env === 'testnet') {
-    arweave = Arweave.init({
-      host: 'localhost',
-      port: 1984,
-      protocol: 'http',
-    });
-  }
-  arweave = Arweave.init({
-    host: 'arweave.net',
-    port: 443,
-    protocol: 'https',
-  });
-
-  return arweave;
-};
 /**
  * create wallet
  * @params seedPhrase: boolean (optional)
