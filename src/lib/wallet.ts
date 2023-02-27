@@ -1,20 +1,24 @@
 import Arweave from 'arweave';
-import { JWKInterface } from 'arweave/node/lib/wallet';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 import * as Types from '../types/wallet';
 
-const arweave = Arweave.init({
-  host: 'localhost',
-  port: 1984,
-  protocol: 'http',
-});
+const initArweave = (env: 'testnet' | 'mainnet') => {
+  let arweave;
+  if (env === 'testnet') {
+    arweave = Arweave.init({
+      host: 'localhost',
+      port: 1984,
+      protocol: 'http',
+    });
+  }
+  arweave = Arweave.init({
+    host: 'arweave.net',
+    port: 443,
+    protocol: 'https',
+  });
 
-const arweaveMainnet = Arweave.init({
-  host: 'arweave.net',
-  port: 443,
-  protocol: 'https',
-});
-
+  return arweave;
+};
 /**
  * create wallet
  * @params seedPhrase: boolean (optional)
@@ -25,17 +29,16 @@ const arweaveMainnet = Arweave.init({
  */
 
 export async function createWallet(
-  params?: Types.CreateProps
+  params: Types.CreateProps
 ): Promise<Types.CreateReturnProps> {
-  let key: any;
-  let walletAddress: string;
+  const arweave = initArweave(params.environment);
 
   if (params?.seedPhrase) {
     const seedPhrase = await generateMnemonic();
 
     if (seedPhrase) {
-      key = await getKeyFromMnemonic(seedPhrase);
-      walletAddress = await arweave.wallets.jwkToAddress(key);
+      const key = await getKeyFromMnemonic(seedPhrase);
+      const walletAddress = await arweave.wallets.jwkToAddress(key);
 
       return {
         key,
@@ -44,15 +47,8 @@ export async function createWallet(
       };
     }
   }
-
-  key = await arweave.wallets.generate();
-  walletAddress = await arweave.wallets.jwkToAddress(key);
-
-  if (params?.environment === 'local') {
-    await arweave.api
-      .get(`mint/${walletAddress}/1000000000000`)
-      .catch((e: { message: any }) => 'Error, ' + e.message);
-  }
+  const key = await arweave.wallets.generate();
+  const walletAddress = await arweave.wallets.jwkToAddress(key);
 
   return {
     key,
@@ -65,8 +61,11 @@ export async function createWallet(
  * @params JWK / Private Key
  * @return address
  */
-export async function getAddress(key: JWKInterface): Promise<string> {
-  const address = await arweave.wallets.jwkToAddress(key);
+export async function getAddress(
+  params: Types.GetAddressProps
+): Promise<string> {
+  const arweave = initArweave(params.environment);
+  const address = await arweave.wallets.jwkToAddress(params.key);
   return address;
 }
 
@@ -80,14 +79,10 @@ export async function getAddress(key: JWKInterface): Promise<string> {
 export async function getBalance(
   params: Types.GetBalanceProps
 ): Promise<string> {
-  let walletBalance: Promise<string>;
+  const arweave = initArweave(params.environment);
+  const winstonBalance = await arweave.wallets.getBalance(params.address);
 
-  if (params.environment === 'local') {
-    walletBalance = arweave.wallets.getBalance(params.address);
-    return walletBalance;
-  }
-
-  walletBalance = arweaveMainnet.wallets.getBalance(params.address);
+  const walletBalance = arweave.ar.winstonToAr(winstonBalance);
 
   return walletBalance;
 }
