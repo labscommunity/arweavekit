@@ -1,8 +1,9 @@
 import Bundlr from '@bundlr-network/client';
-import { initArweave } from '../utils';
-import * as Types from '../types/transaction';
-import { getAddress, getBalance } from './wallet';
 import Transaction from 'arweave/node/lib/transaction';
+import { initArweave } from '../utils';
+import { getAddress, getBalance } from './wallet';
+import { JWKInterface } from 'arweave/node/lib/wallet';
+import * as Types from '../types/transaction';
 
 /**
  * create transaction
@@ -37,20 +38,20 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
         }
       );
 
-      if (params.options.signAndPost === false) {
-        return { transaction };
-      } else {
+      if (params.options?.signAndPost) {
         await transaction.sign();
         const postedTransaction = await transaction.upload();
         return { transaction, postedTransaction };
+      } else {
+        return { transaction };
       }
     } else {
       // fund wallet if environment is local
-      if (params.environment === 'local') {
+      if (params.environment === 'local' && params.options?.signAndPost) {
         await arweave.api
           .get(
             `mint/${await getAddress({
-              key: params.key,
+              key: params.key as JWKInterface,
               environment: 'local',
             })}/1000000000000`
           )
@@ -64,7 +65,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
             ? Buffer.from(`${params.data}`, 'utf8')
             : params.data,
         },
-        params.key
+        params.key ? params.key : 'use_wallet'
       );
 
       // tags
@@ -76,7 +77,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       }
 
       // sign and post
-      if (!params.options?.signAndPost) {
+      if (params.options?.signAndPost) {
         await arweave.transactions.sign(transaction, params.key);
         const postedTransaction = await arweave.transactions.post(transaction);
         return { transaction, postedTransaction };
@@ -86,14 +87,19 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
     }
   } else {
     // wallet transactions
-    const senderAddress = await getAddress({
-      key: params.key,
-      environment: 'local',
-    });
-    const senderBalance = await getBalance({
-      address: senderAddress,
-      environment: 'local',
-    });
+    let senderAddress = '';
+    let senderBalance = '';
+
+    if (params.key) {
+      senderAddress = await getAddress({
+        key: params.key as JWKInterface,
+        environment: 'local',
+      });
+      senderBalance = await getBalance({
+        address: senderAddress,
+        environment: 'local',
+      });
+    }
 
     if (parseInt(senderBalance) >= parseInt(params?.quantity as string)) {
       // create txn
@@ -102,7 +108,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
           target: params.target,
           quantity: params.quantity,
         },
-        params.key
+        params.key ? params.key : 'use_wallet'
       );
 
       // add tags
