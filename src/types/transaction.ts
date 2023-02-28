@@ -3,8 +3,8 @@ import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 
 export interface CreateTransactionProps {
-  key: JWKInterface;
   type: 'data' | 'wallet';
+  key?: JWKInterface;
   environment: 'local' | 'mainnet';
   target?: string;
   quantity?: string;

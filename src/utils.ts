@@ -8,12 +8,13 @@ export const initArweave = (env: 'local' | 'mainnet') => {
       port: 1984,
       protocol: 'http',
     });
+  } else {
+    arweave = Arweave.init({
+      host: 'arweave.net',
+      port: 443,
+      protocol: 'https',
+    });
   }
-  arweave = Arweave.init({
-    host: 'arweave.net',
-    port: 443,
-    protocol: 'https',
-  });
 
   return arweave;
 };

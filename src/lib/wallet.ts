@@ -78,8 +78,8 @@ export async function getBalance(
   if (params.options?.winston) {
     walletBalance = winstonBalance;
     return walletBalance;
+  } else {
+    walletBalance = arweave.ar.winstonToAr(winstonBalance);
+    return walletBalance;
   }
-
-  walletBalance = arweave.ar.winstonToAr(winstonBalance);
-  return walletBalance;
 }
