@@ -7,7 +7,12 @@ export {
   getTransaction,
   getTransactionStatus,
 } from './lib/transaction';
-export { createContract, getContract } from './lib/contract';
+export {
+  createContract,
+  writeContract,
+  readContractState,
+  getContract,
+} from './lib/contract';
 export {
   createServerlessFunction,
   writeServerlessFunction,
