@@ -45,13 +45,13 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
         return { transaction, postedTransaction };
       }
     } else {
-      // fund wallet if environment is testnet
-      if (params.environment === 'testnet') {
+      // fund wallet if environment is local
+      if (params.environment === 'local') {
         await arweave.api
           .get(
             `mint/${await getAddress({
               key: params.key,
-              environment: 'testnet',
+              environment: 'local',
             })}/1000000000000`
           )
           .catch((error) => console.error(error));
@@ -88,11 +88,11 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
     // wallet transactions
     const senderAddress = await getAddress({
       key: params.key,
-      environment: 'testnet',
+      environment: 'local',
     });
     const senderBalance = await getBalance({
       address: senderAddress,
-      environment: 'testnet',
+      environment: 'local',
     });
 
     if (parseInt(senderBalance) >= parseInt(params?.quantity as string)) {
@@ -184,7 +184,7 @@ export async function postTransaction(params: Types.PostTransactionProps) {
 
 export async function getTransactionStatus(params: {
   transactionId: string;
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
 }) {
   const arweave = initArweave(params.environment);
 

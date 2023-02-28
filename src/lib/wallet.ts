@@ -20,7 +20,7 @@ export async function createWallet(
       const key = await getKeyFromMnemonic(seedPhrase);
       const walletAddress = await arweave.wallets.jwkToAddress(key);
 
-      if (params.environment === 'testnet') {
+      if (params.environment === 'local') {
         await arweave.api
           .get(`mint/${walletAddress}/1000000000000`)
           .catch((error) => console.error(error));
@@ -37,7 +37,7 @@ export async function createWallet(
   const key = await arweave.wallets.generate();
   const walletAddress = await arweave.wallets.jwkToAddress(key);
 
-  if (params.environment === 'testnet') {
+  if (params.environment === 'local') {
     await arweave.api
       .get(`mint/${walletAddress}/1000000000000`)
       .catch((error) => console.error(error));

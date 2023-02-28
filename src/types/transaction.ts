@@ -5,7 +5,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 export interface CreateTransactionProps {
   key: JWKInterface;
   type: 'data' | 'wallet';
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
   target?: string;
   quantity?: string;
   data?: string | Uint8Array | ArrayBuffer;
@@ -21,7 +21,7 @@ export interface CreateTransactionProps {
 
 export interface SignTransactionProps {
   key: JWKInterface;
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
   createdTransaction: Transaction | BundlrTransaction;
   useBundlr?: boolean;
   postTransaction?: boolean;
@@ -29,14 +29,14 @@ export interface SignTransactionProps {
 
 export interface PostTransactionProps {
   key: JWKInterface;
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
   transaction: Transaction | BundlrTransaction;
   useBundlr?: boolean;
 }
 
 export interface GetTransactionProps {
   transactionId: string;
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
   options?: {
     data?: boolean;
     tags?: boolean;

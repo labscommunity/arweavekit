@@ -2,7 +2,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 
 export interface CreateWalletProps {
   seedPhrase?: boolean;
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
 }
 export interface CreateWalletReturnProps {
   key: JWKInterface;
@@ -12,12 +12,12 @@ export interface CreateWalletReturnProps {
 
 export interface GetAddressProps {
   key: JWKInterface;
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
 }
 
 export interface GetBalanceProps {
   address: string;
-  environment: 'testnet' | 'mainnet';
+  environment: 'local' | 'mainnet';
   options?: {
     winston?: boolean;
   };

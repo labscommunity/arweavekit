@@ -1,8 +1,8 @@
 import Arweave from 'arweave';
 
-export const initArweave = (env: 'testnet' | 'mainnet') => {
+export const initArweave = (env: 'local' | 'mainnet') => {
   let arweave;
-  if (env === 'testnet') {
+  if (env === 'local') {
     arweave = Arweave.init({
       host: 'localhost',
       port: 1984,
