@@ -1,4 +1,4 @@
-import { Exm, ContractType } from '@execution-machine/sdk';
+import { Exm } from '@execution-machine/sdk';
 import {
   CreateServerlessProps,
   CreateServerlessReturnProps,

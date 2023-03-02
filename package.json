@@ -31,6 +31,7 @@
     "@types/jest": "^29.4.0",
     "@types/node-fetch": "^2.6.2",
     "arlocal": "^1.1.60",
+    "dotenv": "^16.0.3",
     "jest": "^29.4.2",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
@@ -40,6 +41,7 @@
   },
   "dependencies": {
     "@bundlr-network/client": "^0.10.3",
+    "@execution-machine/sdk": "^0.1.7",
     "arweave": "^1.13.0",
     "arweave-mnemonic-keys": "^0.0.9",
     "warp-contracts": "^1.2.52"
