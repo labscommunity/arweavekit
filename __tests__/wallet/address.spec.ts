@@ -5,13 +5,13 @@ jest.setTimeout(300000);
 describe('Get Address', () => {
   it('should return wallet address', async () => {
     const { key } = await createWallet({
-      environment: 'testnet',
+      environment: 'local',
     });
 
     if (key) {
       const address = await getAddress({
         key,
-        environment: 'testnet',
+        environment: 'local',
       });
 
       expect(address).toBeDefined();

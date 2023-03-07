@@ -13,12 +13,12 @@ describe('Get Balance', () => {
 
   it('should create  and return wallet balance', async () => {
     const { walletAddress } = await createWallet({
-      environment: 'testnet',
+      environment: 'local',
     });
     const balance = await getBalance({
       address: walletAddress,
-      environment: 'testnet',
+      environment: 'local',
     });
-    expect(balance).toBe('0.000000000000');
+    expect(balance).toBe('1.000000000000');
   });
 });
