@@ -3,3 +3,6 @@ node_modules
 map.mdx
 /logs
 .env
+wallet1.json
+wallet2.json
+wallet3.json
