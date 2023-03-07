@@ -31,11 +31,16 @@ describe('should write to serverless function', () => {
       },
     });
 
+    const expectedState = {
+      posts: [{ title: 'Intro to arweave', author: 'Hans Zimmer' }],
+    };
+
     expect(data).toBeDefined();
     expect(typeof data).toBe('object');
     expect(responseStatus.code).toBe(200);
     expect(responseStatus.message).toBe('SUCCESSFUL');
     expect(data.execution.state).toBeDefined();
     expect(typeof data.execution.state).toBe('object');
+    expect(data.execution.state).toEqual(expectedState);
   });
 });
