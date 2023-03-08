@@ -1,9 +1,5 @@
 import { readFileSync } from 'fs';
-import { SrcCache } from 'warp-contracts';
-import { createContract, createWallet } from '../../src/index';
-
-// Please note that wallet1.json is an empty pre-created wallet stored in the root dir (not pushed to github)
-// Please note that wallet2.json is a pre-funded pre-created wallet stored in the root dir (not pushed to github)
+import { createContract, createWallet } from '../../src';
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
@@ -15,16 +11,19 @@ jest.setTimeout(120000);
 
 describe('Create Contract', () => {
   it('should create a new contract with wallet passed in on testnet', async () => {
-    const wallet = JSON.parse(readFileSync('wallet2.json', 'utf-8'));
+    const { key } = await createWallet({
+      environment: 'local',
+    });
 
     const { contract, status } = await createContract({
+      wallet: key,
       environment: 'testnet',
-      wallet: wallet,
       initialState: initState,
       contractSource: contractSrc,
     });
 
     expect(contract).toBeDefined();
+    expect(contract).toHaveProperty('_contractTxId');
     expect(typeof contract).toEqual('object');
     expect(status).toBeDefined();
     expect(typeof status).toEqual('object');
@@ -43,6 +42,7 @@ describe('Create Contract', () => {
 
     expect(contract).toBeDefined();
     expect(typeof contract).toEqual('object');
+    expect(contract).toHaveProperty('_contractTxId');
     expect(status).toBeDefined();
     expect(typeof status).toEqual('object');
     expect(status).toEqual({ code: 200, message: 'SUCCESSFUL' });
