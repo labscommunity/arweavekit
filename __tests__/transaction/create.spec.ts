@@ -1,4 +1,5 @@
 import ArLocal from 'arlocal';
+import { JWKInterface } from 'arweave/node/lib/wallet';
 import { readFileSync, writeFileSync } from 'fs';
 import { createTransaction, createWallet, getBalance } from '../../src';
 
@@ -17,24 +18,23 @@ describe('Create Transaction', () => {
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
     const txn = await createTransaction({
+      key,
       type: 'data',
       environment: 'local',
       data: data,
-      key: key,
       options: {
         useBundlr: true,
       },
     });
 
-    expect(txn).toHaveProperty('transaction');
+    console.log('TXN', txn);
+
     expect(txn).toMatchObject({
-      transaction: {
-        bundlr: {
-          currency: 'arweave',
-        },
-        signer: {
-          jwk: key,
-        },
+      bundlr: {
+        currency: 'arweave',
+      },
+      signer: {
+        jwk: key,
       },
     });
   });
@@ -51,7 +51,7 @@ describe('Create Transaction', () => {
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
     const txn = await createTransaction({
-      key: key,
+      key,
       data: data,
       type: 'data',
       environment: 'local',
@@ -80,7 +80,7 @@ describe('Create Transaction', () => {
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
     const txn = await createTransaction({
-      key: key,
+      key,
       data: data,
       type: 'data',
       environment: 'local',
@@ -88,6 +88,7 @@ describe('Create Transaction', () => {
         signAndPost: true,
       },
     });
+
     expect(txn).toHaveProperty('transaction');
     expect(txn).toHaveProperty('postedTransaction');
     expect(txn).toMatchObject({
@@ -112,8 +113,8 @@ describe('Create Transaction', () => {
 
     // bundlr txn
     const bundlrTxn = await createTransaction({
-      key,
       data,
+      key,
       type: 'data',
       environment: 'local',
       options: {
@@ -124,8 +125,8 @@ describe('Create Transaction', () => {
 
     // arweave txn
     const arweaveTxn = await createTransaction({
-      key,
       data,
+      key,
       type: 'data',
       environment: 'local',
       options: {
@@ -133,15 +134,12 @@ describe('Create Transaction', () => {
       },
     });
 
-    expect(bundlrTxn).toHaveProperty('transaction');
     expect(bundlrTxn).toMatchObject({
-      transaction: {
-        bundlr: {
-          currency: 'arweave',
-        },
-        signer: {
-          jwk: key,
-        },
+      bundlr: {
+        currency: 'arweave',
+      },
+      signer: {
+        jwk: key,
       },
     });
 

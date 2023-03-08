@@ -43,7 +43,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
         const postedTransaction = await transaction.upload();
         return { transaction, postedTransaction };
       } else {
-        return { transaction };
+        return transaction;
       }
     } else {
       // fund wallet if environment is local
