@@ -17,4 +17,5 @@ export {
   createServerlessFunction,
   writeServerlessFunction,
   readServerlessFunction,
+  testServerlessFunction,
 } from './lib/serverless';
