@@ -1576,6 +1576,16 @@
   resolved "https://registry.yarnpkg.com/@three-em/node-darwin-arm64/-/node-darwin-arm64-0.3.16.tgz#fa9856200355a26f50ca6e84a8813351353b50c0"
   integrity sha512-vdmw4Oc81vnRgC2n/EpWSNpNPIDDfrnmX4+/AaXUc8IuEbqS7nOakT+x+fbZiwrIuzdBDdPi+56Y/iGIkWoTxQ==
 
+"@three-em/node@^0.3.20", "three-em-0-3-09@npm:@three-em/node@^0.3.09", "three-em-0-3-12@npm:@three-em/node@^0.3.12", "three-em-0-3-13@npm:@three-em/node@^0.3.13", "three-em-0-3-14@npm:@three-em/node@^0.3.14", "three-em-0-3-15@npm:@three-em/node@^0.3.15", "three-em-0-3-16@npm:@three-em/node@^0.3.16", "three-em-0-3-17@npm:@three-em/node@^0.3.17", "three-em-0-3-20@npm:@three-em/node@^0.3.20":
+  version "0.3.20"
+  resolved "https://registry.yarnpkg.com/@three-em/node/-/node-0.3.20.tgz#2e5e7147b461adc40369ad5b14a8acacdb9bbdbb"
+  integrity sha512-eY8lj79ToEvEOmKAD0zLeD+yrmbID7//wCXDhZlF3Qkk5ssvK2yzbW3IOj3isuZgME+MW0yI2Jdk9Ud3enFVkQ==
+  dependencies:
+    detect-libc "^1.0.3"
+    jest "^28.1.0"
+  optionalDependencies:
+    "@three-em/node-darwin-arm64" "0.3.16"
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -7673,16 +7683,6 @@ text-encoding-utf-8@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/text-encoding-utf-8/-/text-encoding-utf-8-1.0.2.tgz#585b62197b0ae437e3c7b5d0af27ac1021e10d13"
   integrity sha512-8bw4MY9WjdsD2aMtO0OzOCY3pXGYNx2d2FfHRVUKkiCPDWjKuOlhLVASS+pD7VkLTVjW268LYJHwsnPFlBpbAg==
-
-"three-em-0-3-09@npm:@three-em/node@^0.3.09", "three-em-0-3-12@npm:@three-em/node@^0.3.12", "three-em-0-3-13@npm:@three-em/node@^0.3.13", "three-em-0-3-14@npm:@three-em/node@^0.3.14", "three-em-0-3-15@npm:@three-em/node@^0.3.15", "three-em-0-3-16@npm:@three-em/node@^0.3.16", "three-em-0-3-17@npm:@three-em/node@^0.3.17", "three-em-0-3-20@npm:@three-em/node@^0.3.20":
-  version "0.3.20"
-  resolved "https://registry.yarnpkg.com/@three-em/node/-/node-0.3.20.tgz#2e5e7147b461adc40369ad5b14a8acacdb9bbdbb"
-  integrity sha512-eY8lj79ToEvEOmKAD0zLeD+yrmbID7//wCXDhZlF3Qkk5ssvK2yzbW3IOj3isuZgME+MW0yI2Jdk9Ud3enFVkQ==
-  dependencies:
-    detect-libc "^1.0.3"
-    jest "^28.1.0"
-  optionalDependencies:
-    "@three-em/node-darwin-arm64" "0.3.16"
 
 through@2, "through@>=2.2.7 <3", through@^2.3.6, through@~2.3, through@~2.3.1:
   version "2.3.8"
