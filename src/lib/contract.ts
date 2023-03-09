@@ -3,6 +3,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/contract';
 
 /***
+ * create warp contract
  * @params CreateContractProps
  * @returns CreateContractReturnProps
  */
@@ -119,6 +120,7 @@ export async function readContractState(params: Types.ReadContractProps) {
 }
 
 /**
+ * get contract
  * @params contractTxId: string
  * @returns Contract
  */
