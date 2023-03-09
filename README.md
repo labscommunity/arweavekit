@@ -6,15 +6,13 @@ PermawebJS aims to lower the barrier of onboarding and building on Arweave by cr
 
 ## Installation
 
-Run the following command to install the package
+Run the following command to install the package using npm or yarn
 
 ```
 npm install permawebjs
-```
 
-### Using Yarn
+#OR
 
-```
 yarn add permawebjs
 ```
 

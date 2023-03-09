@@ -39,9 +39,9 @@ export async function createContract(
   return {
     contract,
     contractTxId,
-    status: {
-      code: status,
-      message: statusText,
+    result: {
+      status,
+      statusText,
     },
   };
 }
@@ -65,7 +65,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.0.0' }],
+    tags: [{ name: 'PermawebJS', value: '1.0.52' }],
   });
 
   const readState = await contract.readState();
@@ -78,9 +78,9 @@ export async function writeContract(params: Types.WriteContractProps) {
   return {
     writeContract,
     state: readState.cachedValue.state,
-    status: {
-      code: status,
-      message: statusText,
+    result: {
+      status,
+      statusText,
     },
   };
 }
@@ -112,9 +112,9 @@ export async function readContractState(params: Types.ReadContractProps) {
 
   return {
     readContract,
-    status: {
-      code: status,
-      message: statusText,
+    result: {
+      status,
+      statusText,
     },
   };
 }

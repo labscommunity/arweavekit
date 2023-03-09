@@ -8,9 +8,9 @@ export interface CreateContractProps {
 }
 
 export interface CreateContractReturnProps {
-  status: {
-    code: number;
-    message: string;
+  result: {
+    status: number;
+    statusText: string;
   };
   contractTxId: string;
   contract: Contract;
