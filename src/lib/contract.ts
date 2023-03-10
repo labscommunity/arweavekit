@@ -1,10 +1,14 @@
-import { WarpFactory } from 'warp-contracts';
+import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
 import { JWKInterface } from 'arweave/node/lib/wallet';
-import { CreateProps, CreateReturnProps } from '../types/contract';
+import * as Types from '../types/contract';
 
+/***
+ * @params CreateContractProps
+ * @returns CreateContractReturnProps
+ */
 export async function createContract(
-  params: CreateProps
-): Promise<CreateReturnProps> {
+  params: Types.CreateContractProps
+): Promise<Types.CreateContractReturnProps> {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
   const warp =
@@ -34,13 +38,90 @@ export async function createContract(
   return {
     contract,
     contractTxId,
-    status: {
-      code: status,
-      message: statusText,
+    result: {
+      status,
+      statusText,
     },
   };
 }
 
+/**
+ * write to warp contract
+ * @params WriteContractProps
+ */
+
+export async function writeContract(params: Types.WriteContractProps) {
+  const warp =
+    params.environment === 'local'
+      ? WarpFactory.forLocal()
+      : params.environment === 'testnet'
+      ? WarpFactory.forTestnet()
+      : WarpFactory.forMainnet();
+
+  let status: number = 400;
+  let statusText: string = 'UNSUCCESSFUL';
+
+  const contract = warp.contract(params.contractTxId).connect(params.wallet);
+
+  const writeContract = await contract.writeInteraction(params.options, {
+    tags: [{ name: 'PermawebJS', value: '1.0.52' }],
+  });
+
+  const readState = await contract.readState();
+
+  if (writeContract?.originalTxId != '') {
+    status = 200;
+    statusText = 'SUCCESSFUL';
+  }
+
+  return {
+    writeContract,
+    state: readState.cachedValue.state,
+    result: {
+      status,
+      statusText,
+    },
+  };
+}
+
+/**
+ * read state of warp contract
+ * @params ReadContractProps
+ */
+
+export async function readContractState(params: Types.ReadContractProps) {
+  const warp =
+    params.environment === 'local'
+      ? WarpFactory.forLocal()
+      : params.environment === 'testnet'
+      ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
+      : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
+
+  let status: number = 400;
+  let statusText: string = 'UNSUCCESSFUL';
+
+  const contract = warp.contract(params.contractTxId).connect(params.wallet);
+
+  const readContract = await contract.readState();
+
+  if (readContract.sortKey && readContract.cachedValue) {
+    status = 200;
+    statusText = 'SUCCESSFUL';
+  }
+
+  return {
+    readContract,
+    result: {
+      status,
+      statusText,
+    },
+  };
+}
+
+/**
+ * @params contractTxId: string
+ * @returns Contract
+ */
 export async function getContract(contractTxId: string) {
   const url = 'https://gateway.warp.cc/gateway';
 

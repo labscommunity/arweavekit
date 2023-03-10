@@ -1,53 +1,45 @@
-import { createTransaction } from '../../src';
-import { readFileSync, writeFileSync, unlinkSync } from 'fs';
+import {
+  createTransaction,
+  createWallet,
+  getTransactionStatus,
+} from '../../src';
+import { readFileSync, writeFileSync } from 'fs';
+import Transaction from 'arweave/node/lib/transaction';
 
 jest.setTimeout(300000);
 
-// todo - figure out the whole TXN ID situation
-
-let txn: any;
-
-beforeAll(async () => {
-  const { key } = JSON.parse(readFileSync('wallet1.json').toString());
-  txn = await createTransaction({
-    data: '__tests__/transactions/data/test.json',
-    key: key,
-    options: { useBundlr: true },
-  });
-});
-
 describe('Create Transaction', () => {
-  it('should get transaction status with bundlr txn', async () => {
-    writeFileSync(
-      '__tests__/transactions/data/txn-bundlr.json',
-      JSON.stringify(txn)
-    );
+  it('should get arweave transaction', async () => {
+    const generateWallet = await createWallet({
+      environment: 'local',
+    });
+    writeFileSync('wallet1.json', JSON.stringify(generateWallet));
+    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
+    const txn: Transaction = (await createTransaction({
+      type: 'data',
+      environment: 'local',
+      data: data,
+      key: key,
+      options: {
+        signAndPost: true,
+      },
+    })) as Transaction;
+    writeFileSync('testTxn.json', JSON.stringify(txn));
+    const { id: txnId } = JSON.parse(
+      readFileSync('testTxn.json').toString()
+    ).transaction;
 
-    const readTxn = JSON.parse(
-      readFileSync('__tests__/transactions/data/txn-bundlr.json').toString()
-    );
+    const getStatus = await getTransactionStatus({
+      environment: 'local',
+      transactionId: txnId,
+    });
 
-    // todo - get transaction status
-
-    console.log('TXN', readTxn);
+    expect(getStatus).toBeDefined();
+    expect(getStatus).toHaveProperty('status');
+    expect(getStatus).toHaveProperty('confirmed');
+    expect(getStatus).toMatchObject({
+      status: 200,
+    });
   });
-
-  it('should get transaction status with arweave txn', async () => {
-    writeFileSync(
-      '__tests__/transactions/data/txn-arweave.json',
-      JSON.stringify(txn)
-    );
-
-    const readTxn = JSON.parse(
-      readFileSync('__tests__/transactions/data/txn-arweave.json').toString()
-    );
-    // todo - get transaction status
-
-    console.log('TXN', readTxn);
-  });
-});
-
-afterAll(() => {
-  unlinkSync('__tests__/transactions/data/txn-bundlr.json');
-  unlinkSync('__tests__/transactions/data/txn-arweave.json');
 });

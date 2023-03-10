@@ -1,17 +1,12 @@
 {
   "name": "permawebjs",
-  "version": "0.1.2",
+  "version": "1.0.52",
   "description": "Utility library to build full stack permaweb applications",
   "type": "commonjs",
   "main": "dist/index.js",
   "module": "esnext",
   "files": [
-    "dist/*.js",
-    "dist/*.d.ts",
-    "dist/*.js.map",
-    "dist/lib/*.js",
-    "dist/lib/*.d.ts",
-    "dist/lib/*.js.map"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
@@ -19,9 +14,6 @@
   "scripts": {
     "build": "rimraf ./dist && tsc",
     "test": "jest --config jestconfig.json",
-    "test:wallet": "jest --testPathPattern=wallet",
-    "test:serverless": "jest --testPathPattern=serverless",
-    "test:transaction": "jest --testPathPattern=transactions",
     "lint": "tslint -p  tsconfig.json",
     "format": "prettier --write src/*.ts"
   },
@@ -39,6 +31,7 @@
     "@types/jest": "^29.4.0",
     "@types/node-fetch": "^2.6.2",
     "arlocal": "^1.1.60",
+    "dotenv": "^16.0.3",
     "jest": "^29.4.2",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
@@ -48,7 +41,7 @@
   },
   "dependencies": {
     "@bundlr-network/client": "^0.10.3",
-    "@execution-machine/sdk": "^0.1.6",
+    "@execution-machine/sdk": "^0.1.7",
     "arweave": "^1.13.0",
     "arweave-mnemonic-keys": "^0.0.9",
     "warp-contracts": "^1.2.52"

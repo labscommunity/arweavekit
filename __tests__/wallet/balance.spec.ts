@@ -1,29 +1,24 @@
-import { createWallet, getBalance } from '../../src';
+import { createWallet, getBalance } from '../../src/lib/wallet';
 
 jest.setTimeout(120000);
 
 describe('Get Balance', () => {
-  it('should return a balance when wallet address is passed in', async () => {
-    const walletBalance = await getBalance({
-      address: 'y7sDPMTIcbvIWxSXSxrDvHldL5iN8zh5RMrCDaTQFAM',
+  it('should return wallet balance', async () => {
+    const balance = await getBalance({
+      address: 'jPpGVmIlub48bIU9LM3gV2BcT599KEooh8uoNpOn2yo',
+      environment: 'mainnet',
     });
-
-    expect(typeof parseInt(walletBalance)).toEqual('number');
-    expect(parseInt(walletBalance)).toBeGreaterThan(0);
+    expect(balance).toBe('0.498733306154');
   });
 
-  it('should return a balance when wallet address is passed in with local environment', async () => {
-    const generateWallet = await createWallet({
-      seedPhrase: false,
+  it('should create  and return wallet balance', async () => {
+    const { walletAddress } = await createWallet({
       environment: 'local',
     });
-
-    const walletBalance = await getBalance({
-      address: generateWallet.walletAddress,
+    const balance = await getBalance({
+      address: walletAddress,
       environment: 'local',
     });
-
-    expect(typeof parseInt(walletBalance)).toEqual('number');
-    expect(parseInt(walletBalance)).toEqual(1000000000000);
+    expect(balance).toBe('1.000000000000');
   });
 });

@@ -22,7 +22,7 @@ it('should read the state of function', async () => {
     initialState: initState,
   });
 
-  const { result } = await writeServerlessFunction({
+  await writeServerlessFunction({
     token,
     functionId,
     inputs: {
@@ -34,13 +34,13 @@ it('should read the state of function', async () => {
     },
   });
 
-  if (result.status === 200 && result.statusText === 'SUCCESSFUL') {
-    const state = await readServerlessFunction({
-      token,
-      functionId,
-    });
+  const state = await readServerlessFunction({
+    token,
+    functionId,
+  });
 
-    expect(state).toBeDefined();
-    expect(typeof state).toBe('object');
-  }
+  expect(functionId).toBeDefined();
+  expect(typeof functionId).toBe('string');
+  expect(state).toBeDefined();
+  expect(typeof state).toBe('object');
 });

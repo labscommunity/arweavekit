@@ -4,7 +4,9 @@ jest.setTimeout(300000);
 
 describe('Create Wallet', () => {
   it('should create wallet without options.seedPhrase passed in', async () => {
-    const generateWallet = await createWallet();
+    const generateWallet = await createWallet({
+      environment: 'local',
+    });
 
     expect(generateWallet.key).toBeDefined();
     expect(generateWallet.seedPhrase).toBeNull;
@@ -13,6 +15,7 @@ describe('Create Wallet', () => {
 
   it('should create wallet with options.seedPhrase passed in', async () => {
     const generateWallet = await createWallet({
+      environment: 'local',
       seedPhrase: true,
     });
 

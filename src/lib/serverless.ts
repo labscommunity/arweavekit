@@ -1,12 +1,10 @@
-import dotenv from 'dotenv';
+import { Exm } from '@execution-machine/sdk';
 import {
   CreateServerlessProps,
   CreateServerlessReturnProps,
   ReadserverlessProps,
   WriteserverlessProps,
 } from '../types/serverless';
-
-dotenv.config();
 
 const URL = 'https://api.exm.dev';
 
@@ -60,43 +58,25 @@ export async function createServerlessFunction(
 }
 
 export async function writeServerlessFunction(params: WriteserverlessProps) {
-  const url = `${URL}/api/transactions?token=${params.token}`;
+  const exm = new Exm({ token: params.token });
+
   const inputs = [{ ...params.inputs }];
 
-  const body = {
-    functionId: params.functionId,
-    inputs: [
-      {
-        input: JSON.stringify(inputs),
-        tags: [],
-      },
-    ],
+  const { data, status } = await exm.functions.write(params.functionId, inputs);
+
+  let responseStatus = {
+    code: 404,
+    message: 'UNSUCCESSFUL',
   };
-
-  const response = await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
-
-  let result = {
-    status: 404,
-    statusText: 'UNSUCCESSFUL',
-  };
-
-  const { status, data } = await response.json();
 
   if (status === 'SUCCESS') {
-    result = {
-      status: 200,
-      statusText: 'SUCCESSFUL',
+    responseStatus = {
+      code: 200,
+      message: 'SUCCESSFUL',
     };
   }
 
-  return { data, result };
+  return { data, responseStatus };
 }
 
 export async function readServerlessFunction(params: ReadserverlessProps) {
