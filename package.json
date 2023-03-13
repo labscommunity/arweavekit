@@ -1,6 +1,6 @@
 {
   "name": "permawebjs",
-  "version": "1.0.52",
+  "version": "1.0.53",
   "description": "Utility library to build full stack permaweb applications",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -40,12 +40,12 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@bundlr-network/client": "^0.10.3",
+    "@bundlr-network/client": "^0.10.5",
     "@execution-machine/sdk": "^0.1.7",
     "@three-em/node": "^0.3.20",
     "arweave": "^1.13.0",
     "arweave-mnemonic-keys": "^0.0.9",
-    "warp-contracts": "^1.2.52"
+    "warp-contracts": "^1.2.56"
   },
   "exports": {
     "./auth": "./dist/lib/auth.js",
