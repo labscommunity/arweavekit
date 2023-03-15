@@ -1,3 +1,4 @@
+import { SimulateInput } from '@three-em/node';
 export interface CreateServerlessProps {
   token: string;
   functionSource: Uint8Array;
@@ -13,11 +14,17 @@ export interface CreateServerlessReturnProps {
     statusText: string;
   };
 }
-export interface ReadserverlessProps {
+export interface ReadServerlessProps {
   token: string;
   functionId: string;
 }
 
-export interface WriteserverlessProps extends ReadserverlessProps {
+export interface WriteServerlessProps extends ReadServerlessProps {
   inputs: {};
+}
+
+export interface TestServerlessFunctionProps {
+  functionSource: Uint8Array;
+  functionInitState: any;
+  functionWrites: SimulateInput[];
 }

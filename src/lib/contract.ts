@@ -3,6 +3,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/contract';
 
 /***
+ * create warp contract
  * @params CreateContractProps
  * @returns CreateContractReturnProps
  */
@@ -64,7 +65,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.0.52' }],
+    tags: [{ name: 'PermawebJS', value: '1.0.53' }],
   });
 
   const readState = await contract.readState();
@@ -119,6 +120,7 @@ export async function readContractState(params: Types.ReadContractProps) {
 }
 
 /**
+ * get contract
  * @params contractTxId: string
  * @returns Contract
  */

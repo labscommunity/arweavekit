@@ -1,13 +1,20 @@
-import { Exm } from '@execution-machine/sdk';
+import { Exm, TestFunction, FunctionType } from '@execution-machine/sdk';
+
 import {
   CreateServerlessProps,
   CreateServerlessReturnProps,
-  ReadserverlessProps,
-  WriteserverlessProps,
+  ReadServerlessProps,
+  WriteServerlessProps,
+  TestServerlessFunctionProps,
 } from '../types/serverless';
 
 const URL = 'https://api.exm.dev';
 
+/***
+ * create EXM serverless function
+ * @params CreateServerlessProps
+ * @returns CreateServerlessReturnProps
+ */
 export async function createServerlessFunction(
   params: CreateServerlessProps
 ): Promise<CreateServerlessReturnProps> {
@@ -57,7 +64,11 @@ export async function createServerlessFunction(
   return { functionId, functionUrl, functionSource, result };
 }
 
-export async function writeServerlessFunction(params: WriteserverlessProps) {
+/***
+ * write to EXM serverless function
+ * @params WriteServerlessProps
+ */
+export async function writeServerlessFunction(params: WriteServerlessProps) {
   const exm = new Exm({ token: params.token });
 
   const inputs = [{ ...params.inputs }];
@@ -79,7 +90,11 @@ export async function writeServerlessFunction(params: WriteserverlessProps) {
   return { data, responseStatus };
 }
 
-export async function readServerlessFunction(params: ReadserverlessProps) {
+/***
+ * read state of EXM serverless function
+ * @params ReadServerlessProps
+ */
+export async function readServerlessFunction(params: ReadServerlessProps) {
   const url = `${URL}/read/${params.functionId}`;
 
   const response = await fetch(url, {
@@ -93,3 +108,22 @@ export async function readServerlessFunction(params: ReadserverlessProps) {
 
   return state;
 }
+
+/***
+ * test EXM serverless function
+ * @params TestServerlessFunctionProps
+ */
+export async function testServerlessFunction(
+  params: TestServerlessFunctionProps
+) {
+  const test = await TestFunction({
+    functionSource: params.functionSource,
+    functionType: FunctionType.JAVASCRIPT,
+    functionInitState: params.functionInitState,
+    writes: params.functionWrites,
+  });
+
+  return test;
+}
+
+export { createWrite } from '@execution-machine/sdk';

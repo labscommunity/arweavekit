@@ -26,7 +26,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
-          value: '1.0.52',
+          value: '1.0.53',
         },
         ...params?.options.tags,
       ];
@@ -34,7 +34,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.52' }],
+          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.53' }],
         }
       );
 
@@ -69,7 +69,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       );
 
       // tags
-      transaction.addTag('PermawebJS', '1.0.0');
+      transaction.addTag('PermawebJS', '1.0.53');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -112,7 +112,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       );
 
       // add tags
-      transaction.addTag('PermawebJS', '1.0.0');
+      transaction.addTag('PermawebJS', '1.0.53');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
