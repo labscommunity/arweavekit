@@ -19,6 +19,6 @@ export interface GetBalanceProps {
   address: string;
   environment: 'local' | 'mainnet';
   options?: {
-    winston?: boolean;
+    winstonToAr?: boolean;
   };
 }
