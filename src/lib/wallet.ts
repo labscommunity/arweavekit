@@ -75,11 +75,11 @@ export async function getBalance(
   const arweave = initArweave(params.environment);
   const winstonBalance = await arweave.wallets.getBalance(params.address);
 
-  if (params.options?.winston) {
-    walletBalance = winstonBalance;
+  if (params.options?.winstonToAr) {
+    walletBalance = arweave.ar.winstonToAr(winstonBalance);
     return walletBalance;
   } else {
-    walletBalance = arweave.ar.winstonToAr(winstonBalance);
+    walletBalance = winstonBalance;
     return walletBalance;
   }
 }

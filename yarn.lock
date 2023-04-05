@@ -1577,6 +1577,7 @@
   integrity sha512-vdmw4Oc81vnRgC2n/EpWSNpNPIDDfrnmX4+/AaXUc8IuEbqS7nOakT+x+fbZiwrIuzdBDdPi+56Y/iGIkWoTxQ==
 
 "@three-em/node@^0.3.20", "three-em-0-3-09@npm:@three-em/node@^0.3.09", "three-em-0-3-12@npm:@three-em/node@^0.3.12", "three-em-0-3-13@npm:@three-em/node@^0.3.13", "three-em-0-3-14@npm:@three-em/node@^0.3.14", "three-em-0-3-15@npm:@three-em/node@^0.3.15", "three-em-0-3-16@npm:@three-em/node@^0.3.16", "three-em-0-3-17@npm:@three-em/node@^0.3.17", "three-em-0-3-20@npm:@three-em/node@^0.3.20":
+  name three-em-0-3-09
   version "0.3.20"
   resolved "https://registry.yarnpkg.com/@three-em/node/-/node-0.3.20.tgz#2e5e7147b461adc40369ad5b14a8acacdb9bbdbb"
   integrity sha512-eY8lj79ToEvEOmKAD0zLeD+yrmbID7//wCXDhZlF3Qkk5ssvK2yzbW3IOj3isuZgME+MW0yI2Jdk9Ud3enFVkQ==
@@ -2574,10 +2575,20 @@ arweave@=1.11.8:
     bignumber.js "^9.0.2"
     util "^0.12.4"
 
-arweave@^1.10.13, arweave@^1.10.5, arweave@^1.11.4, arweave@^1.12.4, arweave@^1.13.0:
+arweave@^1.10.13, arweave@^1.10.5, arweave@^1.11.4, arweave@^1.12.4:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.13.1.tgz#acc70c07cb8505ddaa84548332c82fb45aa8f7c5"
   integrity sha512-B6+N/5Ngvm0w1XTcboRbHGhyJkLmneqz8F5FaoVtd8KHVrzJ8cGq/dBAToP+QL4QJXlRudjLMxX7Mm9tzJt2xQ==
+  dependencies:
+    arconnect "^0.4.2"
+    asn1.js "^5.4.1"
+    base64-js "^1.5.1"
+    bignumber.js "^9.0.2"
+
+arweave@^1.13.5:
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.13.5.tgz#0bd28aae9d0e9fc66df45217661b08f57658c090"
+  integrity sha512-bxXoxmQF1OVXw2QFjD9m29Oo+lwUSvb2mzli494BRFGCfSSTBpE5Fp9f65HmmGEUURCL4xS17J6wBjLm1efrig==
   dependencies:
     arconnect "^0.4.2"
     asn1.js "^5.4.1"
