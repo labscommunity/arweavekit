@@ -152,7 +152,7 @@ describe('Create Transaction', () => {
       signature: '',
       quantity: '0',
       tags: [
-        { name: 'UGVybWF3ZWJKUw', value: 'MS4wLjA' },
+        { name: 'UGVybWF3ZWJKUw', value: 'MS4wLjUz' },
         { name: 'dGVzdC1hcndlYXZl', value: 'amVzdDI' },
       ],
     });
@@ -186,16 +186,16 @@ describe('Create Transaction', () => {
     const txn = await createTransaction({
       key: senderKey,
       type: 'wallet',
-      quantity: '1.000000000000',
+      quantity: '1000000000000',
       target: receiverAddress,
       environment: 'local',
     });
 
-    expect(balance).toBe('1.000000000000');
+    expect(balance).toBe('1000000000000');
     expect(txn).toMatchObject({
       format: 2,
       target: receiverAddress,
-      quantity: '1.000000000000',
+      quantity: '1000000000000',
     });
   });
 });
