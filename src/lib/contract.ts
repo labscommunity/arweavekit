@@ -16,8 +16,8 @@ export async function createContract(
     params.environment === 'local'
       ? WarpFactory.forLocal()
       : params.environment === 'testnet'
-      ? WarpFactory.forTestnet()
-      : WarpFactory.forMainnet();
+        ? WarpFactory.forTestnet()
+        : WarpFactory.forMainnet();
 
   if (params.environment === 'local' || params.environment === 'testnet') {
     await warp.testing
@@ -56,8 +56,8 @@ export async function writeContract(params: Types.WriteContractProps) {
     params.environment === 'local'
       ? WarpFactory.forLocal()
       : params.environment === 'testnet'
-      ? WarpFactory.forTestnet()
-      : WarpFactory.forMainnet();
+        ? WarpFactory.forTestnet()
+        : WarpFactory.forMainnet();
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
@@ -65,7 +65,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.0.53' }],
+    tags: [{ name: 'PermawebJS', value: '1.0.55' }],
   });
 
   const readState = await contract.readState();
@@ -95,8 +95,8 @@ export async function readContractState(params: Types.ReadContractProps) {
     params.environment === 'local'
       ? WarpFactory.forLocal()
       : params.environment === 'testnet'
-      ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
-      : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
+        ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
+        : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
