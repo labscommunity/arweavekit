@@ -1,4 +1,5 @@
 import BundlrTransaction from '@bundlr-network/client/build/common/transaction';
+import { UploadResponse } from '@bundlr-network/client/build/common/types';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 
@@ -18,6 +19,104 @@ export interface CreateTransactionProps {
     signAndPost?: boolean;
   };
 }
+
+export interface CreateWalletTransactionProps extends CreateTransactionProps {
+  type: 'wallet';
+  options?: {
+    tags?: {
+      name: string;
+      value: string;
+    }[];
+    useBundlr?: false;
+    signAndPost?: false;
+  };
+}
+
+export interface CreateAndPostWalletTransactionProps extends CreateTransactionProps {
+  type: 'wallet';
+  options?: {
+    tags?: {
+      name: string;
+      value: string;
+    }[];
+    useBundlr?: false;
+    signAndPost?: true;
+  };
+}
+
+export interface CreateDataTransactionProps extends CreateTransactionProps {
+  type: 'data';
+  options?: {
+    tags?: {
+      name: string;
+      value: string;
+    }[];
+    useBundlr?: false;
+    signAndPost?: false;
+  };
+}
+
+export interface CreateAndPostDataTransactionProps extends CreateTransactionProps {
+  type: 'data';
+  options?: {
+    tags?: {
+      name: string;
+      value: string;
+    }[];
+    useBundlr?: false;
+    signAndPost?: true;
+  };
+}
+
+export interface CreateBundledDataTransactionProps extends CreateTransactionProps {
+  type: 'data';
+  options?: {
+    tags?: {
+      name: string;
+      value: string;
+    }[];
+    useBundlr?: true;
+    signAndPost?: false;
+  };
+}
+
+export interface CreateAndPostBundledDataTransactionProps extends CreateTransactionProps {
+  type: 'data';
+  options?: {
+    tags?: {
+      name: string;
+      value: string;
+    }[];
+    useBundlr?: true;
+    signAndPost?: true;
+  };
+}
+
+export type CreateTransactionReturnProps<T extends CreateWalletTransactionProps | CreateAndPostWalletTransactionProps | CreateDataTransactionProps | CreateAndPostDataTransactionProps | CreateBundledDataTransactionProps | CreateAndPostBundledDataTransactionProps> =
+  T extends CreateWalletTransactionProps ? Transaction :
+  T extends CreateAndPostWalletTransactionProps ? {
+    transaction: Transaction,
+    postedTransaction: {
+      status: number;
+      statusText: string;
+      data: any;
+    }
+  } :
+  T extends CreateDataTransactionProps ? Transaction :
+  T extends CreateAndPostDataTransactionProps ? {
+    transaction: Transaction,
+    postedTransaction: {
+      status: number;
+      statusText: string;
+      data: any;
+    }
+  } :
+  T extends CreateBundledDataTransactionProps ? BundlrTransaction :
+  T extends CreateAndPostBundledDataTransactionProps ? {
+    transaction: BundlrTransaction,
+    postedTransaction: UploadResponse
+  } :
+  never;
 
 export interface SignTransactionProps {
   key: JWKInterface;

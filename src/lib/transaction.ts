@@ -10,7 +10,7 @@ import * as Types from '../types/transaction';
  * @params CreateTransactionProps
  * @returns Transaction | Bundlr Transaction
  */
-export async function createTransaction(params: Types.CreateTransactionProps) {
+export async function createTransaction<T extends Types.CreateWalletTransactionProps | Types.CreateAndPostWalletTransactionProps | Types.CreateDataTransactionProps | Types.CreateAndPostDataTransactionProps | Types.CreateBundledDataTransactionProps | Types.CreateAndPostBundledDataTransactionProps>(params: T): Promise<Types.CreateTransactionReturnProps<T>> {
   // check and default env to mainnet
   const arweave = initArweave(params.environment);
 
@@ -26,7 +26,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
-          value: '1.0.53',
+          value: '1.0.55',
         },
         ...params?.options.tags,
       ];
@@ -34,16 +34,16 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.53' }],
+          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.55' }],
         }
       );
 
       if (params.options?.signAndPost) {
         await transaction.sign();
         const postedTransaction = await transaction.upload();
-        return { transaction, postedTransaction };
+        return { transaction, postedTransaction } as Types.CreateTransactionReturnProps<T>;
       } else {
-        return transaction;
+        return transaction as Types.CreateTransactionReturnProps<T>;
       }
     } else {
       // fund wallet if environment is local
@@ -69,7 +69,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       );
 
       // tags
-      transaction.addTag('PermawebJS', '1.0.53');
+      transaction.addTag('PermawebJS', '1.0.55');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -80,9 +80,9 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       if (params.options?.signAndPost) {
         await arweave.transactions.sign(transaction, params.key);
         const postedTransaction = await arweave.transactions.post(transaction);
-        return { transaction, postedTransaction };
+        return { transaction, postedTransaction } as Types.CreateTransactionReturnProps<T>;
       } else {
-        return transaction;
+        return transaction as Types.CreateTransactionReturnProps<T>;
       }
     }
   } else {
@@ -112,7 +112,7 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       );
 
       // add tags
-      transaction.addTag('PermawebJS', '1.0.53');
+      transaction.addTag('PermawebJS', '1.0.55');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -123,12 +123,12 @@ export async function createTransaction(params: Types.CreateTransactionProps) {
       if (params.options?.signAndPost) {
         await arweave.transactions.sign(transaction, params.key);
         const postedTransaction = await arweave.transactions.post(transaction);
-        return { transaction, postedTransaction };
+        return { transaction, postedTransaction } as Types.CreateTransactionReturnProps<T>;
       } else {
-        return transaction;
+        return transaction as Types.CreateTransactionReturnProps<T>;
       }
     } else {
-      return 'insufficient funds to complete transaction';
+      throw new Error('insufficient funds to complete transaction');
     }
   }
 }
@@ -223,8 +223,8 @@ export async function getTransaction(params: Types.GetTransactionProps) {
   return params.options?.data
     ? txData
     : params?.options?.tags
-    ? { transaction, tags: txTags }
-    : params?.options?.data && params?.options?.tags
-    ? { transactionData: txData, tags: txTags }
-    : transaction;
+      ? { transaction, tags: txTags }
+      : params?.options?.data && params?.options?.tags
+        ? { transactionData: txData, tags: txTags }
+        : transaction;
 }
