@@ -85,7 +85,7 @@ export async function isInstalled() {
  */
 export async function logIn() {
   const response = await othent.logIn();
-  console.log("Login response", response);
+  return response;
 }
 
 /***
@@ -93,8 +93,7 @@ export async function logIn() {
  * 
  */
 export async function logOut() {
-  const response = await othent.logOut();
-  console.log("Logout response", response);
+  await othent.logOut();
 }
 
 export const ArConnect = {
