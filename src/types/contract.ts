@@ -1,7 +1,7 @@
-import { ArWallet, Contract, CustomSignature } from 'warp-contracts';
+import { ArWallet, Contract, CustomSignature, JWKInterface } from 'warp-contracts';
 
 export interface CreateContractProps {
-  wallet: ArWallet;
+  wallet: JWKInterface;
   initialState: string;
   contractSource: string;
   environment: 'local' | 'testnet' | 'mainnet';
