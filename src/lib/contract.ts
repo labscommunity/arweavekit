@@ -1,3 +1,4 @@
+import { DeployPlugin, ArweaveSigner } from 'warp-contracts-plugin-deploy';
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/contract';
@@ -14,21 +15,32 @@ export async function createContract(
   let statusText: string = 'UNSUCCESSFUL';
   const warp =
     params.environment === 'local'
-      ? WarpFactory.forLocal()
+      ? WarpFactory.forLocal().use(new DeployPlugin())
       : params.environment === 'testnet'
-        ? WarpFactory.forTestnet()
-        : WarpFactory.forMainnet();
+        ? WarpFactory.forTestnet().use(new DeployPlugin())
+        : WarpFactory.forMainnet().use(new DeployPlugin());
 
-  if (params.environment === 'local' || params.environment === 'testnet') {
+  if (params.environment === 'local') {
     await warp.testing
-      .addFunds(params.wallet as JWKInterface)
+      .addFunds(params.wallet)
       .catch((e) => console.log('ERROR', e.message));
   }
-  const { contractTxId } = await warp.deploy({
-    wallet: params.wallet,
-    initState: params.initialState,
-    src: params.contractSource,
-  });
+  let contractTxId = "";
+  if (params.environment === 'local') {
+    const { contractTxId: deployedContractTxId } = await warp.deploy({
+      wallet: params.wallet,
+      initState: params.initialState,
+      src: params.contractSource,
+    });
+    contractTxId = deployedContractTxId;
+  } else {
+    const { contractTxId: deployedContractTxId } = await warp.deploy({
+      wallet: new ArweaveSigner(params.wallet),
+      initState: params.initialState,
+      src: params.contractSource,
+    });
+    contractTxId = deployedContractTxId;
+  }
   const contract = warp.contract(contractTxId).connect(params.wallet);
 
   if (contractTxId !== '') {
@@ -65,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.0.55' }],
+    tags: [{ name: 'PermawebJS', value: '1.0.56' }],
   });
 
   const readState = await contract.readState();

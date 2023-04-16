@@ -15,7 +15,7 @@ describe('Create Contract', () => {
       environment: 'local',
     });
 
-    const { contract, status } = await createContract({
+    const { contract, result } = await createContract({
       wallet: key,
       environment: 'testnet',
       initialState: initState,
@@ -25,15 +25,15 @@ describe('Create Contract', () => {
     expect(contract).toBeDefined();
     expect(contract).toHaveProperty('_contractTxId');
     expect(typeof contract).toEqual('object');
-    expect(status).toBeDefined();
-    expect(typeof status).toEqual('object');
-    expect(status).toEqual({ code: 200, message: 'SUCCESSFUL' });
+    expect(result).toBeDefined();
+    expect(typeof result).toEqual('object');
+    expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
   });
 
   it('should create a new contract with wallet passed in on localhost', async () => {
     const { key } = await createWallet({ environment: 'local' });
 
-    const { contract, status } = await createContract({
+    const { contract, result } = await createContract({
       environment: 'local',
       wallet: key,
       initialState: initState,
@@ -43,8 +43,8 @@ describe('Create Contract', () => {
     expect(contract).toBeDefined();
     expect(typeof contract).toEqual('object');
     expect(contract).toHaveProperty('_contractTxId');
-    expect(status).toBeDefined();
-    expect(typeof status).toEqual('object');
-    expect(status).toEqual({ code: 200, message: 'SUCCESSFUL' });
+    expect(result).toBeDefined();
+    expect(typeof result).toEqual('object');
+    expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
   });
 });

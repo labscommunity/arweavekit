@@ -1,5 +1,4 @@
 import { ConnectProps } from '../types/auth';
-import othent from 'othent';
 
 /***
  * connect to arconnect wallet
@@ -79,22 +78,6 @@ export async function isInstalled() {
   return arweaveWallet ? true : false;
 }
 
-/***
- * logIn using othent
- * 
- */
-export async function logIn() {
-  const response = await othent.logIn();
-  return response;
-}
-
-/***
- * logOut using othent
- * 
- */
-export async function logOut() {
-  await othent.logOut();
-}
 
 export const ArConnect = {
   connect,
@@ -105,9 +88,4 @@ export const ArConnect = {
   getAllAddresses,
   getActivePublicKey,
   isInstalled,
-};
-
-export const Othent = {
-  logIn,
-  logOut,
 };
