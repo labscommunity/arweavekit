@@ -20,16 +20,27 @@ export async function createContract(
         ? WarpFactory.forTestnet().use(new DeployPlugin())
         : WarpFactory.forMainnet().use(new DeployPlugin());
 
-  if (params.environment === 'local' || params.environment === 'testnet') {
+  if (params.environment === 'local') {
     await warp.testing
-      .addFunds(params.wallet as JWKInterface)
+      .addFunds(params.wallet)
       .catch((e) => console.log('ERROR', e.message));
   }
-  const { contractTxId } = await warp.deploy({
-    wallet: new ArweaveSigner(params.wallet),
-    initState: params.initialState,
-    src: params.contractSource,
-  });
+  let contractTxId = "";
+  if (params.environment === 'local') {
+    const { contractTxId: deployedContractTxId } = await warp.deploy({
+      wallet: params.wallet,
+      initState: params.initialState,
+      src: params.contractSource,
+    });
+    contractTxId = deployedContractTxId;
+  } else {
+    const { contractTxId: deployedContractTxId } = await warp.deploy({
+      wallet: new ArweaveSigner(params.wallet),
+      initState: params.initialState,
+      src: params.contractSource,
+    });
+    contractTxId = deployedContractTxId;
+  }
   const contract = warp.contract(contractTxId).connect(params.wallet);
 
   if (contractTxId !== '') {

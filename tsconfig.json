@@ -6,11 +6,20 @@
     "module": "commonjs",
     "outDir": "dist",
     "strict": true,
-    "lib": ["es2015", "DOM"],
+    "lib": [
+      "es2015",
+      "DOM"
+    ],
     "esModuleInterop": true,
     "sourceMap": true,
-    "allowJs": true
+    "allowJs": true,
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "__tests__/*", "src/index.ts"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "__tests__/*",
+    "src/index.ts"
+  ]
 }
