@@ -1,7 +1,7 @@
 import { DeployPlugin, ArweaveSigner } from 'warp-contracts-plugin-deploy';
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
-import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/contract';
+import othent from 'othent';
 
 /***
  * create warp contract
@@ -77,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.0.56' }],
+    tags: [{ name: 'PermawebJS', value: '1.1.3' }],
   });
 
   const readState = await contract.readState();
@@ -145,4 +145,28 @@ export async function getContract(contractTxId: string) {
 
   const contract = await getContract.json();
   return { contract };
+}
+
+/**
+ * writeWOthent
+ * @params WriteWOthentProps
+ * @returns WriteWOthentReturnProps
+ */
+
+export async function writeWOthent(params: Types.WriteWOthentProps): Promise<Types.WriteWOthentReturnProps> {
+
+  const signedTransaction = await othent.signTransactionWarp({
+    othentFunction: params.othentFunction,
+    data: params.data,
+    tags: [{ name: 'PermawebJS', value: '1.1.3' }],
+  });
+
+  const postedTransaction = await othent.sendTransactionWarp(signedTransaction);
+
+  if (postedTransaction.success) {
+
+    return postedTransaction as Types.WriteWOthentReturnProps;
+  } else {
+    throw new Error("Transaction creation unsuccessful.");
+  }
 }

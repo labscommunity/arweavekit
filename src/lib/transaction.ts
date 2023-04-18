@@ -4,6 +4,7 @@ import { initArweave } from '../utils';
 import { getAddress, getBalance } from './wallet';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
+import othent from 'othent';
 
 /**
  * create transaction
@@ -26,7 +27,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
-          value: '1.0.56',
+          value: '1.1.3',
         },
         ...params?.options.tags,
       ];
@@ -34,7 +35,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.56' }],
+          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.1.3' }],
         }
       );
 
@@ -61,7 +62,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       // create transaction
       const transaction = await arweave.createTransaction(
         {
-          data: Buffer.isBuffer(params.data)
+          data: (Buffer.isBuffer(params.data))
             ? Buffer.from(`${params.data}`, 'utf8')
             : params.data,
         },
@@ -69,7 +70,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       );
 
       // tags
-      transaction.addTag('PermawebJS', '1.0.56');
+      transaction.addTag('PermawebJS', '1.1.3');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -112,7 +113,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       );
 
       // add tags
-      transaction.addTag('PermawebJS', '1.0.56');
+      transaction.addTag('PermawebJS', '1.1.3');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -227,4 +228,35 @@ export async function getTransaction(params: Types.GetTransactionProps) {
       : params?.options?.data && params?.options?.tags
         ? { transactionData: txData, tags: txTags }
         : transaction;
+}
+
+/**
+ * CreateandPostTransactionWOthent
+ * @params CreateandPostTransactionWOthentProps
+ * @returns CreateandPostTransactionWOthentReturnProps
+ */
+
+export async function createAndPostTransactionWOthent(params: Types.CreateandPostTransactionWOthentProps): Promise<Types.CreateandPostTransactionWOthentReturnProps> {
+  const allTags = params?.tags && [
+    {
+      name: 'PermawebJS',
+      value: '1.1.3',
+    },
+    ...params?.tags,
+  ];
+
+  const signedTransaction = await othent.signTransactionArweave({
+    othentFunction: params.othentFunction,
+    data: params.data,
+    tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.1.3' }],
+  });
+
+  const postedTransaction = await othent.sendTransactionArweave(signedTransaction);
+
+  if (postedTransaction.success) {
+
+    return postedTransaction as Types.CreateandPostTransactionWOthentReturnProps;
+  } else {
+    throw new Error("Transaction creation unsuccessful.");
+  }
 }

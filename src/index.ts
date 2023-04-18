@@ -1,4 +1,4 @@
-export { ArConnect } from './lib/auth';
+export { ArConnect, Othent } from './lib/auth';
 export { createWallet, getAddress, getBalance } from './lib/wallet';
 export {
   createTransaction,
@@ -6,12 +6,14 @@ export {
   postTransaction,
   getTransaction,
   getTransactionStatus,
+  createAndPostTransactionWOthent
 } from './lib/transaction';
 export {
   createContract,
   writeContract,
   readContractState,
   getContract,
+  writeWOthent,
 } from './lib/contract';
 export {
   createServerlessFunction,
