@@ -77,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.1.2' }],
+    tags: [{ name: 'PermawebJS', value: '1.1.3' }],
   });
 
   const readState = await contract.readState();
@@ -148,17 +148,17 @@ export async function getContract(contractTxId: string) {
 }
 
 /**
- * CreateandPostTransactionWOthent
- * @params CreateandPostTransactionWOthentProps
- * @returns CreateandPostTransactionWOthentReturnProps
+ * writeWOthent
+ * @params WriteWOthentProps
+ * @returns WriteWOthentReturnProps
  */
 
 export async function writeWOthent(params: Types.WriteWOthentProps): Promise<Types.WriteWOthentReturnProps> {
 
   const signedTransaction = await othent.signTransactionWarp({
-    othentFunction: "sendTransaction",
+    othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'PermawebJS', value: '1.1.2' }],
+    tags: [{ name: 'PermawebJS', value: '1.1.3' }],
   });
 
   const postedTransaction = await othent.sendTransactionWarp(signedTransaction);
