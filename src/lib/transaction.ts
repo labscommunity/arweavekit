@@ -4,6 +4,7 @@ import { initArweave } from '../utils';
 import { getAddress, getBalance } from './wallet';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
+import othent from 'othent';
 
 /**
  * create transaction
@@ -61,7 +62,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       // create transaction
       const transaction = await arweave.createTransaction(
         {
-          data: Buffer.isBuffer(params.data)
+          data: (Buffer.isBuffer(params.data))
             ? Buffer.from(`${params.data}`, 'utf8')
             : params.data,
         },
@@ -227,4 +228,35 @@ export async function getTransaction(params: Types.GetTransactionProps) {
       : params?.options?.data && params?.options?.tags
         ? { transactionData: txData, tags: txTags }
         : transaction;
+}
+
+/**
+ * CreateandPostTransactionWOthent
+ * @params CreateandPostTransactionWOthentProps
+ * @returns CreateandPostTransactionWOthentReturnProps
+ */
+
+export async function createAndPostTransactionWOthent(params: Types.CreateandPostTransactionWOthentProps): Promise<Types.CreateandPostTransactionWOthentReturnProps> {
+  const allTags = params?.tags && [
+    {
+      name: 'PermawebJS',
+      value: '1.0.56',
+    },
+    ...params?.tags,
+  ];
+
+  const signedTransaction = await othent.signTransactionArweave({
+    othentFunction: "uploadData",
+    data: params.data,
+    tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.1.0' }],
+  });
+
+  const postedTransaction = await othent.sendTransactionArweave(signedTransaction);
+
+  if (postedTransaction.success) {
+
+    return postedTransaction as Types.CreateandPostTransactionWOthentReturnProps;
+  } else {
+    throw new Error("Transaction creation unsuccessful.");
+  }
 }

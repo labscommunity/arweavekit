@@ -6,6 +6,7 @@ export {
   postTransaction,
   getTransaction,
   getTransactionStatus,
+  createAndPostTransactionWOthent
 } from './lib/transaction';
 export {
   createContract,

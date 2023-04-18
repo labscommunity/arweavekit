@@ -18,3 +18,23 @@ export const initArweave = (env: 'local' | 'mainnet') => {
 
   return arweave;
 };
+
+export async function fileToBuffer(file: File): Promise<ArrayBuffer> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.result instanceof ArrayBuffer) {
+        resolve(reader.result);
+      } else {
+        reject('FileReader result is not an ArrayBuffer');
+      }
+    };
+
+    reader.onerror = () => {
+      reject(reader.error);
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+}
