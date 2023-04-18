@@ -26,7 +26,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
-          value: '1.0.56',
+          value: '1.1.0',
         },
         ...params?.options.tags,
       ];
@@ -34,7 +34,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.0.56' }],
+          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.1.0' }],
         }
       );
 
@@ -69,7 +69,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       );
 
       // tags
-      transaction.addTag('PermawebJS', '1.0.56');
+      transaction.addTag('PermawebJS', '1.1.0');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -112,7 +112,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       );
 
       // add tags
-      transaction.addTag('PermawebJS', '1.0.56');
+      transaction.addTag('PermawebJS', '1.1.0');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)

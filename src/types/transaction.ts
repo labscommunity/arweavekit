@@ -17,6 +17,7 @@ export interface CreateTransactionProps {
     }[];
     useBundlr?: boolean;
     signAndPost?: boolean;
+    signAndPostWOthen?: boolean;
   };
 }
 
@@ -29,6 +30,7 @@ export interface CreateWalletTransactionProps extends CreateTransactionProps {
     }[];
     useBundlr?: false;
     signAndPost?: false;
+    signAndPostWOthen?: false;
   };
 }
 
@@ -41,6 +43,7 @@ export interface CreateAndPostWalletTransactionProps extends CreateTransactionPr
     }[];
     useBundlr?: false;
     signAndPost?: true;
+    signAndPostWOthen?: false;
   };
 }
 
@@ -53,6 +56,7 @@ export interface CreateDataTransactionProps extends CreateTransactionProps {
     }[];
     useBundlr?: false;
     signAndPost?: false;
+    signAndPostWOthen?: false;
   };
 }
 
@@ -65,6 +69,20 @@ export interface CreateAndPostDataTransactionProps extends CreateTransactionProp
     }[];
     useBundlr?: false;
     signAndPost?: true;
+    signAndPostWOthen?: false;
+  };
+}
+
+export interface CreateAndPostDataTransactionWOthentProps extends CreateTransactionProps {
+  type: 'data';
+  options?: {
+    tags?: {
+      name: string;
+      value: string;
+    }[];
+    useBundlr?: false;
+    signAndPost?: false;
+    signAndPostWOthen?: true;
   };
 }
 
@@ -77,6 +95,7 @@ export interface CreateBundledDataTransactionProps extends CreateTransactionProp
     }[];
     useBundlr?: true;
     signAndPost?: false;
+    signAndPostWOthen?: false;
   };
 }
 
@@ -89,10 +108,11 @@ export interface CreateAndPostBundledDataTransactionProps extends CreateTransact
     }[];
     useBundlr?: true;
     signAndPost?: true;
+    signAndPostWOthen?: false;
   };
 }
 
-export type CreateTransactionReturnProps<T extends CreateWalletTransactionProps | CreateAndPostWalletTransactionProps | CreateDataTransactionProps | CreateAndPostDataTransactionProps | CreateBundledDataTransactionProps | CreateAndPostBundledDataTransactionProps> =
+export type CreateTransactionReturnProps<T extends CreateWalletTransactionProps | CreateAndPostWalletTransactionProps | CreateDataTransactionProps | CreateAndPostDataTransactionProps | CreateAndPostDataTransactionWOthentProps | CreateBundledDataTransactionProps | CreateAndPostBundledDataTransactionProps> =
   T extends CreateWalletTransactionProps ? Transaction :
   T extends CreateAndPostWalletTransactionProps ? {
     transaction: Transaction,
@@ -110,6 +130,10 @@ export type CreateTransactionReturnProps<T extends CreateWalletTransactionProps 
       statusText: string;
       data: any;
     }
+  } :
+  T extends CreateAndPostDataTransactionWOthentProps ? {
+    success: boolean,
+    transactionId: string
   } :
   T extends CreateBundledDataTransactionProps ? BundlrTransaction :
   T extends CreateAndPostBundledDataTransactionProps ? {
