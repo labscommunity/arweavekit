@@ -21,3 +21,16 @@ export interface ConnectProps {
     protocol: 'http' | 'https';
   };
 }
+
+export interface UserDetailsReturnProps {
+  contract_id: string,
+  given_name: string,
+  family_name: string,
+  nickname: string,
+  name: string,
+  picture: string,
+  locale: string,
+  email: string,
+  email_verified: string,
+  sub: string,
+}

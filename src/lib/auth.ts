@@ -1,4 +1,4 @@
-import { ConnectProps } from '../types/auth';
+import { ConnectProps, UserDetailsReturnProps } from '../types/auth';
 import othent from 'othent';
 
 /***
@@ -96,6 +96,15 @@ export async function logOut() {
   await othent.logOut();
 }
 
+/***
+ * fetch userDetails using othent
+ *
+ */
+export async function userDetails(): Promise<UserDetailsReturnProps> {
+  const res = await othent.userDetails();
+  return res;
+}
+
 
 export const ArConnect = {
   connect,
@@ -111,4 +120,5 @@ export const ArConnect = {
 export const Othent = {
   logIn,
   logOut,
+  userDetails,
 };
