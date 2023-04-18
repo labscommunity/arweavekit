@@ -28,3 +28,21 @@ export interface ReadContractProps {
   contractTxId: string;
   wallet: ArWallet | CustomSignature;
 }
+
+export interface WriteWOthentProps {
+  othentFunction: string,
+  data: {
+    toContractId: string,
+    toContractFunction: string,
+    txnData: object
+  }
+  tags?: {
+    name: string;
+    value: string;
+  }[],
+}
+
+export interface WriteWOthentReturnProps {
+  success: boolean,
+  transactionId: string,
+}
