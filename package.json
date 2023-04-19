@@ -2,7 +2,7 @@
   "name": "permawebjs",
   "version": "1.1.7",
   "description": "Utility library to build full stack permaweb applications",
-  "type": "commonjs",
+  "type": "module",
   "main": "dist/index.js",
   "module": "esnext",
   "files": [

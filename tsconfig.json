@@ -3,11 +3,11 @@
     "moduleResolution": "node",
     "declaration": true,
     "target": "es5",
-    "module": "commonjs",
+    "module": "ES2015",
     "outDir": "dist",
     "strict": true,
     "lib": [
-      "es2015",
+      "ES2015",
       "DOM"
     ],
     "esModuleInterop": true,
