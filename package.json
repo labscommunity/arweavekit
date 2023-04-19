@@ -1,6 +1,6 @@
 {
   "name": "permawebjs",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "Utility library to build full stack permaweb applications",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -45,7 +45,7 @@
     "@three-em/node": "^0.3.22",
     "arweave": "^1.13.5",
     "arweave-mnemonic-keys": "^0.0.9",
-    "othent": "^1.0.35",
+    "othent": "^1.0.36",
     "warp-contracts": "^1.4.1",
     "warp-contracts-plugin-deploy": "^1.0.3"
   },
