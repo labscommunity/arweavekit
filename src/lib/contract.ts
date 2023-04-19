@@ -77,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.1.5' }],
+    tags: [{ name: 'PermawebJS', value: '1.1.6' }],
   });
 
   const readState = await contract.readState();
@@ -113,7 +113,7 @@ export async function readContractState(params: Types.ReadContractProps) {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
 
-  const contract = warp.contract(params.contractTxId).connect(params.wallet);
+  const contract = warp.contract(params.contractTxId);
 
   const readContract = await contract.readState();
 
@@ -158,7 +158,7 @@ export async function writeWOthent(params: Types.WriteWOthentProps): Promise<Typ
   const signedTransaction = await othent.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'PermawebJS', value: '1.1.5' }],
+    tags: [{ name: 'PermawebJS', value: '1.1.6' }],
   });
 
   const postedTransaction = await othent.sendTransactionWarp(signedTransaction);

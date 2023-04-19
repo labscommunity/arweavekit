@@ -26,7 +26,6 @@ export interface WriteContractProps {
 export interface ReadContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
   contractTxId: string;
-  wallet: ArWallet | CustomSignature;
 }
 
 export interface WriteWOthentProps {

@@ -101,8 +101,8 @@ export async function logOut() {
  *
  */
 export async function userDetails(): Promise<UserDetailsReturnProps> {
-  const res = await othent.userDetails();
-  return res;
+  const response = await othent.userDetails();
+  return response;
 }
 
 
