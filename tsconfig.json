@@ -2,16 +2,15 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "declaration": true,
-    "target": "esnext",
-    "module": "ES2020",
+    "target": "es5",
+    "module": "commonjs",
     "outDir": "dist",
     "strict": true,
     "lib": [
-      "ES2020",
+      "es2015",
       "DOM"
     ],
     "esModuleInterop": true,
-    "emitDeclarationOnly": false,
     "sourceMap": true,
     "allowJs": true,
   },
