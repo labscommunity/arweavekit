@@ -77,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.1.6' }],
+    tags: [{ name: 'PermawebJS', value: '1.1.14' }],
   });
 
   const readState = await contract.readState();
@@ -148,25 +148,37 @@ export async function getContract(contractTxId: string) {
 }
 
 /**
- * writeWOthent
- * @params WriteWOthentProps
- * @returns WriteWOthentReturnProps
+ * writeContractWOthent
+ * @params WriteContractWOthentProps
+ * @returns WriteContractWOthentReturnProps
  */
 
-export async function writeWOthent(params: Types.WriteWOthentProps): Promise<Types.WriteWOthentReturnProps> {
+export async function writeContractWOthent(params: Types.WriteContractWOthentProps): Promise<Types.WriteContractWOthentReturnProps> {
 
   const signedTransaction = await othent.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'PermawebJS', value: '1.1.6' }],
+    tags: [{ name: 'PermawebJS', value: '1.1.14' }],
   });
 
   const postedTransaction = await othent.sendTransactionWarp(signedTransaction);
 
   if (postedTransaction.success) {
 
-    return postedTransaction as Types.WriteWOthentReturnProps;
+    return postedTransaction as Types.WriteContractWOthentReturnProps;
   } else {
     throw new Error("Transaction creation unsuccessful.");
   }
+}
+
+/**
+ * readContractWOthent
+ * @params ReadContractWOthentProps
+ * @returns ReadContractWOthentReturnProps
+ */
+
+export async function readContractWOthent(params: Types.ReadContractWOthentProps): Promise<Types.ReadContractWOthentReturnProps> {
+  const res = await othent.readCustomContract({ contract_id: params.contractTxId });
+
+  return res;
 }

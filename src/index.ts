@@ -13,7 +13,8 @@ export {
   writeContract,
   readContractState,
   getContract,
-  writeWOthent,
+  writeContractWOthent,
+  readContractWOthent,
 } from './lib/contract';
 export {
   createServerlessFunction,
