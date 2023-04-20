@@ -4,73 +4,71 @@ import {
   readContractState,
   writeContract,
 } from '../../src/index';
-// import { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 
-// const contractSrc = readFileSync(
-//   '__tests__/contract/data/contract.js',
-//   'utf-8'
-// );
-// const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
+const contractSrc = readFileSync(
+  '__tests__/contract/data/contract.js',
+  'utf-8'
+);
+const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 
 jest.setTimeout(120000);
 
 describe('Read Contract State', () => {
   it('should read initial state', async () => {
-    // const { key } = await createWallet({ environment: 'local' });
+    const { key } = await createWallet({ environment: 'local' });
 
-    // const { contractTxId } = await createContract({
-    //   wallet: key,
-    //   environment: 'testnet',
-    //   initialState: initState,
-    //   contractSource: contractSrc,
-    // });
+    const { contractTxId } = await createContract({
+      wallet: key,
+      environment: 'testnet',
+      initialState: initState,
+      contractSource: contractSrc,
+    });
 
     const { readContract } = await readContractState({
       environment: 'mainnet',
-      contractTxId: 'i2l6sd9DRAtLQafurxcv4k_5nUgLe_sBvP_7Z2nW1GE',
+      contractTxId,
     });
 
-    // expect(readContract.sortKey).toBeDefined();
-    // expect(readContract.cachedValue.state).toBeDefined();
-    // expect(readContract.cachedValue.validity).toBeDefined();
-    // expect(typeof readContract.cachedValue.state).toBe('object');
-    // expect(typeof readContract.cachedValue.validity).toBe('object');
-    // expect(readContract.cachedValue.state).toEqual({ counter: 0 });
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect(readContract.cachedValue.state).toEqual({ counter: 0 });
 
     console.log("Res", readContract);
   });
 })
 
-//   it('should read updated state', async () => {
-//     const { key } = await createWallet({ environment: 'local' });
+it('should read updated state', async () => {
+  const { key } = await createWallet({ environment: 'local' });
 
-//     const { contractTxId } = await createContract({
-//       environment: 'testnet',
-//       wallet: key,
-//       initialState: initState,
-//       contractSource: contractSrc,
-//     });
+  const { contractTxId } = await createContract({
+    environment: 'testnet',
+    wallet: key,
+    initialState: initState,
+    contractSource: contractSrc,
+  });
 
-//     await writeContract({
-//       environment: 'testnet',
-//       contractTxId: contractTxId,
-//       wallet: key,
-//       options: {
-//         function: 'fifty',
-//       },
-//     });
+  await writeContract({
+    environment: 'testnet',
+    contractTxId: contractTxId,
+    wallet: key,
+    options: {
+      function: 'fifty',
+    },
+  });
 
-//     const { readContract } = await readContractState({
-//       environment: 'testnet',
-//       contractTxId: contractTxId,
-//       wallet: key,
-//     });
+  const { readContract } = await readContractState({
+    environment: 'testnet',
+    contractTxId: contractTxId,
+  });
 
-//     expect(readContract.sortKey).toBeDefined();
-//     expect(readContract.cachedValue.state).toBeDefined();
-//     expect(readContract.cachedValue.validity).toBeDefined();
-//     expect(typeof readContract.cachedValue.state).toBe('object');
-//     expect(typeof readContract.cachedValue.validity).toBe('object');
-//     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
-//   });
-// });
+  expect(readContract.sortKey).toBeDefined();
+  expect(readContract.cachedValue.state).toBeDefined();
+  expect(readContract.cachedValue.validity).toBeDefined();
+  expect(typeof readContract.cachedValue.state).toBe('object');
+  expect(typeof readContract.cachedValue.validity).toBe('object');
+  expect(readContract.cachedValue.state).toEqual({ counter: 50 });
+});

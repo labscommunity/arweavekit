@@ -28,7 +28,7 @@ export interface ReadContractProps {
   contractTxId: string;
 }
 
-export interface WriteWOthentProps {
+export interface WriteContractWOthentProps {
   othentFunction: string,
   data: {
     toContractId: string,
@@ -41,7 +41,17 @@ export interface WriteWOthentProps {
   }[],
 }
 
-export interface WriteWOthentReturnProps {
+export interface WriteContractWOthentReturnProps {
   success: boolean,
   transactionId: string,
+}
+
+export interface ReadContractWOthentProps {
+  contractTxId: string
+}
+
+export interface ReadContractWOthentReturnProps {
+  state: object,
+  errors: object,
+  validity: object
 }
