@@ -1,18 +1,19 @@
 {
   "name": "permawebjs",
-  "version": "1.1.14",
+  "version": "1.2.0",
   "description": "Utility library to build full stack permaweb applications",
   "type": "commonjs",
-  "main": "dist/index.js",
-  "module": "esnext",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "files": [
-    "dist"
+    "./dist"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "rimraf ./dist && tsc",
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "build": "rimraf ./dist && yarn tsc",
     "test": "jest --config jestconfig.json",
     "lint": "tslint -p  tsconfig.json",
     "format": "prettier --write src/*.ts"
@@ -22,7 +23,7 @@
     "url": "git+https://github.com/labscommunity/permawebjs.git"
   },
   "author": "CommunityLabs",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/labscommunity/permawebjs/issues"
   },
