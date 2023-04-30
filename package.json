@@ -1,12 +1,12 @@
 {
   "name": "permawebjs",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "description": "Utility library to build full stack permaweb applications",
-  "type": "commonjs",
+  "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "files": [
-    "./dist"
+    "./dist/"
   ],
   "publishConfig": {
     "access": "public"
@@ -51,28 +51,43 @@
     "warp-contracts-plugin-deploy": "^1.0.3"
   },
   "exports": {
-    "./auth": "./dist/lib/auth.js",
-    "./wallet": "./dist/lib/wallet.js",
-    "./serverless": "./dist/lib/serverless.js",
-    "./transaction": "./dist/lib/transaction.js",
-    "./contract": "./dist/lib/contract.js"
+    "./auth": {
+      "import": "./dist/esm/lib/auth.js",
+      "require": "./dist/cjs/lib/auth.js"
+    },
+    "./contract": {
+      "import": "./dist/esm/lib/contract.js",
+      "require": "./dist/cjs/lib/contract.js"
+    },
+    "./serverless": {
+      "import": "./dist/esm/lib/serverless.js",
+      "require": "./dist/cjs/lib/serverless.js"
+    },
+    "./transaction": {
+      "import": "./dist/esm/lib/transaction.js",
+      "require": "./dist/cjs/lib/transaction.js"
+    },
+    "./wallet": {
+      "import": "./dist/esm/lib/wallet.js",
+      "require": "./dist/cjs/lib/wallet.js"
+    }
   },
   "typesVersions": {
     "*": {
       "auth": [
-        "dist/lib/auth.d.ts"
+        "dist/cjs/lib/auth.d.ts"
       ],
       "wallet": [
-        "dist/lib/wallet.d.ts"
+        "dist/cjs/lib/wallet.d.ts"
       ],
       "serverless": [
-        "dist/lib/serverless.d.ts"
+        "dist/cjs/lib/serverless.d.ts"
       ],
       "transaction": [
-        "dist/lib/transaction.d.ts"
+        "dist/cjs/lib/transaction.d.ts"
       ],
       "contract": [
-        "dist/lib/contract.d.ts"
+        "dist/cjs/lib/contract.d.ts"
       ]
     }
   }
