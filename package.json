@@ -51,29 +51,45 @@
     "warp-contracts-plugin-deploy": "^1.0.3"
   },
   "exports": {
-    "./auth": "./dist/lib/auth.js",
-    "./wallet": "./dist/lib/wallet.js",
-    "./serverless": "./dist/lib/serverless.js",
-    "./transaction": "./dist/lib/transaction.js",
-    "./contract": "./dist/lib/contract.js"
-  },
-  "typesVersions": {
-    "*": {
-      "auth": [
-        "dist/lib/auth.d.ts"
-      ],
-      "wallet": [
-        "dist/lib/wallet.d.ts"
-      ],
-      "serverless": [
-        "dist/lib/serverless.d.ts"
-      ],
-      "transaction": [
-        "dist/lib/transaction.d.ts"
-      ],
-      "contract": [
-        "dist/lib/contract.d.ts"
-      ]
+    "./auth": {
+      "import": {
+        "default": "./dist/esm/lib/auth.js",
+        "types": "./dist/esm/lib/auth.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/lib/auth.js",
+        "types": "./dist/cjs/lib/auth.d.ts"
+      }
+    },
+    "./wallet": {
+      "import": {
+        "default": "./dist/esm/lib/wallet.js",
+        "types": "./dist/esm/lib/wallet.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/lib/wallet.js",
+        "types": "./dist/cjs/lib/wallet.d.ts"
+      }
+    },
+    "./serverless": {
+      "import": {
+        "default": "./dist/esm/lib/serverless.js",
+        "types": "./dist/esm/lib/serverless.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/lib/serverless.js",
+        "types": "./dist/cjs/lib/serverless.d.ts"
+      }
+    },
+    "./contract": {
+      "import": {
+        "default": "./dist/esm/lib/contract.js",
+        "types": "./dist/esm/lib/contract.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/lib/contract.js",
+        "types": "./dist/cjs/lib/contract.d.ts"
+      }
     }
   }
 }
