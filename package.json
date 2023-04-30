@@ -1,12 +1,12 @@
 {
   "name": "permawebjs",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Utility library to build full stack permaweb applications",
-  "type": "commonjs",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "type": "module",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "files": [
-    "./dist"
+    "dist/"
   ],
   "publishConfig": {
     "access": "public"
@@ -61,14 +61,14 @@
         "types": "./dist/cjs/lib/auth.d.ts"
       }
     },
-    "./wallet": {
+    "./contract": {
       "import": {
-        "default": "./dist/esm/lib/wallet.js",
-        "types": "./dist/esm/lib/wallet.d.ts"
+        "default": "./dist/esm/lib/contract.js",
+        "types": "./dist/esm/lib/contract.d.ts"
       },
       "require": {
-        "default": "./dist/cjs/lib/wallet.js",
-        "types": "./dist/cjs/lib/wallet.d.ts"
+        "default": "./dist/cjs/lib/contract.js",
+        "types": "./dist/cjs/lib/contract.d.ts"
       }
     },
     "./serverless": {
@@ -81,14 +81,24 @@
         "types": "./dist/cjs/lib/serverless.d.ts"
       }
     },
-    "./contract": {
+    "./transaction": {
       "import": {
-        "default": "./dist/esm/lib/contract.js",
-        "types": "./dist/esm/lib/contract.d.ts"
+        "default": "./dist/esm/lib/transaction.js",
+        "types": "./dist/esm/lib/transaction.d.ts"
       },
       "require": {
-        "default": "./dist/cjs/lib/contract.js",
-        "types": "./dist/cjs/lib/contract.d.ts"
+        "default": "./dist/cjs/lib/transaction.js",
+        "types": "./dist/cjs/lib/transaction.d.ts"
+      }
+    },
+    "./wallet": {
+      "import": {
+        "default": "./dist/esm/lib/wallet.js",
+        "types": "./dist/esm/lib/wallet.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/lib/wallet.js",
+        "types": "./dist/cjs/lib/wallet.d.ts"
       }
     }
   }
