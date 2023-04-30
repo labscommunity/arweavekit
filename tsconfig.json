@@ -4,7 +4,7 @@
     "declaration": true,
     "target": "ES2015",
     "module": "ES2020",
-    "outDir": "./dist/esm",
+    "outDir": "dist/esm",
     "strict": true,
     "lib": [
       "es2015",
@@ -15,11 +15,11 @@
     "allowJs": true,
   },
   "include": [
-    "./src"
+    "src"
   ],
   "exclude": [
-    "./node_modules",
-    "./__tests__/*",
-    "./src/index.ts"
+    "node_modules",
+    "__tests__/*",
+    "src/index.ts"
   ]
 }

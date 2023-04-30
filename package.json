@@ -3,10 +3,10 @@
   "version": "1.2.3",
   "description": "Utility library to build full stack permaweb applications",
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "files": [
-    "dist/"
+    "./dist/"
   ],
   "publishConfig": {
     "access": "public"
@@ -52,54 +52,43 @@
   },
   "exports": {
     "./auth": {
-      "import": {
-        "default": "./dist/esm/lib/auth.js",
-        "types": "./dist/esm/lib/auth.d.ts"
-      },
-      "require": {
-        "default": "./dist/cjs/lib/auth.js",
-        "types": "./dist/cjs/lib/auth.d.ts"
-      }
+      "import": "./dist/esm/lib/auth.js",
+      "require": "./dist/cjs/lib/auth.js"
     },
     "./contract": {
-      "import": {
-        "default": "./dist/esm/lib/contract.js",
-        "types": "./dist/esm/lib/contract.d.ts"
-      },
-      "require": {
-        "default": "./dist/cjs/lib/contract.js",
-        "types": "./dist/cjs/lib/contract.d.ts"
-      }
+      "import": "./dist/esm/lib/contract.js",
+      "require": "./dist/cjs/lib/contract.js"
     },
     "./serverless": {
-      "import": {
-        "default": "./dist/esm/lib/serverless.js",
-        "types": "./dist/esm/lib/serverless.d.ts"
-      },
-      "require": {
-        "default": "./dist/cjs/lib/serverless.js",
-        "types": "./dist/cjs/lib/serverless.d.ts"
-      }
+      "import": "./dist/esm/lib/serverless.js",
+      "require": "./dist/cjs/lib/serverless.js"
     },
     "./transaction": {
-      "import": {
-        "default": "./dist/esm/lib/transaction.js",
-        "types": "./dist/esm/lib/transaction.d.ts"
-      },
-      "require": {
-        "default": "./dist/cjs/lib/transaction.js",
-        "types": "./dist/cjs/lib/transaction.d.ts"
-      }
+      "import": "./dist/esm/lib/transaction.js",
+      "require": "./dist/cjs/lib/transaction.js"
     },
     "./wallet": {
-      "import": {
-        "default": "./dist/esm/lib/wallet.js",
-        "types": "./dist/esm/lib/wallet.d.ts"
-      },
-      "require": {
-        "default": "./dist/cjs/lib/wallet.js",
-        "types": "./dist/cjs/lib/wallet.d.ts"
-      }
+      "import": "./dist/esm/lib/wallet.js",
+      "require": "./dist/cjs/lib/wallet.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "auth": [
+        "dist/cjs/lib/auth.d.ts"
+      ],
+      "wallet": [
+        "dist/cjs/lib/wallet.d.ts"
+      ],
+      "serverless": [
+        "dist/cjs/lib/serverless.d.ts"
+      ],
+      "transaction": [
+        "dist/cjs/lib/transaction.d.ts"
+      ],
+      "contract": [
+        "dist/cjs/lib/contract.d.ts"
+      ]
     }
   }
 }
