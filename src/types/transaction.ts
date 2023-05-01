@@ -174,6 +174,7 @@ export interface CreateandPostTransactionWOthentProps {
     name: string;
     value: string;
   }[],
+  useBundlr?: boolean;
 }
 
 export interface CreateandPostTransactionWOthentReturnProps {
