@@ -20,6 +20,6 @@
   "exclude": [
     "node_modules",
     "__tests__/*",
-    "src/index.ts"
-  ]
+    "src/index.ts",
+  ],
 }
