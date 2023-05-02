@@ -27,7 +27,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
-          value: '1.2.5',
+          value: '1.2.6',
         },
         ...params?.options.tags,
       ];

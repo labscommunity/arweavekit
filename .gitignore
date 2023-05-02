@@ -9,3 +9,4 @@ wallet3.json
 testTxn.json
 /cache
 yarn-error.log
+*.tgz
