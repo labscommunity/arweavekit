@@ -12,7 +12,7 @@ describe('Create Transaction', () => {
     writeFileSync('wallet1.json', JSON.stringify(generateWallet));
     const { key } = JSON.parse(readFileSync('wallet1.json').toString());
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
-    const txn: Transaction = (await createTransaction({
+    const txn = await createTransaction({
       type: 'data',
       environment: 'local',
       data: data,
@@ -20,7 +20,7 @@ describe('Create Transaction', () => {
       options: {
         signAndPost: true,
       },
-    })) as Transaction;
+    });
     writeFileSync('testTxn.json', JSON.stringify(txn));
     const { id: txnId } = JSON.parse(
       readFileSync('testTxn.json').toString()

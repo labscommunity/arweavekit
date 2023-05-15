@@ -8,19 +8,19 @@ jest.setTimeout(300000);
 describe('Create Transaction', () => {
   it('should create data transaction with bundlr', async () => {
     const generateWallet = await createWallet({
-      environment: 'local',
+      environment: 'mainnet',
     });
 
-    writeFileSync('wallet1.json', JSON.stringify(generateWallet));
+    writeFileSync('wallet.json', JSON.stringify(generateWallet));
 
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const { key } = JSON.parse(readFileSync('wallet.json').toString());
 
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
     const txn = await createTransaction({
       key,
       type: 'data',
-      environment: 'local',
+      environment: 'mainnet',
       data: data,
       options: {
         useBundlr: true,
@@ -41,12 +41,12 @@ describe('Create Transaction', () => {
 
   it('should create an arweave data transaction', async () => {
     const generateWallet = await createWallet({
-      environment: 'local',
+      environment: 'mainnet',
     });
 
-    writeFileSync('wallet1.json', JSON.stringify(generateWallet));
+    writeFileSync('wallet.json', JSON.stringify(generateWallet));
 
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const { key } = JSON.parse(readFileSync('wallet.json').toString());
 
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
@@ -54,7 +54,7 @@ describe('Create Transaction', () => {
       key,
       data: data,
       type: 'data',
-      environment: 'local',
+      environment: 'mainnet',
     });
 
     expect(txn).toHaveProperty('id');
@@ -70,12 +70,12 @@ describe('Create Transaction', () => {
 
   it('should create, sign and post an arweave data transaction', async () => {
     const generateWallet = await createWallet({
-      environment: 'local',
+      environment: 'mainnet',
     });
 
-    writeFileSync('wallet1.json', JSON.stringify(generateWallet));
+    writeFileSync('wallet.json', JSON.stringify(generateWallet));
 
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const { key } = JSON.parse(readFileSync('wallet.json').toString());
 
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
@@ -83,7 +83,7 @@ describe('Create Transaction', () => {
       key,
       data: data,
       type: 'data',
-      environment: 'local',
+      environment: 'mainnet',
       options: {
         signAndPost: true,
       },
@@ -102,12 +102,12 @@ describe('Create Transaction', () => {
 
   it('should add tags to a transaction', async () => {
     const generateWallet = await createWallet({
-      environment: 'local',
+      environment: 'mainnet',
     });
 
-    writeFileSync('wallet1.json', JSON.stringify(generateWallet));
+    writeFileSync('wallet.json', JSON.stringify(generateWallet));
 
-    const { key } = JSON.parse(readFileSync('wallet1.json').toString());
+    const { key } = JSON.parse(readFileSync('wallet.json').toString());
 
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
@@ -116,7 +116,7 @@ describe('Create Transaction', () => {
       data,
       key,
       type: 'data',
-      environment: 'local',
+      environment: 'mainnet',
       options: {
         tags: [{ name: 'test', value: 'jest' }],
         useBundlr: true,
@@ -128,7 +128,7 @@ describe('Create Transaction', () => {
       data,
       key,
       type: 'data',
-      environment: 'local',
+      environment: 'mainnet',
       options: {
         tags: [{ name: 'test-arweave', value: 'jest2' }],
       },
@@ -160,11 +160,11 @@ describe('Create Transaction', () => {
 
   it('should create a wallet transaction', async () => {
     const senderWallet = await createWallet({
-      environment: 'local',
+      environment: 'mainnet',
     });
 
     const receiverWallet = await createWallet({
-      environment: 'local',
+      environment: 'mainnet',
     });
 
     writeFileSync('wallet2.json', JSON.stringify(senderWallet));
@@ -180,7 +180,7 @@ describe('Create Transaction', () => {
 
     const balance = await getBalance({
       address: senderAddress,
-      environment: 'local',
+      environment: 'mainnet',
     });
 
     const txn = await createTransaction({
@@ -188,7 +188,7 @@ describe('Create Transaction', () => {
       type: 'wallet',
       quantity: '1000000000000',
       target: receiverAddress,
-      environment: 'local',
+      environment: 'mainnet',
     });
 
     expect(balance).toBe('1000000000000');

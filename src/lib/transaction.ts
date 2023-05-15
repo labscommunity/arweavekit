@@ -4,7 +4,7 @@ import { initArweave } from '../utils';
 import { getAddress, getBalance } from './wallet';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
-import othent from 'othent';
+import { Othent as othent } from 'othent';
 
 /**
  * create transaction
@@ -12,8 +12,12 @@ import othent from 'othent';
  * @returns Transaction | Bundlr Transaction
  */
 export async function createTransaction<T extends Types.CreateWalletTransactionProps | Types.CreateAndPostWalletTransactionProps | Types.CreateDataTransactionProps | Types.CreateAndPostDataTransactionProps | Types.CreateBundledDataTransactionProps | Types.CreateAndPostBundledDataTransactionProps>(params: T): Promise<Types.CreateTransactionReturnProps<T>> {
+  console.log("Enters PJS function");
+
   // check and default env to mainnet
   const arweave = initArweave(params.environment);
+
+  console.log("This is the arweave instance", arweave);
 
   if (params.type === 'data') {
     // use useBundlr
@@ -237,6 +241,7 @@ export async function getTransaction(params: Types.GetTransactionProps) {
  */
 
 export async function createAndPostTransactionWOthent(params: Types.CreateandPostTransactionWOthentProps): Promise<Types.CreateandPostTransactionWOthentReturnProps> {
+  const othentInstance = await othent({ API_ID: params.apiId });
   const allTags = params?.tags && [
     {
       name: 'PermawebJS',
@@ -248,21 +253,21 @@ export async function createAndPostTransactionWOthent(params: Types.CreateandPos
   let postedTransaction;
 
   if (params.useBundlr) {
-    const signedTransaction = await othent.signTransactionBundlr({
+    const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
       tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.5' }],
     });
 
-    postedTransaction = await othent.sendTransactionBundlr(signedTransaction);
+    postedTransaction = await othentInstance.sendTransactionBundlr(signedTransaction);
   } else {
-    const signedTransaction = await othent.signTransactionArweave({
+    const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
       tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.5' }],
     });
 
-    postedTransaction = await othent.sendTransactionArweave(signedTransaction);
+    postedTransaction = await othentInstance.sendTransactionArweave(signedTransaction);
   }
 
   if (postedTransaction.success) {

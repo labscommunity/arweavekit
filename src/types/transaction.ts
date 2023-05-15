@@ -168,6 +168,7 @@ export interface GetTransactionProps {
 }
 
 export interface CreateandPostTransactionWOthentProps {
+  apiId: string,
   othentFunction: string,
   data: File,
   tags?: {
