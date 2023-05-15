@@ -3,18 +3,18 @@
   "version": "1.2.5",
   "description": "Utility library to build full stack permaweb applications",
   "type": "module",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "files": [
-    "./dist/"
+    "dist/"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "build": "rimraf ./dist && yarn tsc",
-    "test": "jest --config jestconfig.json",
+    "build": "rm -rf ./dist && npx rollup -c",
+    "test": "jest --config jest.config.json",
     "lint": "tslint -p  tsconfig.json",
     "format": "prettier --write src/*.ts"
   },
@@ -29,12 +29,16 @@
   },
   "homepage": "https://github.com/labscommunity/permawebjs#readme",
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.1",
+    "@rollup/plugin-typescript": "^11.1.1",
     "@types/jest": "^29.4.0",
     "@types/node-fetch": "^2.6.2",
     "arlocal": "^1.1.60",
+    "babel-jest": "^29.5.0",
     "dotenv": "^16.0.3",
     "jest": "^29.4.2",
     "prettier": "^2.8.4",
+    "rollup": "^3.21.7",
     "ts-jest": "^29.0.5",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
@@ -46,48 +50,43 @@
     "@three-em/node": "^0.3.22",
     "arweave": "^1.13.5",
     "arweave-mnemonic-keys": "^0.0.9",
-    "othent": "^1.0.49",
+    "othent": "^1.0.59",
     "warp-contracts": "^1.4.1",
     "warp-contracts-plugin-deploy": "^1.0.3"
   },
   "exports": {
     "./auth": {
-      "import": "./dist/esm/lib/auth.js",
-      "require": "./dist/cjs/lib/auth.js"
+      "import": "./dist/lib/auth.js"
     },
     "./contract": {
-      "import": "./dist/esm/lib/contract.js",
-      "require": "./dist/cjs/lib/contract.js"
+      "import": "./dist/lib/contract.js"
     },
     "./serverless": {
-      "import": "./dist/esm/lib/serverless.js",
-      "require": "./dist/cjs/lib/serverless.js"
+      "import": "./dist/lib/serverless.js"
     },
     "./transaction": {
-      "import": "./dist/esm/lib/transaction.js",
-      "require": "./dist/cjs/lib/transaction.js"
+      "import": "./dist/lib/transaction.js"
     },
     "./wallet": {
-      "import": "./dist/esm/lib/wallet.js",
-      "require": "./dist/cjs/lib/wallet.js"
+      "import": "./dist/lib/wallet.js"
     }
   },
   "typesVersions": {
     "*": {
       "auth": [
-        "dist/cjs/lib/auth.d.ts"
+        "dist/lib/auth.d.ts"
       ],
       "wallet": [
-        "dist/cjs/lib/wallet.d.ts"
+        "dist/lib/wallet.d.ts"
       ],
       "serverless": [
-        "dist/cjs/lib/serverless.d.ts"
+        "dist/lib/serverless.d.ts"
       ],
       "transaction": [
-        "dist/cjs/lib/transaction.d.ts"
+        "dist/lib/transaction.d.ts"
       ],
       "contract": [
-        "dist/cjs/lib/contract.d.ts"
+        "dist/lib/contract.d.ts"
       ]
     }
   }

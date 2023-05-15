@@ -1,4 +1,12 @@
 {
   "preset": "ts-jest",
-  "testMatch": ["**/*.spec.ts"]
+  "testMatch": [
+    "**/*.spec.ts"
+  ],
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "transformIgnorePatterns": [
+    "/node_modules/(?!othent)"
+  ]
 }

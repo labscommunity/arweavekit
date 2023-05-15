@@ -2,17 +2,18 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "declaration": true,
-    "target": "ES2015",
-    "module": "ES2020",
-    "outDir": "dist/esm",
+    "target": "ESNext",
+    "module": "ESNext",
+    "outDir": "dist/",
     "strict": true,
     "lib": [
-      "es2015",
+      "ESNext",
       "DOM"
     ],
     "esModuleInterop": true,
     "sourceMap": true,
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
   },
   "include": [
     "src"
@@ -20,6 +21,6 @@
   "exclude": [
     "node_modules",
     "__tests__/*",
-    "src/index.ts"
+    "dist/"
   ]
 }
