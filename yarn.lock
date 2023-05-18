@@ -4462,7 +4462,7 @@ fs.realpath@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
-fsevents@^2.3.2, fsevents@~2.3.1, fsevents@~2.3.2:
+fsevents@^2.3.2, fsevents@~2.3.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
@@ -7019,10 +7019,10 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==
 
-othent@^1.0.59:
-  version "1.0.59"
-  resolved "https://registry.yarnpkg.com/othent/-/othent-1.0.59.tgz#b0e241e8899c39d155ef197dac58cd5e6efcb491"
-  integrity sha512-iXIUbIRKpjA3Z1pyWpkhTwCUKuSr0J7JUDdLjY0W77ctJG9F9ksrfeHxWzGUMsRHeOnPfCzDg0Jd5Hx30k1zsw==
+othent@^1.0.60:
+  version "1.0.60"
+  resolved "https://registry.yarnpkg.com/othent/-/othent-1.0.60.tgz#18bcfa344c57dece384de8eea7c6703bf9c2a703"
+  integrity sha512-aYm73cupjmZnuR1Iv7w+h50kwpAxfyJ3kbu5yNsTaemep6pNG9mJXKrc0Mwbue4MulwAsIBFYplM5mSPjppotw==
   dependencies:
     "@auth0/auth0-spa-js" "^2.0.4"
     axios "^1.3.4"
@@ -7619,13 +7619,6 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^3.0.0"
     inherits "^2.0.1"
-
-rollup@^3.21.7:
-  version "3.21.7"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.21.7.tgz#022ab47416712c93546f369abfb20da5fb8ed42e"
-  integrity sha512-KXPaEuR8FfUoK2uHwNjxTmJ18ApyvD6zJpYv9FOJSqLStmt6xOY84l1IjK2dSolQmoXknrhEFRaPRgOPdqCT5w==
-  optionalDependencies:
-    fsevents "~2.3.2"
 
 rpc-websockets@^7.5.1:
   version "7.5.1"
