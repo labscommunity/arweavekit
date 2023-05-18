@@ -6,6 +6,7 @@ map.mdx
 wallet1.json
 wallet2.json
 wallet3.json
+wallet.json
 testTxn.json
 /cache
 yarn-error.log

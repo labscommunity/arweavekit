@@ -1,7 +1,7 @@
 import { DeployPlugin, ArweaveSigner } from 'warp-contracts-plugin-deploy';
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
 import * as Types from '../types/contract';
-import othent from 'othent';
+import { Othent as othent } from 'othent';
 
 /***
  * create warp contract
@@ -77,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.2.5' }],
+    tags: [{ name: 'PermawebJS', value: '1.2.7' }],
   });
 
   const readState = await contract.readState();
@@ -154,14 +154,14 @@ export async function getContract(contractTxId: string) {
  */
 
 export async function writeContractWOthent(params: Types.WriteContractWOthentProps): Promise<Types.WriteContractWOthentReturnProps> {
-
-  const signedTransaction = await othent.signTransactionWarp({
+  const othentInstance = await othent({ API_ID: params.apiId });
+  const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'PermawebJS', value: '1.2.5' }],
+    tags: [{ name: 'PermawebJS', value: '1.2.7' }],
   });
 
-  const postedTransaction = await othent.sendTransactionWarp(signedTransaction);
+  const postedTransaction = await othentInstance.sendTransactionWarp(signedTransaction);
 
   if (postedTransaction.success) {
 
@@ -178,7 +178,8 @@ export async function writeContractWOthent(params: Types.WriteContractWOthentPro
  */
 
 export async function readContractWOthent(params: Types.ReadContractWOthentProps): Promise<Types.ReadContractWOthentReturnProps> {
-  const res = await othent.readCustomContract({ contract_id: params.contractTxId });
+  const othentInstance = await othent({ API_ID: params.apiId });
+  const res = await othentInstance.readCustomContract({ contract_id: params.contractTxId });
 
   return res;
 }

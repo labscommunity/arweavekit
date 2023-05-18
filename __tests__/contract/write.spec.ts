@@ -46,7 +46,6 @@ describe('Write Contracts', () => {
     const { readContract } = await readContractState({
       environment: 'local',
       contractTxId: contractTxId,
-      wallet: key,
     });
 
     expect(readContract.sortKey).toBeDefined();
@@ -79,7 +78,6 @@ describe('Write Contracts', () => {
     const { readContract } = await readContractState({
       environment: 'testnet',
       contractTxId: contractTxId,
-      wallet: key,
     });
 
     expect(readContract.sortKey).toBeDefined();

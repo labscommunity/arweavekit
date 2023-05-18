@@ -29,6 +29,7 @@ export interface ReadContractProps {
 }
 
 export interface WriteContractWOthentProps {
+  apiId: string,
   othentFunction: string,
   data: {
     toContractId: string,
@@ -47,6 +48,7 @@ export interface WriteContractWOthentReturnProps {
 }
 
 export interface ReadContractWOthentProps {
+  apiId: string,
   contractTxId: string
 }
 

@@ -34,3 +34,7 @@ export interface UserDetailsReturnProps {
   email_verified: string,
   sub: string,
 }
+
+export interface OthentInstanceConenctionProps {
+  apiId: string,
+}

@@ -1,10 +1,51 @@
+import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
 import Transaction from 'arweave/node/lib/transaction';
-import { initArweave } from '../utils';
+// import { initArweave } from '../utils';
 import { getAddress, getBalance } from './wallet';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
-import othent from 'othent';
+import { Othent as othent } from 'othent';
+
+async function initArweave(params: Types.InitArweaveProps) {
+  let arweave;
+  if (params.environment === 'local') {
+    arweave = Arweave.init({
+      host: 'localhost',
+      port: 1984,
+      protocol: 'http',
+    });
+  } else {
+    arweave = Arweave.init({
+      host: 'arweave.net',
+      port: 443,
+      protocol: 'https',
+    });
+  }
+
+  return arweave;
+}
+
+async function fileToArrayBuffer(file: File): Promise<ArrayBuffer> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result;
+      if (result instanceof ArrayBuffer) {
+        resolve(result);
+      } else {
+        reject(new Error('Failed to convert file to ArrayBuffer.'));
+      }
+    };
+
+    reader.onerror = () => {
+      reject(new Error('Error occurred while reading the file.'));
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+}
 
 /**
  * create transaction
@@ -12,9 +53,10 @@ import othent from 'othent';
  * @returns Transaction | Bundlr Transaction
  */
 export async function createTransaction<T extends Types.CreateWalletTransactionProps | Types.CreateAndPostWalletTransactionProps | Types.CreateDataTransactionProps | Types.CreateAndPostDataTransactionProps | Types.CreateBundledDataTransactionProps | Types.CreateAndPostBundledDataTransactionProps>(params: T): Promise<Types.CreateTransactionReturnProps<T>> {
-  // check and default env to mainnet
-  const arweave = initArweave(params.environment);
+  // init arweave instance
+  const arweave = await initArweave({ environment: params.environment });
 
+  // check and default env to mainnet
   if (params.type === 'data') {
     // use useBundlr
     if (params.options?.useBundlr) {
@@ -27,7 +69,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
-          value: '1.2.5',
+          value: '1.2.7',
         },
         ...params?.options.tags,
       ];
@@ -35,7 +77,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.5' }],
+          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.7' }],
         }
       );
 
@@ -59,22 +101,38 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
           .catch((error) => console.error(error));
       }
 
+      let data;
+
+      if (typeof params.data === "string") {
+        data = params.data;
+      } else if (params.data instanceof Uint8Array) {
+        data = params.data;
+      } else if (params.data instanceof ArrayBuffer) {
+        data = params.data;
+      } else if (params.data instanceof File) {
+        data = await fileToArrayBuffer(params.data);
+      } else {
+        throw new TypeError("Unsupported data type");
+      }
+
       // create transaction
       const transaction = await arweave.createTransaction(
         {
-          data: (Buffer.isBuffer(params.data))
-            ? Buffer.from(`${params.data}`, 'utf8')
-            : params.data,
+          data: data,
         },
         params.key ? params.key : 'use_wallet'
       );
 
       // tags
-      transaction.addTag('PermawebJS', '1.2.5');
+      transaction.addTag('PermawebJS', '1.2.7');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
         );
+      }
+
+      if (params.data instanceof File) {
+        transaction.addTag('Content-Type', params.data.type);
       }
 
       // sign and post
@@ -113,7 +171,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       );
 
       // add tags
-      transaction.addTag('PermawebJS', '1.2.5');
+      transaction.addTag('PermawebJS', '1.2.7');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -141,7 +199,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
  */
 
 export async function signTransaction(params: Types.SignTransactionProps) {
-  const arweave = initArweave(params.environment);
+  const arweave = await initArweave({ environment: params.environment });
 
   if (params?.useBundlr) {
     const transaction = await params?.createdTransaction.sign();
@@ -175,7 +233,7 @@ export async function signTransaction(params: Types.SignTransactionProps) {
  */
 
 export async function postTransaction(params: Types.PostTransactionProps) {
-  const arweave = initArweave(params.environment);
+  const arweave = await initArweave({ environment: params.environment });
 
   if (params?.useBundlr) {
     const postedTransaction = await params.transaction.upload();
@@ -193,7 +251,7 @@ export async function getTransactionStatus(params: {
   transactionId: string;
   environment: 'local' | 'mainnet';
 }) {
-  const arweave = initArweave(params.environment);
+  const arweave = await initArweave({ environment: params.environment });
 
   let status: any;
   status = await arweave.transactions.getStatus(params.transactionId);
@@ -206,7 +264,7 @@ export async function getTransactionStatus(params: {
  * @returns Transaction
  */
 export async function getTransaction(params: Types.GetTransactionProps) {
-  const arweave = initArweave(params.environment);
+  const arweave = await initArweave({ environment: params.environment });
   const transaction = await arweave.transactions.get(params.transactionId);
   let txTags, txData;
 
@@ -237,10 +295,11 @@ export async function getTransaction(params: Types.GetTransactionProps) {
  */
 
 export async function createAndPostTransactionWOthent(params: Types.CreateandPostTransactionWOthentProps): Promise<Types.CreateandPostTransactionWOthentReturnProps> {
+  const othentInstance = await othent({ API_ID: params.apiId });
   const allTags = params?.tags && [
     {
       name: 'PermawebJS',
-      value: '1.2.5',
+      value: '1.2.7',
     },
     ...params?.tags,
   ];
@@ -248,21 +307,21 @@ export async function createAndPostTransactionWOthent(params: Types.CreateandPos
   let postedTransaction;
 
   if (params.useBundlr) {
-    const signedTransaction = await othent.signTransactionBundlr({
+    const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.5' }],
+      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.7' }],
     });
 
-    postedTransaction = await othent.sendTransactionBundlr(signedTransaction);
+    postedTransaction = await othentInstance.sendTransactionBundlr(signedTransaction);
   } else {
-    const signedTransaction = await othent.signTransactionArweave({
+    const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.5' }],
+      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.7' }],
     });
 
-    postedTransaction = await othent.sendTransactionArweave(signedTransaction);
+    postedTransaction = await othentInstance.sendTransactionArweave(signedTransaction);
   }
 
   if (postedTransaction.success) {

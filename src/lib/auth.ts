@@ -1,5 +1,5 @@
-import { ConnectProps, UserDetailsReturnProps } from '../types/auth';
-import othent from 'othent';
+import { ConnectProps, OthentInstanceConenctionProps, UserDetailsReturnProps } from '../types/auth';
+import { Othent as othent } from 'othent';
 
 /***
  * connect to arconnect wallet
@@ -83,8 +83,9 @@ export async function isInstalled() {
  * logIn using othent
  *
  */
-export async function logIn() {
-  const response = await othent.logIn();
+export async function logIn(params: OthentInstanceConenctionProps) {
+  const othentInstance = await othent({ API_ID: params.apiId });
+  const response = await othentInstance.logIn();
   return response;
 }
 
@@ -92,16 +93,18 @@ export async function logIn() {
  * logOut using othent
  *
  */
-export async function logOut() {
-  await othent.logOut();
+export async function logOut(params: OthentInstanceConenctionProps) {
+  const othentInstance = await othent({ API_ID: params.apiId });
+  await othentInstance.logOut();
 }
 
 /***
  * fetch userDetails using othent
  *
  */
-export async function userDetails(): Promise<UserDetailsReturnProps> {
-  const response = await othent.userDetails();
+export async function userDetails(params: OthentInstanceConenctionProps): Promise<UserDetailsReturnProps> {
+  const othentInstance = await othent({ API_ID: params.apiId });
+  const response = await othentInstance.userDetails();
   return response;
 }
 

@@ -3,13 +3,17 @@ import { UploadResponse } from '@bundlr-network/client/build/common/types';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 
+export interface InitArweaveProps {
+  environment: 'local' | 'mainnet';
+}
+
 export interface CreateTransactionProps {
   type: 'data' | 'wallet';
   key?: JWKInterface;
   environment: 'local' | 'mainnet';
   target?: string;
   quantity?: string;
-  data?: string | Uint8Array | ArrayBuffer;
+  data?: string | Uint8Array | ArrayBuffer | File;
   options?: {
     tags?: {
       name: string;
@@ -30,7 +34,6 @@ export interface CreateWalletTransactionProps extends CreateTransactionProps {
     }[];
     useBundlr?: false;
     signAndPost?: false;
-    // signAndPostWOthent?: false;
   };
 }
 
@@ -43,7 +46,6 @@ export interface CreateAndPostWalletTransactionProps extends CreateTransactionPr
     }[];
     useBundlr?: false;
     signAndPost?: true;
-    // signAndPostWOthent?: false;
   };
 }
 
@@ -56,7 +58,6 @@ export interface CreateDataTransactionProps extends CreateTransactionProps {
     }[];
     useBundlr?: false;
     signAndPost?: false;
-    // signAndPostWOthent?: false;
   };
 }
 
@@ -69,23 +70,8 @@ export interface CreateAndPostDataTransactionProps extends CreateTransactionProp
     }[];
     useBundlr?: false;
     signAndPost?: true;
-    // signAndPostWOthent?: false;
   };
 }
-
-// export interface CreateAndPostDataTransactionWOthentProps extends CreateTransactionProps {
-//   type: 'data';
-//   data: File;
-//   options?: {
-//     tags?: {
-//       name: string;
-//       value: string;
-//     }[];
-//     useBundlr?: false;
-//     signAndPost?: false;
-//     signAndPostWOthent?: true;
-//   };
-// }
 
 export interface CreateBundledDataTransactionProps extends CreateTransactionProps {
   type: 'data';
@@ -96,7 +82,6 @@ export interface CreateBundledDataTransactionProps extends CreateTransactionProp
     }[];
     useBundlr?: true;
     signAndPost?: false;
-    // signAndPostWOthent?: false;
   };
 }
 
@@ -109,7 +94,6 @@ export interface CreateAndPostBundledDataTransactionProps extends CreateTransact
     }[];
     useBundlr?: true;
     signAndPost?: true;
-    // signAndPostWOthent?: false;
   };
 }
 
@@ -132,10 +116,6 @@ export type CreateTransactionReturnProps<T extends CreateWalletTransactionProps 
       data: any;
     }
   } :
-  // T extends CreateAndPostDataTransactionWOthentProps ? {
-  //   success: boolean,
-  //   transactionId: string
-  // } :
   T extends CreateBundledDataTransactionProps ? BundlrTransaction :
   T extends CreateAndPostBundledDataTransactionProps ? {
     transaction: BundlrTransaction,
@@ -168,6 +148,7 @@ export interface GetTransactionProps {
 }
 
 export interface CreateandPostTransactionWOthentProps {
+  apiId: string,
   othentFunction: string,
   data: File,
   tags?: {
