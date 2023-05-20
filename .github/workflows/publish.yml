@@ -1,21 +1,31 @@
-name: Publish to NPM
+name: "🚀 publish"
+
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
+
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+    name: 🚀 publish
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - name: 📚 checkout
+        uses: actions/checkout@v2.1.1
+      - name: 🟢 node
+        uses: actions/setup-node@v2.5.0
         with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
-      - name: Install dependencies and build 🔧
-        run: yarn && yarn build
-      - name: Publish package on NPM 📦
-        run: npm publish
+          node-version: 16
+          registry-url: https://registry.npmjs.org
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+          envFile: .env
+      - name: 📦 install dependencies
+        run: yarn
+      - name: 📝 build
+        run: yarn build
+      - name: 🚀 publish
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_ACCESS_TOKEN}}
