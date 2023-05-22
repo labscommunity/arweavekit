@@ -69,7 +69,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const allTags = params?.options.tags && [
         {
           name: 'PermawebJS',
-          value: '1.2.7',
+          value: '1.2.8',
         },
         ...params?.options.tags,
       ];
@@ -77,7 +77,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.7' }],
+          tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.8' }],
         }
       );
 
@@ -124,7 +124,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       );
 
       // tags
-      transaction.addTag('PermawebJS', '1.2.7');
+      transaction.addTag('PermawebJS', '1.2.8');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -171,7 +171,7 @@ export async function createTransaction<T extends Types.CreateWalletTransactionP
       );
 
       // add tags
-      transaction.addTag('PermawebJS', '1.2.7');
+      transaction.addTag('PermawebJS', '1.2.8');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -299,7 +299,7 @@ export async function createAndPostTransactionWOthent(params: Types.CreateandPos
   const allTags = params?.tags && [
     {
       name: 'PermawebJS',
-      value: '1.2.7',
+      value: '1.2.8',
     },
     ...params?.tags,
   ];
@@ -310,7 +310,7 @@ export async function createAndPostTransactionWOthent(params: Types.CreateandPos
     const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.7' }],
+      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.8' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionBundlr(signedTransaction);
@@ -318,7 +318,7 @@ export async function createAndPostTransactionWOthent(params: Types.CreateandPos
     const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.7' }],
+      tags: allTags ? allTags : [{ name: 'PermawebJS', value: '1.2.8' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionArweave(signedTransaction);
