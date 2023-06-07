@@ -1,19 +1,19 @@
-# permawebjs
+# ArweaveKit
 
 ## Introduction
 
-PermawebJS aims to lower the barrier of onboarding and building on Arweave by creating a well documented one-stop library.
+ArweaveKit aims to lower the barrier of onboarding and building on Arweave by creating a well documented one-stop library.
 
 ## Installation
 
 Run the following command to install the package using npm or yarn
 
 ```
-npm install permawebjs
+npm install arweavekit
 
 #OR
 
-yarn add permawebjs
+yarn add arweavekit
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ yarn add permawebjs
 Functions from specific function types can be imported as follows:
 
 ```ts
-import { createWallet } from 'permawebjs/wallet';
+import { createWallet } from 'arweavekit/wallet';
 
 const wallet = await createWallet({
   seedPhrase: true,
@@ -33,15 +33,15 @@ const wallet = await createWallet({
 
 In this library, the following types of functions are available:
 
-`Wallet Functions`: Functions associated with creating and using wallets. Read more [here](https://community-labs.gitbook.io/permawebjs-docs/wallets/introduction).
+`Wallet Functions`: Functions associated with creating and using wallets. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/wallets/introduction).
 
-`Transaction Functions`: Functions associated with creating and interacting with transactions. Read more [here](https://community-labs.gitbook.io/permawebjs-docs/transactions/introduction).
+`Transaction Functions`: Functions associated with creating and interacting with transactions. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/transactions/introduction).
 
-`Contract Functions`: Functions associated with creating and interacting with contracts. Read more [here](https://community-labs.gitbook.io/permawebjs-docs/smart-contracts/introduction-to-smart-contracts).
+`Contract Functions`: Functions associated with creating and interacting with contracts. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/smart-contracts/introduction-to-smart-contracts).
 
-`Serverless Functions`: Functions associated with creating and interacting with serverless functions. Read more [here](https://community-labs.gitbook.io/permawebjs-docs/smart-contracts/introduction-to-smart-contracts).
+`Serverless Functions`: Functions associated with creating and interacting with serverless functions. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/smart-contracts/introduction-to-smart-contracts).
 
-`Auth Functions`: Functions associated with authentication. Authentication currently supports ArConnect only. Read more [here](https://community-labs.gitbook.io/permawebjs-docs/auth/introduction-to-auth).
+`Auth Functions`: Functions associated with authentication. Authentication currently supports ArConnect only. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/auth/introduction-to-auth).
 
 ### Understanding the docs
 
@@ -53,4 +53,4 @@ Every function has a dedicated page with the following information associated wi
   - Parameters with the `optional` keyword means they are optional. Parameters that do not have this keyword are required and must be passed in for successful function calls.
 - Returned data for function calls
 
-Read the docs [here](https://community-labs.gitbook.io/permawebjs-docs/permawebjs/introduction)
+Read the docs [here](https://community-labs.gitbook.io/arweavekit-docs/permawebjs/introduction)

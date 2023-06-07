@@ -17,15 +17,15 @@ export async function createContract(
     params.environment === 'local'
       ? WarpFactory.forLocal().use(new DeployPlugin())
       : params.environment === 'testnet'
-        ? WarpFactory.forTestnet().use(new DeployPlugin())
-        : WarpFactory.forMainnet().use(new DeployPlugin());
+      ? WarpFactory.forTestnet().use(new DeployPlugin())
+      : WarpFactory.forMainnet().use(new DeployPlugin());
 
   if (params.environment === 'local') {
     await warp.testing
       .addFunds(params.wallet)
       .catch((e) => console.log('ERROR', e.message));
   }
-  let contractTxId = "";
+  let contractTxId = '';
   if (params.environment === 'local') {
     const { contractTxId: deployedContractTxId } = await warp.deploy({
       wallet: params.wallet,
@@ -68,8 +68,8 @@ export async function writeContract(params: Types.WriteContractProps) {
     params.environment === 'local'
       ? WarpFactory.forLocal()
       : params.environment === 'testnet'
-        ? WarpFactory.forTestnet()
-        : WarpFactory.forMainnet();
+      ? WarpFactory.forTestnet()
+      : WarpFactory.forMainnet();
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
@@ -77,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'PermawebJS', value: '1.2.8' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.9' }],
   });
 
   const readState = await contract.readState();
@@ -107,8 +107,8 @@ export async function readContractState(params: Types.ReadContractProps) {
     params.environment === 'local'
       ? WarpFactory.forLocal()
       : params.environment === 'testnet'
-        ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
-        : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
+      ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
+      : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
@@ -153,21 +153,24 @@ export async function getContract(contractTxId: string) {
  * @returns WriteContractWOthentReturnProps
  */
 
-export async function writeContractWOthent(params: Types.WriteContractWOthentProps): Promise<Types.WriteContractWOthentReturnProps> {
+export async function writeContractWOthent(
+  params: Types.WriteContractWOthentProps
+): Promise<Types.WriteContractWOthentReturnProps> {
   const othentInstance = await othent({ API_ID: params.apiId });
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'PermawebJS', value: '1.2.8' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.9' }],
   });
 
-  const postedTransaction = await othentInstance.sendTransactionWarp(signedTransaction);
+  const postedTransaction = await othentInstance.sendTransactionWarp(
+    signedTransaction
+  );
 
   if (postedTransaction.success) {
-
     return postedTransaction as Types.WriteContractWOthentReturnProps;
   } else {
-    throw new Error("Transaction creation unsuccessful.");
+    throw new Error('Transaction creation unsuccessful.');
   }
 }
 
@@ -177,9 +180,13 @@ export async function writeContractWOthent(params: Types.WriteContractWOthentPro
  * @returns ReadContractWOthentReturnProps
  */
 
-export async function readContractWOthent(params: Types.ReadContractWOthentProps): Promise<Types.ReadContractWOthentReturnProps> {
+export async function readContractWOthent(
+  params: Types.ReadContractWOthentProps
+): Promise<Types.ReadContractWOthentReturnProps> {
   const othentInstance = await othent({ API_ID: params.apiId });
-  const res = await othentInstance.readCustomContract({ contract_id: params.contractTxId });
+  const res = await othentInstance.readCustomContract({
+    contract_id: params.contractTxId,
+  });
 
   return res;
 }
