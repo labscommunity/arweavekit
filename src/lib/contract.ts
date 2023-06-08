@@ -77,7 +77,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   const contract = warp.contract(params.contractTxId).connect(params.wallet);
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'ArweaveKit', value: '1.2.9' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.10' }],
   });
 
   const readState = await contract.readState();
@@ -160,7 +160,7 @@ export async function writeContractWOthent(
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'ArweaveKit', value: '1.2.9' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.10' }],
   });
 
   const postedTransaction = await othentInstance.sendTransactionWarp(
