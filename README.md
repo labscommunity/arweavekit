@@ -33,15 +33,15 @@ const wallet = await createWallet({
 
 In this library, the following types of functions are available:
 
-`Wallet Functions`: Functions associated with creating and using wallets. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/wallets/introduction).
+`Wallet Functions`: Functions associated with creating and using wallets. Read more [here](https://docs.arweavekit.com/wallets/introduction).
 
-`Transaction Functions`: Functions associated with creating and interacting with transactions. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/transactions/introduction).
+`Transaction Functions`: Functions associated with creating and interacting with transactions. Read more [here](https://docs.arweavekit.com/transactions/introduction).
 
-`Contract Functions`: Functions associated with creating and interacting with contracts. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/smart-contracts/introduction-to-smart-contracts).
+`Contract Functions`: Functions associated with creating and interacting with contracts. Read more [here](https://docs.arweavekit.com/smart-contracts/introduction-to-smart-contracts).
 
-`Serverless Functions`: Functions associated with creating and interacting with serverless functions. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/smart-contracts/introduction-to-smart-contracts).
+`Serverless Functions`: Functions associated with creating and interacting with serverless functions. Read more [here](https://docs.arweavekit.com/serverless-functions/introduction-to-serverless-functions).
 
-`Auth Functions`: Functions associated with authentication. Authentication currently supports ArConnect only. Read more [here](https://community-labs.gitbook.io/arweavekit-docs/auth/introduction-to-auth).
+`Auth Functions`: Functions associated with authentication. Authentication currently supports ArConnect only. Read more [here](https://docs.arweavekit.com/auth/introduction-to-auth).
 
 ### Understanding the docs
 
