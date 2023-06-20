@@ -1,4 +1,9 @@
-import { ArWallet, Contract, CustomSignature, JWKInterface } from 'warp-contracts';
+import {
+  ArWallet,
+  Contract,
+  CustomSignature,
+  JWKInterface,
+} from 'warp-contracts';
 
 export interface CreateContractProps {
   wallet: JWKInterface;
@@ -29,31 +34,33 @@ export interface ReadContractProps {
 }
 
 export interface WriteContractWOthentProps {
-  apiId: string,
-  othentFunction: string,
+  apiId: string;
+  callBackURLs: string[];
+  othentFunction: string;
   data: {
-    toContractId: string,
-    toContractFunction: string,
-    txnData: object
-  }
+    toContractId: string;
+    toContractFunction: string;
+    txnData: object;
+  };
   tags?: {
     name: string;
     value: string;
-  }[],
+  }[];
 }
 
 export interface WriteContractWOthentReturnProps {
-  success: boolean,
-  transactionId: string,
+  success: boolean;
+  transactionId: string;
 }
 
 export interface ReadContractWOthentProps {
-  apiId: string,
-  contractTxId: string
+  apiId: string;
+  callBackURLs: string[];
+  contractTxId: string;
 }
 
 export interface ReadContractWOthentReturnProps {
-  state: object,
-  errors: object,
-  validity: object
+  state: object;
+  errors: object;
+  validity: object;
 }
