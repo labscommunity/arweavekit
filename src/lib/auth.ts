@@ -1,4 +1,8 @@
-import { ConnectProps, OthentInstanceConenctionProps, UserDetailsReturnProps } from '../types/auth';
+import {
+  ConnectProps,
+  OthentInstanceConenctionProps,
+  UserDetailsReturnProps,
+} from '../types/auth';
 import { Othent as othent } from 'othent';
 
 /***
@@ -84,7 +88,10 @@ export async function isInstalled() {
  *
  */
 export async function logIn(params: OthentInstanceConenctionProps) {
-  const othentInstance = await othent({ API_ID: params.apiId });
+  const othentInstance = await othent({
+    API_ID: params.apiId,
+    callbackURLs: params.callBackURLs,
+  });
   const response = await othentInstance.logIn();
   return response;
 }
@@ -94,7 +101,10 @@ export async function logIn(params: OthentInstanceConenctionProps) {
  *
  */
 export async function logOut(params: OthentInstanceConenctionProps) {
-  const othentInstance = await othent({ API_ID: params.apiId });
+  const othentInstance = await othent({
+    API_ID: params.apiId,
+    callbackURLs: params.callBackURLs,
+  });
   await othentInstance.logOut();
 }
 
@@ -102,12 +112,16 @@ export async function logOut(params: OthentInstanceConenctionProps) {
  * fetch userDetails using othent
  *
  */
-export async function userDetails(params: OthentInstanceConenctionProps): Promise<UserDetailsReturnProps> {
-  const othentInstance = await othent({ API_ID: params.apiId });
+export async function userDetails(
+  params: OthentInstanceConenctionProps
+): Promise<UserDetailsReturnProps> {
+  const othentInstance = await othent({
+    API_ID: params.apiId,
+    callbackURLs: params.callBackURLs,
+  });
   const response = await othentInstance.userDetails();
   return response;
 }
-
 
 export const ArConnect = {
   connect,

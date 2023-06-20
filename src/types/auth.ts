@@ -23,18 +23,19 @@ export interface ConnectProps {
 }
 
 export interface UserDetailsReturnProps {
-  contract_id: string,
-  given_name: string,
-  family_name: string,
-  nickname: string,
-  name: string,
-  picture: string,
-  locale: string,
-  email: string,
-  email_verified: string,
-  sub: string,
+  contract_id: string;
+  given_name: string;
+  family_name: string;
+  nickname: string;
+  name: string;
+  picture: string;
+  locale: string;
+  email: string;
+  email_verified: string;
+  sub: string;
 }
 
 export interface OthentInstanceConenctionProps {
-  apiId: string,
+  apiId: string;
+  callBackURLs: string[];
 }
