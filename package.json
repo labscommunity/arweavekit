@@ -1,6 +1,6 @@
 {
   "name": "arweavekit",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "description": "Utility library to build full stack permaweb applications",
   "type": "module",
   "main": "dist/index.js",
