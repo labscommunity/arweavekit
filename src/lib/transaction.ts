@@ -314,7 +314,10 @@ export async function getTransaction(params: Types.GetTransactionProps) {
 export async function createAndPostTransactionWOthent(
   params: Types.CreateandPostTransactionWOthentProps
 ): Promise<Types.CreateandPostTransactionWOthentReturnProps> {
-  const othentInstance = await othent({ API_ID: params.apiId });
+  const othentInstance = await othent({
+    API_ID: params.apiId,
+    callbackURLs: params.callBackURLs,
+  });
   const allTags = params?.tags && [
     {
       name: 'ArweaveKit',

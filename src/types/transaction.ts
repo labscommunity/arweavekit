@@ -37,7 +37,8 @@ export interface CreateWalletTransactionProps extends CreateTransactionProps {
   };
 }
 
-export interface CreateAndPostWalletTransactionProps extends CreateTransactionProps {
+export interface CreateAndPostWalletTransactionProps
+  extends CreateTransactionProps {
   type: 'wallet';
   options?: {
     tags?: {
@@ -61,7 +62,8 @@ export interface CreateDataTransactionProps extends CreateTransactionProps {
   };
 }
 
-export interface CreateAndPostDataTransactionProps extends CreateTransactionProps {
+export interface CreateAndPostDataTransactionProps
+  extends CreateTransactionProps {
   type: 'data';
   options?: {
     tags?: {
@@ -73,7 +75,8 @@ export interface CreateAndPostDataTransactionProps extends CreateTransactionProp
   };
 }
 
-export interface CreateBundledDataTransactionProps extends CreateTransactionProps {
+export interface CreateBundledDataTransactionProps
+  extends CreateTransactionProps {
   type: 'data';
   options?: {
     tags?: {
@@ -85,7 +88,8 @@ export interface CreateBundledDataTransactionProps extends CreateTransactionProp
   };
 }
 
-export interface CreateAndPostBundledDataTransactionProps extends CreateTransactionProps {
+export interface CreateAndPostBundledDataTransactionProps
+  extends CreateTransactionProps {
   type: 'data';
   options?: {
     tags?: {
@@ -97,31 +101,44 @@ export interface CreateAndPostBundledDataTransactionProps extends CreateTransact
   };
 }
 
-export type CreateTransactionReturnProps<T extends CreateWalletTransactionProps | CreateAndPostWalletTransactionProps | CreateDataTransactionProps | CreateAndPostDataTransactionProps | CreateBundledDataTransactionProps | CreateAndPostBundledDataTransactionProps> =
-  T extends CreateWalletTransactionProps ? Transaction :
-  T extends CreateAndPostWalletTransactionProps ? {
-    transaction: Transaction,
-    postedTransaction: {
-      status: number;
-      statusText: string;
-      data: any;
+export type CreateTransactionReturnProps<
+  T extends
+    | CreateWalletTransactionProps
+    | CreateAndPostWalletTransactionProps
+    | CreateDataTransactionProps
+    | CreateAndPostDataTransactionProps
+    | CreateBundledDataTransactionProps
+    | CreateAndPostBundledDataTransactionProps
+> = T extends CreateWalletTransactionProps
+  ? Transaction
+  : T extends CreateAndPostWalletTransactionProps
+  ? {
+      transaction: Transaction;
+      postedTransaction: {
+        status: number;
+        statusText: string;
+        data: any;
+      };
     }
-  } :
-  T extends CreateDataTransactionProps ? Transaction :
-  T extends CreateAndPostDataTransactionProps ? {
-    transaction: Transaction,
-    postedTransaction: {
-      status: number;
-      statusText: string;
-      data: any;
+  : T extends CreateDataTransactionProps
+  ? Transaction
+  : T extends CreateAndPostDataTransactionProps
+  ? {
+      transaction: Transaction;
+      postedTransaction: {
+        status: number;
+        statusText: string;
+        data: any;
+      };
     }
-  } :
-  T extends CreateBundledDataTransactionProps ? BundlrTransaction :
-  T extends CreateAndPostBundledDataTransactionProps ? {
-    transaction: BundlrTransaction,
-    postedTransaction: UploadResponse
-  } :
-  never;
+  : T extends CreateBundledDataTransactionProps
+  ? BundlrTransaction
+  : T extends CreateAndPostBundledDataTransactionProps
+  ? {
+      transaction: BundlrTransaction;
+      postedTransaction: UploadResponse;
+    }
+  : never;
 
 export interface SignTransactionProps {
   key: JWKInterface;
@@ -148,17 +165,18 @@ export interface GetTransactionProps {
 }
 
 export interface CreateandPostTransactionWOthentProps {
-  apiId: string,
-  othentFunction: string,
-  data: File,
+  apiId: string;
+  callBackURLs: string[];
+  othentFunction: string;
+  data: File;
   tags?: {
     name: string;
     value: string;
-  }[],
+  }[];
   useBundlr?: boolean;
 }
 
 export interface CreateandPostTransactionWOthentReturnProps {
-  success: boolean,
-  transactionId: string,
+  success: boolean;
+  transactionId: string;
 }
