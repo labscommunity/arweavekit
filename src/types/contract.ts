@@ -24,7 +24,7 @@ export interface CreateContractReturnProps {
 export interface WriteContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
   contractTxId: string;
-  wallet: ArWallet | CustomSignature;
+  wallet?: ArWallet | CustomSignature;
   options: {};
 }
 
