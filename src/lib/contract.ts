@@ -74,10 +74,12 @@ export async function writeContract(params: Types.WriteContractProps) {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
 
-  const contract = warp.contract(params.contractTxId).connect(params.wallet);
+  const contract = warp
+    .contract(params.contractTxId)
+    .connect(params.wallet ? params.wallet : 'use_wallet');
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'ArweaveKit', value: '1.2.11' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.12' }],
   });
 
   const readState = await contract.readState();
@@ -163,7 +165,7 @@ export async function writeContractWOthent(
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'ArweaveKit', value: '1.2.11' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.12' }],
   });
 
   const postedTransaction = await othentInstance.sendTransactionWarp(
