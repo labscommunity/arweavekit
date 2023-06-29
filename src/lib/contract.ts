@@ -79,7 +79,7 @@ export async function writeContract(params: Types.WriteContractProps) {
     .connect(params.wallet ? params.wallet : 'use_wallet');
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'ArweaveKit', value: '1.2.12' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.13' }],
   });
 
   const readState = await contract.readState();
@@ -160,12 +160,11 @@ export async function writeContractWOthent(
 ): Promise<Types.WriteContractWOthentReturnProps> {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'ArweaveKit', value: '1.2.12' }],
+    tags: [{ name: 'ArweaveKit', value: '1.2.13' }],
   });
 
   const postedTransaction = await othentInstance.sendTransactionWarp(
@@ -190,7 +189,6 @@ export async function readContractWOthent(
 ): Promise<Types.ReadContractWOthentReturnProps> {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   const res = await othentInstance.readCustomContract({
     contract_id: params.contractTxId,

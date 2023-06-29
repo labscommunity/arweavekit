@@ -7033,10 +7033,10 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==
 
-othent@^1.0.631:
-  version "1.0.631"
-  resolved "https://registry.yarnpkg.com/othent/-/othent-1.0.631.tgz#2b48b973076ade2227c2978aee3f831f148b2038"
-  integrity sha512-CoeDMwN5OroTHXOCc7zfCR69r6eA0EL3dyGwvkxPmzcI8/mgAPenjgiQGpo2IEABcpBOr3UYYUYf7YQLmnsA5Q==
+othent@^1.0.634:
+  version "1.0.634"
+  resolved "https://registry.yarnpkg.com/othent/-/othent-1.0.634.tgz#23b4da0612311d21b2b2ec09a2035deb38b8ba45"
+  integrity sha512-iI96hhd0HJW3b2nPdEsXiTlpl76xWgTAdpR/vcnSA398HUgzGNXIqRWEBh8K7xR6C3YT6kDwCV9wYDRawxJbDg==
   dependencies:
     "@auth0/auth0-spa-js" "^2.0.4"
     axios "^1.3.4"

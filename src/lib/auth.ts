@@ -90,7 +90,6 @@ export async function isInstalled() {
 export async function logIn(params: OthentInstanceConenctionProps) {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   const response = await othentInstance.logIn();
   return response;
@@ -103,7 +102,6 @@ export async function logIn(params: OthentInstanceConenctionProps) {
 export async function logOut(params: OthentInstanceConenctionProps) {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   await othentInstance.logOut();
 }
@@ -117,7 +115,6 @@ export async function userDetails(
 ): Promise<UserDetailsReturnProps> {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   const response = await othentInstance.userDetails();
   return response;
