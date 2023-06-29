@@ -316,7 +316,6 @@ export async function createAndPostTransactionWOthent(
 ): Promise<Types.CreateandPostTransactionWOthentReturnProps> {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   const allTags = params?.tags && [
     {

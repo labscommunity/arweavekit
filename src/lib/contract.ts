@@ -160,7 +160,6 @@ export async function writeContractWOthent(
 ): Promise<Types.WriteContractWOthentReturnProps> {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
@@ -190,7 +189,6 @@ export async function readContractWOthent(
 ): Promise<Types.ReadContractWOthentReturnProps> {
   const othentInstance = await othent({
     API_ID: params.apiId,
-    callbackURLs: params.callBackURLs,
   });
   const res = await othentInstance.readCustomContract({
     contract_id: params.contractTxId,
