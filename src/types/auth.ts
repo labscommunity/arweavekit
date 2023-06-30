@@ -37,5 +37,4 @@ export interface UserDetailsReturnProps {
 
 export interface OthentInstanceConenctionProps {
   apiId: string;
-  callBackURLs: string[];
 }

@@ -166,7 +166,6 @@ export interface GetTransactionProps {
 
 export interface CreateandPostTransactionWOthentProps {
   apiId: string;
-  callBackURLs: string[];
   othentFunction: string;
   data: File;
   tags?: {
