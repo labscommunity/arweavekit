@@ -35,7 +35,6 @@ export interface ReadContractProps {
 
 export interface WriteContractWOthentProps {
   apiId: string;
-  callBackURLs: string[];
   othentFunction: string;
   data: {
     toContractId: string;
@@ -55,7 +54,6 @@ export interface WriteContractWOthentReturnProps {
 
 export interface ReadContractWOthentProps {
   apiId: string;
-  callBackURLs: string[];
   contractTxId: string;
 }
 
