@@ -38,3 +38,10 @@ export async function fileToBuffer(file: File): Promise<ArrayBuffer> {
     reader.readAsArrayBuffer(file);
   });
 }
+
+export const ARWEAVE_GATEWAYS = [
+  'arweave.net',
+  'arweave.dev',
+  'g8way.io',
+  'arweave-search.goldsky.com',
+] as const;
