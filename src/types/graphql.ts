@@ -1,4 +1,5 @@
 import { ARWEAVE_GATEWAYS } from '../utils';
+import { GraphQLError as ActualGraphQLError } from 'graphql';
 
 export type QueryGQLOptions = {
   gateway: string;
@@ -10,13 +11,13 @@ export type QueryTransactionsGQLOptions = QueryGQLOptions & { cursor?: string };
 export type QueryGQLResult = {
   status: number;
   data: GraphQLData | null;
-  errors: GraphQLError[] | null;
+  errors: GraphQLError[] | readonly ActualGraphQLError[] | null;
 };
 
 export type QueryTransactionsGQLResult = {
   status: number;
   data: GQLEdge[];
-  errors: GraphQLError[] | null;
+  errors: GraphQLError[] | readonly ActualGraphQLError[] | null;
   cursor: string;
   hasNextPage: boolean;
 };

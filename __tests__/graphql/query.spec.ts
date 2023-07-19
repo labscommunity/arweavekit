@@ -1,4 +1,4 @@
-import { queryGQL, queryTransactionsGQL } from '../../src';
+import { queryGQL, queryTransactionsGQL } from '../../src/lib/graphql';
 import * as Types from '../../src/types/graphql';
 import {
   transactionsQuery,

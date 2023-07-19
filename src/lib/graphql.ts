@@ -1,7 +1,8 @@
 import Arweave from 'arweave';
+import { buildSchema, parse, validate, GraphQLError } from 'graphql';
 
 import * as Types from '../types/graphql';
-import { ARWEAVE_GATEWAYS } from '../utils';
+import { ARWEAVE_GATEWAYS, graphQlSchemaString } from '../utils';
 
 /**
  * Query data with GraphQL endpoint
@@ -13,6 +14,25 @@ export async function queryGQL(
   query: string,
   options: Types.QueryGQLOptions
 ): Promise<Types.QueryGQLResult> {
+  let validationResult: GraphQLError[] = [];
+
+  try {
+    const queryAST = parse(query);
+    const schema = buildSchema(graphQlSchemaString);
+    const result = validate(schema, queryAST);
+    validationResult = [...result];
+  } catch (error: any) {
+    validationResult.push(new GraphQLError(error.message));
+  }
+
+  if (validationResult.length > 0) {
+    return {
+      status: 400,
+      data: null,
+      errors: validationResult,
+    };
+  }
+
   const arweave = initArweave(options.gateway);
 
   const payload = {
