@@ -6,7 +6,7 @@ export {
   postTransaction,
   getTransaction,
   getTransactionStatus,
-  createAndPostTransactionWOthent
+  createAndPostTransactionWOthent,
 } from './lib/transaction';
 export {
   createContract,
@@ -22,3 +22,4 @@ export {
   readServerlessFunction,
   testServerlessFunction,
 } from './lib/serverless';
+export { queryGQL, queryTransactionsGQL } from './lib/graphql';

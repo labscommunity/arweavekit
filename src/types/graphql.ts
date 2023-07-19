@@ -5,10 +5,20 @@ export type QueryGQLOptions = {
   filters: Record<string, unknown>;
 };
 
+export type QueryTransactionsGQLOptions = QueryGQLOptions & { cursor?: string };
+
 export type QueryGQLResult = {
   status: number;
   data: GraphQLData | null;
   errors: GraphQLError[] | null;
+};
+
+export type QueryTransactionsGQLResult = {
+  status: number;
+  data: GQLEdge[];
+  errors: GraphQLError[] | null;
+  cursor: string;
+  hasNextPage: boolean;
 };
 
 export interface GQLNode {
@@ -76,4 +86,4 @@ export type GraphQLError = {
   };
 };
 
-export type Gateway = typeof ARWEAVE_GATEWAYS[number];
+export type Gateway = (typeof ARWEAVE_GATEWAYS)[number];

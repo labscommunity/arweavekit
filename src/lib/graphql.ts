@@ -28,6 +28,41 @@ export async function queryGQL(
   };
 }
 
+/**
+ * Query transactions with pagination on GraphQL endpoint
+ * @params QueryTransactionsGQLOptions
+ * @returns QueryTransactionsGQLResult
+ */
+
+export async function queryTransactionsGQL(
+  query: string,
+  options: Types.QueryTransactionsGQLOptions
+): Promise<Types.QueryTransactionsGQLResult> {
+  let cursor = options.cursor || '';
+  let hasNextPage = false;
+  const filters = options.filters || {};
+
+  const { data, errors, status } = await queryGQL(query, {
+    ...options,
+    filters: { ...filters, cursor },
+  });
+
+  const edges = data?.transactions?.edges || [];
+
+  if (edges.length) {
+    cursor = edges[edges.length - 1].cursor;
+    hasNextPage = data?.transactions?.pageInfo?.hasNextPage || false;
+  }
+
+  return {
+    status,
+    data: edges,
+    errors,
+    cursor,
+    hasNextPage,
+  };
+}
+
 function initArweave(gateway: string) {
   const LOCAL_GATEWAY_CONFIG = {
     host: 'localhost',
