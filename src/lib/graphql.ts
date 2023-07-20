@@ -101,11 +101,13 @@ export async function queryAllTransactionsGQL(
       hasNextPage: _hasNextPage,
     } = await queryTransactionsGQL(query, { ...options, cursor });
 
-    if (!errors) {
-      dataSet.push(...data);
-      cursor = currentCursor;
-      hasNextPage = _hasNextPage;
+    if (errors && !data.length) {
+      break;
     }
+
+    dataSet.push(...data);
+    cursor = currentCursor;
+    hasNextPage = _hasNextPage;
   }
 
   return dataSet;
