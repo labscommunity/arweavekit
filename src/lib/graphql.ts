@@ -20,6 +20,7 @@ export async function queryGQL(
     const queryAST = parse(query);
     const schema = buildSchema(graphQlSchemaString);
     const result = validate(schema, queryAST);
+
     validationResult = [...result];
   } catch (error: any) {
     validationResult.push(new GraphQLError(error.message));
@@ -81,6 +82,33 @@ export async function queryTransactionsGQL(
     cursor,
     hasNextPage,
   };
+}
+
+export async function queryAllTransactionsGQL(
+  query: string,
+  options: Types.QueryGQLOptions
+) {
+  const dataSet: Types.GQLEdge[] = [];
+
+  let cursor = '';
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const {
+      data,
+      errors,
+      cursor: currentCursor,
+      hasNextPage: _hasNextPage,
+    } = await queryTransactionsGQL(query, { ...options, cursor });
+
+    if (!errors) {
+      dataSet.push(...data);
+      cursor = currentCursor;
+      hasNextPage = _hasNextPage;
+    }
+  }
+
+  return dataSet;
 }
 
 function initArweave(gateway: string) {
