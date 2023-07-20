@@ -22,4 +22,8 @@ export {
   readServerlessFunction,
   testServerlessFunction,
 } from './lib/serverless';
-export { queryGQL, queryTransactionsGQL } from './lib/graphql';
+export {
+  queryGQL,
+  queryTransactionsGQL,
+  queryAllTransactionsGQL,
+} from './lib/graphql';
