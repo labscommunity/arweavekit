@@ -6,7 +6,7 @@ export {
   postTransaction,
   getTransaction,
   getTransactionStatus,
-  createAndPostTransactionWOthent
+  createAndPostTransactionWOthent,
 } from './lib/transaction';
 export {
   createContract,
@@ -16,6 +16,12 @@ export {
   writeContractWOthent,
   readContractWOthent,
 } from './lib/contract';
+export {
+  encryptFileWithAES,
+  encryptAESKeywithRSA,
+  decryptFileWithAES,
+  decryptAESKeywithRSA,
+} from './lib/encryption';
 export {
   createServerlessFunction,
   writeServerlessFunction,
