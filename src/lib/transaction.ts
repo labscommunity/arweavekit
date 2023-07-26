@@ -1,7 +1,6 @@
 import Arweave from 'arweave';
 import Bundlr from '@bundlr-network/client';
 import Transaction from 'arweave/node/lib/transaction';
-// import { initArweave } from '../utils';
 import { getAddress, getBalance } from './wallet';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';

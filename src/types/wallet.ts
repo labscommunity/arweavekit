@@ -1,5 +1,9 @@
 import { JWKInterface } from 'arweave/node/lib/wallet';
 
+export interface InitArweaveProps {
+  environment: 'local' | 'mainnet';
+}
+
 export interface CreateWalletProps {
   seedPhrase?: boolean;
   environment: 'local' | 'mainnet';

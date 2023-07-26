@@ -1,6 +1,25 @@
+import Arweave from 'arweave';
 import * as Types from '../types/wallet';
-import { initArweave } from '../utils';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
+
+const initArweave = (params: Types.InitArweaveProps) => {
+  let arweave;
+  if (params.environment === 'local') {
+    arweave = Arweave.init({
+      host: 'localhost',
+      port: 1984,
+      protocol: 'http',
+    });
+  } else {
+    arweave = Arweave.init({
+      host: 'arweave.net',
+      port: 443,
+      protocol: 'https',
+    });
+  }
+
+  return arweave;
+};
 
 /**
  * create wallet
@@ -11,7 +30,7 @@ import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 export async function createWallet(
   params: Types.CreateWalletProps
 ): Promise<Types.CreateWalletReturnProps> {
-  const arweave = initArweave(params.environment);
+  const arweave = initArweave({ environment: params.environment });
 
   if (params?.seedPhrase) {
     const seedPhrase = await generateMnemonic();
@@ -57,7 +76,7 @@ export async function createWallet(
 export async function getAddress(
   params: Types.GetAddressProps
 ): Promise<string> {
-  const arweave = initArweave(params.environment);
+  const arweave = initArweave({ environment: params.environment });
   const address = await arweave.wallets.jwkToAddress(params.key);
   return address;
 }
@@ -72,7 +91,7 @@ export async function getBalance(
   params: Types.GetBalanceProps
 ): Promise<string> {
   let walletBalance;
-  const arweave = initArweave(params.environment);
+  const arweave = initArweave({ environment: params.environment });
   const winstonBalance = await arweave.wallets.getBalance(params.address);
 
   if (params.options?.winstonToAr) {
