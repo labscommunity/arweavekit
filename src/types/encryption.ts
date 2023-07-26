@@ -1,4 +1,4 @@
-export interface EncryptFileWithAESProps {
+export interface EncryptDataWithAESProps {
   data: ArrayBuffer;
 }
 
@@ -10,7 +10,7 @@ export interface DecryptAESKeywithRSAProps {
   key: Uint8Array;
 }
 
-export interface DecryptFileWithAESProps {
+export interface DecryptDataWithAESProps {
   data: ArrayBuffer;
   key: string;
 }

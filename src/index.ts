@@ -17,9 +17,9 @@ export {
   readContractWOthent,
 } from './lib/contract';
 export {
-  encryptFileWithAES,
+  encryptDataWithAES,
   encryptAESKeywithRSA,
-  decryptFileWithAES,
+  decryptDataWithAES,
   decryptAESKeywithRSA,
 } from './lib/encryption';
 export {

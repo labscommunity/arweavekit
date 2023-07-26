@@ -50,8 +50,8 @@ function bufferToBase64(buf: ArrayBuffer) {
  * @param params data (to be encrypted) as ArrayBuffer
  * @returns object of raw AES key as Base64 and encrypted data as ArrayBuffer
  */
-export async function encryptFileWithAES(
-  params: Types.EncryptFileWithAESProps
+export async function encryptDataWithAES(
+  params: Types.EncryptDataWithAESProps
 ) {
   const encryptedDataAESKey = await window.crypto.subtle.generateKey(
     {
@@ -135,8 +135,8 @@ function base64ToBuffer(base64: string) {
  * @param params object of encrypted data as ArrayBuffer and raw AES key as base64 string
  * @returns decrypted data as ArrayBuffer
  */
-export async function decryptFileWithAES(
-  params: Types.DecryptFileWithAESProps
+export async function decryptDataWithAES(
+  params: Types.DecryptDataWithAESProps
 ) {
   const ArrayBufferKey = base64ToBuffer(params.key);
 
