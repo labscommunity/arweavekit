@@ -23,12 +23,6 @@ export {
   decryptAESKeywithRSA,
 } from './lib/encryption';
 export {
-  createServerlessFunction,
-  writeServerlessFunction,
-  readServerlessFunction,
-  testServerlessFunction,
-} from './lib/serverless';
-export {
   queryGQL,
   queryTransactionsGQL,
   queryAllTransactionsGQL,
