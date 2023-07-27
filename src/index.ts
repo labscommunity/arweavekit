@@ -17,11 +17,11 @@ export {
   readContractWOthent,
 } from './lib/contract';
 export {
-  createServerlessFunction,
-  writeServerlessFunction,
-  readServerlessFunction,
-  testServerlessFunction,
-} from './lib/serverless';
+  encryptDataWithAES,
+  encryptAESKeywithRSA,
+  decryptDataWithAES,
+  decryptAESKeywithRSA,
+} from './lib/encryption';
 export {
   queryGQL,
   queryTransactionsGQL,
