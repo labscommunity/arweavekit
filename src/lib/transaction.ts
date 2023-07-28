@@ -4,6 +4,7 @@ import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
 import { Othent as othent } from 'othent';
+import { version } from '../../package.json';
 
 async function initArweave(params: Types.InitArweaveProps) {
   let arweave;
@@ -75,7 +76,7 @@ export async function createTransaction<
       const allTags = params?.options.tags && [
         {
           name: 'ArweaveKit',
-          value: '1.4.0',
+          value: version,
         },
         ...params?.options.tags,
       ];
@@ -83,7 +84,7 @@ export async function createTransaction<
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.0' }],
+          tags: allTags ? allTags : [{ name: 'ArweaveKit', value: version }],
         }
       );
 
@@ -132,7 +133,7 @@ export async function createTransaction<
       );
 
       // tags
-      transaction.addTag('ArweaveKit', '1.4.0');
+      transaction.addTag('ArweaveKit', version);
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -183,7 +184,7 @@ export async function createTransaction<
       );
 
       // add tags
-      transaction.addTag('ArweaveKit', '1.4.0');
+      transaction.addTag('ArweaveKit', version);
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -318,7 +319,7 @@ export async function createAndPostTransactionWOthent(
   const allTags = params?.tags && [
     {
       name: 'ArweaveKit',
-      value: '1.4.0',
+      value: version,
     },
     ...params?.tags,
   ];
@@ -329,7 +330,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.0' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: version }],
     });
 
     postedTransaction = await othentInstance.sendTransactionBundlr(
@@ -339,7 +340,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.0' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: version }],
     });
 
     postedTransaction = await othentInstance.sendTransactionArweave(
