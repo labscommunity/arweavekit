@@ -32,6 +32,7 @@
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.1",
     "@rollup/plugin-typescript": "^11.1.1",
+    "@types/bn.js": "^5.1.1",
     "@types/jest": "^29.4.0",
     "@types/node-fetch": "^2.6.2",
     "arlocal": "^1.1.60",
@@ -46,7 +47,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@bundlr-network/client": "^0.10.5",
+    "@bundlr-network/client": "0.11.9",
     "arweave": "^1.13.5",
     "arweave-mnemonic-keys": "^0.0.9",
     "graphql": "^16.7.1",
