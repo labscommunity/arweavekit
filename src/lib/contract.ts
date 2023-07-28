@@ -2,7 +2,6 @@ import { DeployPlugin, ArweaveSigner } from 'warp-contracts-plugin-deploy';
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
-import { version } from '../../package.json';
 
 /***
  * create warp contract
@@ -80,7 +79,7 @@ export async function writeContract(params: Types.WriteContractProps) {
     .connect(params.wallet ? params.wallet : 'use_wallet');
 
   const writeContract = await contract.writeInteraction(params.options, {
-    tags: [{ name: 'ArweaveKit', value: version }],
+    tags: [{ name: 'ArweaveKit', value: '1.4.0' }],
   });
 
   const readState = await contract.readState();
@@ -165,7 +164,7 @@ export async function writeContractWOthent(
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'ArweaveKit', value: version }],
+    tags: [{ name: 'ArweaveKit', value: '1.4.0' }],
   });
 
   const postedTransaction = await othentInstance.sendTransactionWarp(

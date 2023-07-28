@@ -144,7 +144,6 @@ export interface SignTransactionProps {
   key: JWKInterface;
   environment: 'local' | 'mainnet';
   createdTransaction: Transaction | BundlrTransaction;
-  useBundlr?: boolean;
   postTransaction?: boolean;
 }
 
@@ -152,7 +151,6 @@ export interface PostTransactionProps {
   key: JWKInterface;
   environment: 'local' | 'mainnet';
   transaction: Transaction | BundlrTransaction;
-  useBundlr?: boolean;
 }
 
 export interface GetTransactionProps {
