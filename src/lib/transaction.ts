@@ -1,7 +1,6 @@
 import Arweave from 'arweave';
-import Bundlr from '@bundlr-network/client';
+import NodeBundlr from '@bundlr-network/client/build/esm/node/bundlr';
 import Transaction from 'arweave/node/lib/transaction';
-import { getAddress, getBalance } from './wallet';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
 import { Othent as othent } from 'othent';
@@ -67,7 +66,7 @@ export async function createTransaction<
   if (params.type === 'data') {
     // use useBundlr
     if (params.options?.useBundlr) {
-      const bundlr = new Bundlr(
+      const bundlr = new NodeBundlr(
         'http://node2.bundlr.network',
         'arweave',
         params.key
@@ -103,10 +102,9 @@ export async function createTransaction<
       if (params.environment === 'local' && params.options?.signAndPost) {
         await arweave.api
           .get(
-            `mint/${await getAddress({
-              key: params.key as JWKInterface,
-              environment: 'local',
-            })}/1000000000000`
+            `mint/${await arweave.wallets.getAddress(
+              params.key as JWKInterface
+            )}/1000000000000`
           )
           .catch((error) => console.error(error));
       }
@@ -163,14 +161,15 @@ export async function createTransaction<
     let senderBalance = '';
 
     if (params.key) {
-      senderAddress = await getAddress({
-        key: params.key as JWKInterface,
-        environment: 'local',
-      });
-      senderBalance = await getBalance({
-        address: senderAddress,
-        environment: 'local',
-      });
+      senderAddress = await arweave.wallets.getAddress(
+        params.key as JWKInterface
+      );
+      senderBalance = await arweave.wallets.getBalance(senderAddress);
+      console.log('This is the sender bal from the function', senderBalance);
+      console.log(
+        'This is the sender bal from the function as parseInt',
+        parseInt(senderBalance)
+      );
     }
 
     if (parseInt(senderBalance) >= parseInt(params?.quantity as string)) {
