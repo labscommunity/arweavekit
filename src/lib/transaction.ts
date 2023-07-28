@@ -1,5 +1,5 @@
 import Arweave from 'arweave';
-import NodeBundlr from '@bundlr-network/client/build/esm/node/bundlr';
+import Bundlr from '@bundlr-network/client';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
@@ -66,7 +66,7 @@ export async function createTransaction<
   if (params.type === 'data') {
     // use useBundlr
     if (params.options?.useBundlr) {
-      const bundlr = new NodeBundlr(
+      const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
         params.key
