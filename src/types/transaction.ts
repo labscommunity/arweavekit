@@ -1,5 +1,7 @@
-import BundlrTransaction from '@bundlr-network/client/build/common/transaction';
-import { UploadResponse } from '@bundlr-network/client/build/common/types';
+import {
+  UploadResponse,
+  BundlrTransaction,
+} from '@bundlr-network/client/build/esm/common/types';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 
