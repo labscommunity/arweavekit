@@ -1,5 +1,5 @@
 import Arweave from 'arweave';
-import NodeBundlr from '@bundlr-network/client/build/esm/node/bundlr';
+import Bundlr from '@bundlr-network/client';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
@@ -66,7 +66,7 @@ export async function createTransaction<
   if (params.type === 'data') {
     // use useBundlr
     if (params.options?.useBundlr) {
-      const bundlr = new NodeBundlr(
+      const bundlr = new Bundlr(
         'http://node2.bundlr.network',
         'arweave',
         params.key
@@ -75,7 +75,7 @@ export async function createTransaction<
       const allTags = params?.options.tags && [
         {
           name: 'ArweaveKit',
-          value: '1.4.4',
+          value: '1.4.5',
         },
         ...params?.options.tags,
       ];
@@ -83,7 +83,7 @@ export async function createTransaction<
       const transaction = bundlr.createTransaction(
         JSON.stringify(params?.data),
         {
-          tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.4' }],
+          tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.5' }],
         }
       );
 
@@ -128,7 +128,7 @@ export async function createTransaction<
       );
 
       // tags
-      transaction.addTag('ArweaveKit', '1.4.4');
+      transaction.addTag('ArweaveKit', '1.4.5');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -179,7 +179,7 @@ export async function createTransaction<
       );
 
       // add tags
-      transaction.addTag('ArweaveKit', '1.4.4');
+      transaction.addTag('ArweaveKit', '1.4.5');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -296,7 +296,7 @@ export async function createAndPostTransactionWOthent(
   const allTags = params?.tags && [
     {
       name: 'ArweaveKit',
-      value: '1.4.4',
+      value: '1.4.5',
     },
     ...params?.tags,
   ];
@@ -307,7 +307,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.4' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.5' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionBundlr(
@@ -317,7 +317,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.4' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.5' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionArweave(
