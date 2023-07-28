@@ -69,6 +69,9 @@
     },
     "./wallet": {
       "import": "./dist/lib/wallet.js"
+    },
+    "./graphql": {
+      "import": "./dist/lib/graphql.js"
     }
   },
   "typesVersions": {
@@ -87,6 +90,9 @@
       ],
       "encryption": [
         "dist/lib/encryption.d.ts"
+      ],
+      "graphql": [
+        "dist/lib/graphql.d.ts"
       ]
     }
   }
