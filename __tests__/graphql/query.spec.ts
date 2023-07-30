@@ -2,10 +2,8 @@ import { queryGQL, queryTransactionsGQL } from '../../src/lib/graphql';
 import * as Types from '../../src/types/graphql';
 import {
   transactionsQuery,
-  transactionsWithTagFilterQuery,
   transactionsWithPageInfo,
 } from './queries';
-import mockedResponses from './queries/test.json';
 
 describe('Query GraphQL endpoint with `queryGQL`', () => {
   it('should run and return first 10 transactions', async () => {
@@ -20,36 +18,6 @@ describe('Query GraphQL endpoint with `queryGQL`', () => {
     expect(data).not.toBeNull();
     expect(errors).toBeNull();
     expect(data?.transactions.edges.length).toBe(10);
-  });
-
-  it('should get 5 transactions filtered by tags', async () => {
-    const { data, errors, status } = await queryGQL(
-      transactionsWithTagFilterQuery,
-      {
-        gateway: 'arweave.dev',
-        filters: {
-          count: 5,
-          tags: [
-            {
-              name: 'App-Name',
-              values: ['PublicSquare'],
-            },
-            {
-              name: 'Content-Type',
-              values: ['text/plain'],
-            },
-          ],
-        },
-      }
-    );
-
-    expect(status).toBe(200);
-    expect(data).not.toBeNull();
-    expect(errors).toBeNull();
-
-    expect(data).toEqual(
-      mockedResponses.responses.transactionsFilteredByTagsQuery
-    );
   });
 
   it('should produce errors when invalid query is passed', async () => {

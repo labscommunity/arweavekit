@@ -1,12 +1,12 @@
 {
   "preset": "ts-jest",
-  "testMatch": [
-    "**/*.spec.ts"
-  ],
+  "testMatch": ["**/*.spec.ts"],
   "transform": {
-    "^.+\\.tsx?$": "ts-jest"
+    "\\.[jt]sx?$": "ts-jest"
   },
-  "transformIgnorePatterns": [
-    "/node_modules/(?!othent)"
-  ]
+  "moduleNameMapper": {
+    "^(\\.\\.?\\/.+)\\.js$": "$1"
+  },
+  "extensionsToTreatAsEsm": [".ts"],
+  "transformIgnorePatterns": ["/node_modules/(?!othent)"]
 }
