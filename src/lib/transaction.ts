@@ -1,5 +1,5 @@
 import Arweave from 'arweave';
-import Bundlr from '@bundlr-network/client';
+import Bundlr from '@bundlr-network/client/build/esm/node/bundlr';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
@@ -59,9 +59,11 @@ export async function createTransaction<
     | Types.CreateBundledDataTransactionProps
     | Types.CreateAndPostBundledDataTransactionProps
 >(params: T): Promise<Types.CreateTransactionReturnProps<T>> {
+  console.log('Enters createTransaction');
   // init arweave instance
   const arweave = await initArweave({ environment: params.environment });
 
+  console.log('Creates arweave instance on', arweave);
   // check and default env to mainnet
   if (params.type === 'data') {
     // use useBundlr
@@ -80,12 +82,15 @@ export async function createTransaction<
         ...params?.options.tags,
       ];
 
-      const transaction = bundlr.createTransaction(
-        JSON.stringify(params?.data),
-        {
+      let transaction;
+
+      if (params.data instanceof Buffer || typeof params.data === 'string') {
+        transaction = bundlr.createTransaction(params?.data, {
           tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.7' }],
-        }
-      );
+        });
+      } else {
+        throw new Error('Bundlr only accepts `string` and `Buffer`.');
+      }
 
       await transaction.sign();
       const postedTransaction = await transaction.upload();
@@ -105,24 +110,27 @@ export async function createTransaction<
           .catch((error) => console.error(error));
       }
 
-      let data;
+      // if (typeof params.data === 'string') {
+      //   data = params.data;
+      // } else if (params.data instanceof Uint8Array) {
+      //   data = params.data;
+      // } else if (params.data instanceof ArrayBuffer) {
+      //   data = params.data;
+      // } else if (params.data instanceof File) {
+      //   data = await fileToArrayBuffer(params.data);
+      // } else {
+      //   throw new TypeError('Unsupported data type');
+      // }
 
-      if (typeof params.data === 'string') {
-        data = params.data;
-      } else if (params.data instanceof Uint8Array) {
-        data = params.data;
-      } else if (params.data instanceof ArrayBuffer) {
-        data = params.data;
-      } else if (params.data instanceof File) {
-        data = await fileToArrayBuffer(params.data);
-      } else {
-        throw new TypeError('Unsupported data type');
-      }
+      console.log(
+        'This is the data for createTransaction with Arweave*********',
+        params.data
+      );
 
       // create transaction
       const transaction = await arweave.createTransaction(
         {
-          data: data,
+          data: params.data,
         },
         params.key ? params.key : 'use_wallet'
       );
@@ -133,10 +141,6 @@ export async function createTransaction<
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
         );
-      }
-
-      if (params.data instanceof File) {
-        transaction.addTag('Content-Type', params.data.type);
       }
 
       // sign and post
