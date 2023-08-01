@@ -24,27 +24,6 @@ async function initArweave(params: Types.InitArweaveProps) {
   return arweave;
 }
 
-async function fileToArrayBuffer(file: File): Promise<ArrayBuffer> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const result = reader.result;
-      if (result instanceof ArrayBuffer) {
-        resolve(result);
-      } else {
-        reject(new Error('Failed to convert file to ArrayBuffer.'));
-      }
-    };
-
-    reader.onerror = () => {
-      reject(new Error('Error occurred while reading the file.'));
-    };
-
-    reader.readAsArrayBuffer(file);
-  });
-}
-
 /**
  * create transaction
  * @params CreateTransactionProps
