@@ -38,11 +38,9 @@ export async function createTransaction<
     | Types.CreateBundledDataTransactionProps
     | Types.CreateAndPostBundledDataTransactionProps
 >(params: T): Promise<Types.CreateTransactionReturnProps<T>> {
-  console.log('Enters createTransaction');
   // init arweave instance
   const arweave = await initArweave({ environment: params.environment });
 
-  console.log('Creates arweave instance on', arweave);
   // check and default env to mainnet
   if (params.type === 'data') {
     // use useBundlr
@@ -89,11 +87,6 @@ export async function createTransaction<
           .catch((error) => console.error(error));
       }
 
-      console.log(
-        'This is the data for createTransaction with Arweave*********',
-        params.data
-      );
-
       // create transaction
       const transaction = await arweave.createTransaction(
         {
@@ -135,11 +128,6 @@ export async function createTransaction<
         params.key as JWKInterface
       );
       senderBalance = await arweave.wallets.getBalance(senderAddress);
-      console.log('This is the sender bal from the function', senderBalance);
-      console.log(
-        'This is the sender bal from the function as parseInt',
-        parseInt(senderBalance)
-      );
     }
 
     if (parseInt(senderBalance) >= parseInt(params?.quantity as string)) {
