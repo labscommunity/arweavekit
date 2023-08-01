@@ -110,18 +110,6 @@ export async function createTransaction<
           .catch((error) => console.error(error));
       }
 
-      // if (typeof params.data === 'string') {
-      //   data = params.data;
-      // } else if (params.data instanceof Uint8Array) {
-      //   data = params.data;
-      // } else if (params.data instanceof ArrayBuffer) {
-      //   data = params.data;
-      // } else if (params.data instanceof File) {
-      //   data = await fileToArrayBuffer(params.data);
-      // } else {
-      //   throw new TypeError('Unsupported data type');
-      // }
-
       console.log(
         'This is the data for createTransaction with Arweave*********',
         params.data
