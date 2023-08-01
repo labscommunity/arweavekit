@@ -112,7 +112,10 @@ export async function createTransaction<
 
       // sign and post
       if (params.options?.signAndPost) {
-        await arweave.transactions.sign(transaction, params.key);
+        await arweave.transactions.sign(
+          transaction,
+          params.key ? params.key : 'use_wallet'
+        );
         const postedTransaction = await arweave.transactions.post(transaction);
         return {
           transaction,
@@ -159,7 +162,10 @@ export async function createTransaction<
 
       // signAndPost
       if (params.options?.signAndPost) {
-        await arweave.transactions.sign(transaction, params.key);
+        await arweave.transactions.sign(
+          transaction,
+          params.key ? params.key : 'use_wallet'
+        );
         const postedTransaction = await arweave.transactions.post(transaction);
         return {
           transaction,
@@ -185,7 +191,7 @@ export async function signTransaction(params: Types.SignTransactionProps) {
 
   await arweave.transactions.sign(
     params.createdTransaction as Transaction,
-    params.key
+    params.key ? params.key : 'use_wallet'
   );
   if (params?.postTransaction) {
     const postedTransaction = await arweave.transactions.post(

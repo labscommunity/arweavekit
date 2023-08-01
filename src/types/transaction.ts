@@ -142,14 +142,14 @@ export type CreateTransactionReturnProps<
   : never;
 
 export interface SignTransactionProps {
-  key: JWKInterface;
+  key?: JWKInterface;
   environment: 'local' | 'mainnet';
   createdTransaction: Transaction | BundlrTransaction;
   postTransaction?: boolean;
 }
 
 export interface PostTransactionProps {
-  key: JWKInterface;
+  key?: JWKInterface;
   environment: 'local' | 'mainnet';
   transaction: Transaction | BundlrTransaction;
 }
