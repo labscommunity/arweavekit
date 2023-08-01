@@ -15,7 +15,7 @@ export interface CreateTransactionProps {
   environment: 'local' | 'mainnet';
   target?: string;
   quantity?: string;
-  data?: string | Uint8Array | ArrayBuffer | File;
+  data?: string | Uint8Array | ArrayBuffer;
   options?: {
     tags?: {
       name: string;
@@ -23,7 +23,6 @@ export interface CreateTransactionProps {
     }[];
     useBundlr?: boolean;
     signAndPost?: boolean;
-    // signAndPostWOthent?: boolean;
   };
 }
 
