@@ -427,7 +427,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bundlr-network/client@^0.11.9":
+"@bundlr-network/client@0.11.9":
   version "0.11.9"
   resolved "https://registry.yarnpkg.com/@bundlr-network/client/-/client-0.11.9.tgz#c6d170e1ff74661af78547ed8bd8d84e09824f4a"
   integrity sha512-0lZAB0kx+GZsIGPT+nN2tMLseAzg98hS1HEupRoZcuE9OoMOa4+H+SOTNEbmxp7kuDKoMC3TXN9GOJBXFcPe7Q==
@@ -2186,13 +2186,14 @@ aptos@^1.3.13:
     tweetnacl "1.0.3"
 
 aptos@^1.8.5:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/aptos/-/aptos-1.14.0.tgz#32b9d0f13d6f6134d9738e86b784158497daa008"
-  integrity sha512-Lg3gq27gytHgiwB3l2X9vX0E/zxmJMnafLw8bBMyeojutv5vbMj88ZtgH2jAKZ/nNwepUzLZLtv76I4nkljoCA==
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/aptos/-/aptos-1.15.0.tgz#6803d4d735aae8ae932e7a832d43cf1fc2377953"
+  integrity sha512-cTQX8CpD1RijRc5K9KNypkgK513Wnk9uXmcvPk2neBBq464BHS53ejxx5FeGdPa7LpdDW2oSE6vvyzU8xJBvCg==
   dependencies:
     "@aptos-labs/aptos-client" "^0.0.2"
     "@noble/hashes" "1.1.3"
     "@scure/bip39" "1.1.0"
+    eventemitter3 "^5.0.1"
     form-data "4.0.0"
     tweetnacl "1.0.3"
 
@@ -3859,6 +3860,11 @@ eventemitter3@^4.0.7:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
+eventemitter3@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.1.tgz#53f5ffd0a492ac800721bb42c66b841de96423c4"
+  integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
 
 events@3.3.0, events@^3.0.0, events@^3.3.0:
   version "3.3.0"
