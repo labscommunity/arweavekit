@@ -1,6 +1,6 @@
 import {
-  UploadResponse,
   BundlrTransaction,
+  UploadResponse,
 } from '@bundlr-network/client/build/esm/common/types';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
@@ -136,8 +136,8 @@ export type CreateTransactionReturnProps<
   ? BundlrTransaction
   : T extends CreateAndPostBundledDataTransactionProps
   ? {
-      transaction: BundlrTransaction;
-      postedTransaction: UploadResponse;
+      transaction: BundlrTransaction | Transaction;
+      postedTransaction: any;
     }
   : never;
 
