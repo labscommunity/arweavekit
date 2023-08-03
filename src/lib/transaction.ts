@@ -264,9 +264,10 @@ export async function signTransaction(params: Types.SignTransactionProps) {
     const postedTransaction = await arweave.transactions.post(
       params.createdTransaction
     );
-    return postedTransaction;
+    const createdTransaction = params.createdTransaction;
+    return { createdTransaction, postedTransaction };
   } else {
-    return params.createdTransaction;
+    return params.createdTransaction as Transaction;
   }
 }
 
@@ -280,8 +281,8 @@ export async function postTransaction(params: Types.PostTransactionProps) {
   const arweave = await initArweave({ environment: params.environment });
 
   const postedTransaction = await arweave.transactions.post(params.transaction);
-
-  return postedTransaction;
+  const transaction = params.transaction;
+  return { transaction, postedTransaction };
 }
 
 export async function getTransactionStatus(params: {
@@ -289,9 +290,8 @@ export async function getTransactionStatus(params: {
   environment: 'local' | 'mainnet';
 }) {
   const arweave = await initArweave({ environment: params.environment });
+  const status = await arweave.transactions.getStatus(params.transactionId);
 
-  let status: any;
-  status = await arweave.transactions.getStatus(params.transactionId);
   return status;
 }
 
@@ -303,26 +303,8 @@ export async function getTransactionStatus(params: {
 export async function getTransaction(params: Types.GetTransactionProps) {
   const arweave = await initArweave({ environment: params.environment });
   const transaction = await arweave.transactions.get(params.transactionId);
-  let txTags, txData;
 
-  if (params.options?.tags) {
-    txTags = transaction.tags.forEach((tag) => {
-      let key = tag.get('name', { decode: true, string: true });
-      let value = tag.get('value', { decode: true, string: true });
-
-      return { key, value };
-    });
-  } else if (params.options?.data) {
-    txData = await arweave.transactions.getData(params?.transactionId);
-  }
-
-  return params.options?.data
-    ? txData
-    : params?.options?.tags
-    ? { transaction, tags: txTags }
-    : params?.options?.data && params?.options?.tags
-    ? { transactionData: txData, tags: txTags }
-    : transaction;
+  return transaction;
 }
 
 /**
