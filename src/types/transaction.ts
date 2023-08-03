@@ -157,10 +157,6 @@ export interface PostTransactionProps {
 export interface GetTransactionProps {
   transactionId: string;
   environment: 'local' | 'mainnet';
-  options?: {
-    data?: boolean;
-    tags?: boolean;
-  };
 }
 
 export interface CreateandPostTransactionWOthentProps {
