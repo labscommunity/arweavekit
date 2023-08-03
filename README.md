@@ -39,7 +39,7 @@ In this library, the following types of functions are available:
 
 `Contract Functions`: Functions associated with creating and interacting with contracts. Read more [here](https://docs.arweavekit.com/smart-contracts/introduction-to-smart-contracts).
 
-`Serverless Functions`: Functions associated with creating and interacting with serverless functions. Read more [here](https://docs.arweavekit.com/serverless-functions/introduction-to-serverless-functions).
+`Encryption Functions`: Functions associated with encrypting and decrypting with encryption functions. Read more [here](https://docs.arweavekit.com/encryption/introduction-to-encryption).
 
 `Auth Functions`: Functions associated with authentication. Authentication currently supports ArConnect only. Read more [here](https://docs.arweavekit.com/auth/introduction-to-auth).
 
