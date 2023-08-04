@@ -1,9 +1,9 @@
 import Arweave from 'arweave';
-import Bundlr from '@bundlr-network/client';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
 import { Othent as othent } from 'othent';
+import { ethers } from 'ethers';
 
 async function initArweave(params: Types.InitArweaveProps) {
   let arweave;
@@ -22,27 +22,6 @@ async function initArweave(params: Types.InitArweaveProps) {
   }
 
   return arweave;
-}
-
-async function fileToArrayBuffer(file: File): Promise<ArrayBuffer> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const result = reader.result;
-      if (result instanceof ArrayBuffer) {
-        resolve(result);
-      } else {
-        reject(new Error('Failed to convert file to ArrayBuffer.'));
-      }
-    };
-
-    reader.onerror = () => {
-      reject(new Error('Error occurred while reading the file.'));
-    };
-
-    reader.readAsArrayBuffer(file);
-  });
 }
 
 /**
@@ -66,33 +45,115 @@ export async function createTransaction<
   if (params.type === 'data') {
     // use useBundlr
     if (params.options?.useBundlr) {
-      const bundlr = new Bundlr(
-        'http://node2.bundlr.network',
-        'arweave',
-        params.key
-      );
+      if (!params.key) {
+        try {
+          if (window.ethereum) {
+            const Bundlr = await import(
+              '@bundlr-network/client/build/esm/web/bundlr'
+            );
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            // @ts-ignore
+            provider.getSigner = () => signer;
+            const bundlr = new Bundlr.default(
+              'http://node2.bundlr.network',
+              'matic',
+              provider
+            );
+            await bundlr.ready();
 
-      const allTags = params?.options.tags && [
-        {
-          name: 'ArweaveKit',
-          value: '1.4.7',
-        },
-        ...params?.options.tags,
-      ];
+            const allTags = params?.options.tags && [
+              {
+                name: 'ArweaveKit',
+                value: '1.4.8',
+              },
+              ...params?.options.tags,
+            ];
 
-      const transaction = bundlr.createTransaction(
-        JSON.stringify(params?.data),
-        {
-          tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.7' }],
+            let transaction;
+
+            if (
+              params.data instanceof Buffer ||
+              typeof params.data === 'string'
+            ) {
+              transaction = bundlr.createTransaction(params?.data, {
+                tags: allTags
+                  ? allTags
+                  : [{ name: 'ArweaveKit', value: '1.4.8' }],
+              });
+            } else {
+              throw new Error('Bundlr only accepts `string` and `Buffer`.');
+            }
+            await transaction.sign();
+            const postedTransaction = await transaction.upload();
+
+            return {
+              transaction,
+              postedTransaction,
+            } as Types.CreateTransactionReturnProps<T>;
+          } else {
+            throw new Error('No Ethereum object found in window');
+          }
+        } catch (error) {
+          console.error('Posting with Bundlr failed, posting with Arweave');
+          // create transaction
+          const transaction = await arweave.createTransaction({
+            data: params.data,
+          });
+
+          // tags
+          transaction.addTag('ArweaveKit', '1.4.8');
+          if (params?.options?.tags) {
+            params?.options?.tags?.map((k, i) =>
+              transaction.addTag(k.name, k.value)
+            );
+          }
+
+          // sign and post
+          await arweave.transactions.sign(transaction);
+          const postedTransaction = await arweave.transactions.post(
+            transaction
+          );
+          return {
+            transaction,
+            postedTransaction,
+          } as Types.CreateTransactionReturnProps<T>;
         }
-      );
+      } else {
+        const Bundlr = await import(
+          '@bundlr-network/client/build/esm/node/bundlr'
+        );
+        const bundlr = new Bundlr.default(
+          'http://node2.bundlr.network',
+          'arweave',
+          params.key
+        );
 
-      await transaction.sign();
-      const postedTransaction = await transaction.upload();
-      return {
-        transaction,
-        postedTransaction,
-      } as Types.CreateTransactionReturnProps<T>;
+        const allTags = params?.options.tags && [
+          {
+            name: 'ArweaveKit',
+            value: '1.4.8',
+          },
+          ...params?.options.tags,
+        ];
+
+        let transaction;
+
+        if (params.data instanceof Buffer || typeof params.data === 'string') {
+          transaction = bundlr.createTransaction(params?.data, {
+            tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.8' }],
+          });
+        } else {
+          throw new Error('Bundlr only accepts `string` and `Buffer`.');
+        }
+
+        await transaction.sign();
+        const postedTransaction = await transaction.upload();
+        return {
+          transaction,
+          postedTransaction,
+        } as Types.CreateTransactionReturnProps<T>;
+      }
     } else {
       // fund wallet if environment is local
       if (params.environment === 'local' && params.options?.signAndPost) {
@@ -105,43 +166,28 @@ export async function createTransaction<
           .catch((error) => console.error(error));
       }
 
-      let data;
-
-      if (typeof params.data === 'string') {
-        data = params.data;
-      } else if (params.data instanceof Uint8Array) {
-        data = params.data;
-      } else if (params.data instanceof ArrayBuffer) {
-        data = params.data;
-      } else if (params.data instanceof File) {
-        data = await fileToArrayBuffer(params.data);
-      } else {
-        throw new TypeError('Unsupported data type');
-      }
-
       // create transaction
       const transaction = await arweave.createTransaction(
         {
-          data: data,
+          data: params.data,
         },
         params.key ? params.key : 'use_wallet'
       );
 
       // tags
-      transaction.addTag('ArweaveKit', '1.4.7');
+      transaction.addTag('ArweaveKit', '1.4.8');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
         );
       }
 
-      if (params.data instanceof File) {
-        transaction.addTag('Content-Type', params.data.type);
-      }
-
       // sign and post
       if (params.options?.signAndPost) {
-        await arweave.transactions.sign(transaction, params.key);
+        await arweave.transactions.sign(
+          transaction,
+          params.key ? params.key : 'use_wallet'
+        );
         const postedTransaction = await arweave.transactions.post(transaction);
         return {
           transaction,
@@ -161,11 +207,6 @@ export async function createTransaction<
         params.key as JWKInterface
       );
       senderBalance = await arweave.wallets.getBalance(senderAddress);
-      console.log('This is the sender bal from the function', senderBalance);
-      console.log(
-        'This is the sender bal from the function as parseInt',
-        parseInt(senderBalance)
-      );
     }
 
     if (parseInt(senderBalance) >= parseInt(params?.quantity as string)) {
@@ -179,7 +220,7 @@ export async function createTransaction<
       );
 
       // add tags
-      transaction.addTag('ArweaveKit', '1.4.7');
+      transaction.addTag('ArweaveKit', '1.4.8');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -188,7 +229,10 @@ export async function createTransaction<
 
       // signAndPost
       if (params.options?.signAndPost) {
-        await arweave.transactions.sign(transaction, params.key);
+        await arweave.transactions.sign(
+          transaction,
+          params.key ? params.key : 'use_wallet'
+        );
         const postedTransaction = await arweave.transactions.post(transaction);
         return {
           transaction,
@@ -214,15 +258,16 @@ export async function signTransaction(params: Types.SignTransactionProps) {
 
   await arweave.transactions.sign(
     params.createdTransaction as Transaction,
-    params.key
+    params.key ? params.key : 'use_wallet'
   );
   if (params?.postTransaction) {
     const postedTransaction = await arweave.transactions.post(
       params.createdTransaction
     );
-    return postedTransaction;
+    const createdTransaction = params.createdTransaction;
+    return { createdTransaction, postedTransaction };
   } else {
-    return params.createdTransaction;
+    return params.createdTransaction as Transaction;
   }
 }
 
@@ -236,8 +281,8 @@ export async function postTransaction(params: Types.PostTransactionProps) {
   const arweave = await initArweave({ environment: params.environment });
 
   const postedTransaction = await arweave.transactions.post(params.transaction);
-
-  return postedTransaction;
+  const transaction = params.transaction;
+  return { transaction, postedTransaction };
 }
 
 export async function getTransactionStatus(params: {
@@ -245,9 +290,8 @@ export async function getTransactionStatus(params: {
   environment: 'local' | 'mainnet';
 }) {
   const arweave = await initArweave({ environment: params.environment });
+  const status = await arweave.transactions.getStatus(params.transactionId);
 
-  let status: any;
-  status = await arweave.transactions.getStatus(params.transactionId);
   return status;
 }
 
@@ -259,26 +303,8 @@ export async function getTransactionStatus(params: {
 export async function getTransaction(params: Types.GetTransactionProps) {
   const arweave = await initArweave({ environment: params.environment });
   const transaction = await arweave.transactions.get(params.transactionId);
-  let txTags, txData;
 
-  if (params.options?.tags) {
-    txTags = transaction.tags.forEach((tag) => {
-      let key = tag.get('name', { decode: true, string: true });
-      let value = tag.get('value', { decode: true, string: true });
-
-      return { key, value };
-    });
-  } else if (params.options?.data) {
-    txData = await arweave.transactions.getData(params?.transactionId);
-  }
-
-  return params.options?.data
-    ? txData
-    : params?.options?.tags
-    ? { transaction, tags: txTags }
-    : params?.options?.data && params?.options?.tags
-    ? { transactionData: txData, tags: txTags }
-    : transaction;
+  return transaction;
 }
 
 /**
@@ -296,7 +322,7 @@ export async function createAndPostTransactionWOthent(
   const allTags = params?.tags && [
     {
       name: 'ArweaveKit',
-      value: '1.4.7',
+      value: '1.4.8',
     },
     ...params?.tags,
   ];
@@ -307,7 +333,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.7' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.8' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionBundlr(
@@ -317,7 +343,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.7' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.8' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionArweave(

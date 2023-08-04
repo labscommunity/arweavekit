@@ -1,6 +1,6 @@
 import {
-  UploadResponse,
   BundlrTransaction,
+  UploadResponse,
 } from '@bundlr-network/client/build/esm/common/types';
 import Transaction from 'arweave/node/lib/transaction';
 import { JWKInterface } from 'arweave/node/lib/wallet';
@@ -15,7 +15,7 @@ export interface CreateTransactionProps {
   environment: 'local' | 'mainnet';
   target?: string;
   quantity?: string;
-  data?: string | Uint8Array | ArrayBuffer | File;
+  data?: string | Uint8Array | ArrayBuffer;
   options?: {
     tags?: {
       name: string;
@@ -23,7 +23,6 @@ export interface CreateTransactionProps {
     }[];
     useBundlr?: boolean;
     signAndPost?: boolean;
-    // signAndPostWOthent?: boolean;
   };
 }
 
@@ -137,31 +136,27 @@ export type CreateTransactionReturnProps<
   ? BundlrTransaction
   : T extends CreateAndPostBundledDataTransactionProps
   ? {
-      transaction: BundlrTransaction;
-      postedTransaction: UploadResponse;
+      transaction: BundlrTransaction | Transaction;
+      postedTransaction: any;
     }
   : never;
 
 export interface SignTransactionProps {
-  key: JWKInterface;
+  key?: JWKInterface;
   environment: 'local' | 'mainnet';
-  createdTransaction: Transaction | BundlrTransaction;
+  createdTransaction: Transaction;
   postTransaction?: boolean;
 }
 
 export interface PostTransactionProps {
-  key: JWKInterface;
+  key?: JWKInterface;
   environment: 'local' | 'mainnet';
-  transaction: Transaction | BundlrTransaction;
+  transaction: Transaction;
 }
 
 export interface GetTransactionProps {
   transactionId: string;
   environment: 'local' | 'mainnet';
-  options?: {
-    data?: boolean;
-    tags?: boolean;
-  };
 }
 
 export interface CreateandPostTransactionWOthentProps {
