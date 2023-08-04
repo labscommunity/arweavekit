@@ -7,10 +7,6 @@ describe('Create Transaction', () => {
     const getTxn = await getTransaction({
       environment: 'mainnet',
       transactionId: 'gPRPfb9fQ4UVMr9zxosuNpqRyS2lRzu_rHrLnas6kh0',
-      options: {
-        data: true,
-        tags: true,
-      },
     });
 
     console.log(getTxn);
