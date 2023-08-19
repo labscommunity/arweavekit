@@ -47,16 +47,19 @@ export async function createTransaction<
     if (params.options?.useBundlr) {
       if (!params.key) {
         try {
-          if (window.ethereum) {
-            const Bundlr = await import(
-              '@bundlr-network/client/build/esm/web/bundlr'
-            );
+          if (typeof window !== 'undefined' && window.ethereum) {
+            const { WebBundlr } = await import('@bundlr-network/client');
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             // @ts-ignore
             provider.getSigner = () => signer;
-            const bundlr = new Bundlr.default(
-              'http://node2.bundlr.network',
+
+            // @ts-ignore
+            signer._signTypedData = (domain, types, value) =>
+              signer.signTypedData(domain, types, value);
+
+            const bundlr = new WebBundlr(
+              'https://node2.bundlr.network',
               'matic',
               provider
             );
@@ -120,11 +123,9 @@ export async function createTransaction<
           } as Types.CreateTransactionReturnProps<T>;
         }
       } else {
-        const Bundlr = await import(
-          '@bundlr-network/client/build/esm/node/bundlr'
-        );
-        const bundlr = new Bundlr.default(
-          'http://node2.bundlr.network',
+        const { NodeBundlr } = await import('@bundlr-network/client');
+        const bundlr = new NodeBundlr(
+          'https://node2.bundlr.network',
           'arweave',
           params.key
         );
