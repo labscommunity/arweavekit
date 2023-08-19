@@ -3,15 +3,16 @@ import * as Types from '../types/wallet';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
 
 const initArweave = (params: Types.InitArweaveProps) => {
-  let arweave;
+  let arweave: Arweave;
+  const ArweaveClass = (Arweave as any)?.default ?? Arweave;
   if (params.environment === 'local') {
-    arweave = Arweave.init({
+    arweave = ArweaveClass.init({
       host: 'localhost',
       port: 1984,
       protocol: 'http',
     });
   } else {
-    arweave = Arweave.init({
+    arweave = ArweaveClass.init({
       host: 'arweave.net',
       port: 443,
       protocol: 'https',
