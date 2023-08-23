@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 
 async function initArweave(params: Types.InitArweaveProps) {
   let arweave: Arweave;
-  const ArweaveClass = (Arweave as any)?.default ?? Arweave;
+  const ArweaveClass: typeof Arweave = (Arweave as any)?.default ?? Arweave;
   if (params.environment === 'local') {
     arweave = ArweaveClass.init({
       host: 'localhost',
