@@ -3,6 +3,32 @@ import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
 
+/**
+ * Get a Warp instance based on the specified environment and options.
+ * @param environment - The environment ('local', 'testnet', or 'mainnet').
+ * @param useDeployPlugin - Whether to use the DeployPlugin (Default: false).
+ * @param cacheOptions - Options for caching (defaults {@link defaultCacheOptions}).
+ * @returns An instance of Warp.
+ */
+const getWarpInstance = (
+  environment: 'local' | 'testnet' | 'mainnet',
+  useDeployPlugin = false,
+  cacheOptions = defaultCacheOptions
+) => {
+  const warp =
+    environment === 'local'
+      ? WarpFactory.forLocal()
+      : environment === 'testnet'
+      ? WarpFactory.forTestnet(cacheOptions)
+      : WarpFactory.forMainnet(cacheOptions);
+
+  if (useDeployPlugin) {
+    warp.use(new DeployPlugin());
+  }
+
+  return warp;
+};
+
 /***
  * create warp contract
  * @params CreateContractProps
@@ -13,12 +39,7 @@ export async function createContract(
 ): Promise<Types.CreateContractReturnProps> {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
-  const warp =
-    params.environment === 'local'
-      ? WarpFactory.forLocal().use(new DeployPlugin())
-      : params.environment === 'testnet'
-      ? WarpFactory.forTestnet().use(new DeployPlugin())
-      : WarpFactory.forMainnet().use(new DeployPlugin());
+  const warp = getWarpInstance(params.environment, true);
 
   if (params.environment === 'local') {
     await warp.testing
@@ -59,12 +80,7 @@ export async function createContract(
  */
 
 export async function writeContract(params: Types.WriteContractProps) {
-  const warp =
-    params.environment === 'local'
-      ? WarpFactory.forLocal()
-      : params.environment === 'testnet'
-      ? WarpFactory.forTestnet()
-      : WarpFactory.forMainnet();
+  const warp = getWarpInstance(params.environment);
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
@@ -101,12 +117,10 @@ export async function writeContract(params: Types.WriteContractProps) {
  */
 
 export async function readContractState(params: Types.ReadContractProps) {
-  const warp =
-    params.environment === 'local'
-      ? WarpFactory.forLocal()
-      : params.environment === 'testnet'
-      ? WarpFactory.forTestnet({ ...defaultCacheOptions, inMemory: true })
-      : WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
+  const warp = getWarpInstance(params.environment, false, {
+    ...defaultCacheOptions,
+    inMemory: true,
+  });
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
@@ -137,11 +151,11 @@ export async function readContractState(params: Types.ReadContractProps) {
 export async function getContract(contractTxId: string) {
   const url = 'https://gateway.warp.cc/gateway';
 
-  const getContract = await fetch(`${url}/contract?txId=${contractTxId}`, {
+  const response = await fetch(`${url}/contract?txId=${contractTxId}`, {
     method: 'GET',
   });
 
-  const contract = await getContract.json();
+  const contract = await response.json();
   return { contract };
 }
 
