@@ -1,6 +1,6 @@
 {
   "name": "arweavekit",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "description": "Utility library to build full stack permaweb applications",
   "type": "module",
   "main": "dist/index.js",
@@ -47,7 +47,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@bundlr-network/client": "0.11.9",
+    "@bundlr-network/client": "^0.11.12",
     "@metamask/providers": "^11.1.0",
     "arweave": "^1.13.5",
     "arweave-mnemonic-keys": "^0.0.9",

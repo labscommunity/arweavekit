@@ -6,15 +6,16 @@ import { Othent as othent } from 'othent';
 import { ethers } from 'ethers';
 
 async function initArweave(params: Types.InitArweaveProps) {
-  let arweave;
+  let arweave: Arweave;
+  const ArweaveClass: typeof Arweave = (Arweave as any)?.default ?? Arweave;
   if (params.environment === 'local') {
-    arweave = Arweave.init({
+    arweave = ArweaveClass.init({
       host: 'localhost',
       port: 1984,
       protocol: 'http',
     });
   } else {
-    arweave = Arweave.init({
+    arweave = ArweaveClass.init({
       host: 'arweave.net',
       port: 443,
       protocol: 'https',
@@ -47,16 +48,19 @@ export async function createTransaction<
     if (params.options?.useBundlr) {
       if (!params.key) {
         try {
-          if (window.ethereum) {
-            const Bundlr = await import(
-              '@bundlr-network/client/build/esm/web/bundlr'
-            );
+          if (typeof window !== 'undefined' && window.ethereum) {
+            const { WebBundlr } = await import('@bundlr-network/client');
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             // @ts-ignore
             provider.getSigner = () => signer;
-            const bundlr = new Bundlr.default(
-              'http://node2.bundlr.network',
+
+            // @ts-ignore
+            signer._signTypedData = (domain, types, value) =>
+              signer.signTypedData(domain, types, value);
+
+            const bundlr = new WebBundlr(
+              'https://node2.bundlr.network',
               'matic',
               provider
             );
@@ -65,7 +69,7 @@ export async function createTransaction<
             const allTags = params?.options.tags && [
               {
                 name: 'ArweaveKit',
-                value: '1.4.8',
+                value: '1.4.9',
               },
               ...params?.options.tags,
             ];
@@ -79,7 +83,7 @@ export async function createTransaction<
               transaction = bundlr.createTransaction(params?.data, {
                 tags: allTags
                   ? allTags
-                  : [{ name: 'ArweaveKit', value: '1.4.8' }],
+                  : [{ name: 'ArweaveKit', value: '1.4.9' }],
               });
             } else {
               throw new Error('Bundlr only accepts `string` and `Buffer`.');
@@ -102,7 +106,7 @@ export async function createTransaction<
           });
 
           // tags
-          transaction.addTag('ArweaveKit', '1.4.8');
+          transaction.addTag('ArweaveKit', '1.4.9');
           if (params?.options?.tags) {
             params?.options?.tags?.map((k, i) =>
               transaction.addTag(k.name, k.value)
@@ -120,11 +124,9 @@ export async function createTransaction<
           } as Types.CreateTransactionReturnProps<T>;
         }
       } else {
-        const Bundlr = await import(
-          '@bundlr-network/client/build/esm/node/bundlr'
-        );
-        const bundlr = new Bundlr.default(
-          'http://node2.bundlr.network',
+        const { NodeBundlr } = await import('@bundlr-network/client');
+        const bundlr = new NodeBundlr(
+          'https://node2.bundlr.network',
           'arweave',
           params.key
         );
@@ -132,7 +134,7 @@ export async function createTransaction<
         const allTags = params?.options.tags && [
           {
             name: 'ArweaveKit',
-            value: '1.4.8',
+            value: '1.4.9',
           },
           ...params?.options.tags,
         ];
@@ -141,7 +143,7 @@ export async function createTransaction<
 
         if (params.data instanceof Buffer || typeof params.data === 'string') {
           transaction = bundlr.createTransaction(params?.data, {
-            tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.8' }],
+            tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.9' }],
           });
         } else {
           throw new Error('Bundlr only accepts `string` and `Buffer`.');
@@ -175,7 +177,7 @@ export async function createTransaction<
       );
 
       // tags
-      transaction.addTag('ArweaveKit', '1.4.8');
+      transaction.addTag('ArweaveKit', '1.4.9');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -220,7 +222,7 @@ export async function createTransaction<
       );
 
       // add tags
-      transaction.addTag('ArweaveKit', '1.4.8');
+      transaction.addTag('ArweaveKit', '1.4.9');
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -322,7 +324,7 @@ export async function createAndPostTransactionWOthent(
   const allTags = params?.tags && [
     {
       name: 'ArweaveKit',
-      value: '1.4.8',
+      value: '1.4.9',
     },
     ...params?.tags,
   ];
@@ -333,7 +335,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.8' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.9' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionBundlr(
@@ -343,7 +345,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.8' }],
+      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.9' }],
     });
 
     postedTransaction = await othentInstance.sendTransactionArweave(

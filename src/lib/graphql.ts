@@ -113,7 +113,7 @@ export async function queryAllTransactionsGQL(
   return dataSet;
 }
 
-function initArweave(gateway: string) {
+function initArweave(gateway: string): Arweave {
   const LOCAL_GATEWAY_CONFIG = {
     host: 'localhost',
     port: 1984,
@@ -131,7 +131,10 @@ function initArweave(gateway: string) {
     config = LOCAL_GATEWAY_CONFIG;
   }
 
-  return Arweave.init(config);
+  const ArweaveClass: typeof Arweave = (Arweave as any)?.default ?? Arweave;
+  const arweave = ArweaveClass.init(config);
+
+  return arweave;
 }
 
 export const ARWEAVE_GATEWAYS = [

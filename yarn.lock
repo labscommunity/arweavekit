@@ -432,10 +432,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bundlr-network/client@0.11.9":
-  version "0.11.9"
-  resolved "https://registry.yarnpkg.com/@bundlr-network/client/-/client-0.11.9.tgz#c6d170e1ff74661af78547ed8bd8d84e09824f4a"
-  integrity sha512-0lZAB0kx+GZsIGPT+nN2tMLseAzg98hS1HEupRoZcuE9OoMOa4+H+SOTNEbmxp7kuDKoMC3TXN9GOJBXFcPe7Q==
+"@bundlr-network/client@^0.11.12":
+  version "0.11.12"
+  resolved "https://registry.npmjs.org/@bundlr-network/client/-/client-0.11.12.tgz#6542851407810407c24734ece6943c248906bb9c"
+  integrity sha512-wbWjIKsb8kRVSGNjhd7bEeYfRWhIx99cQQY1IYbYkg6GEgKKGB0MkHrNHkYlYkKazy3uBeObK1KhjHK7GF6quw==
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
     "@ethersproject/contracts" "^5.7.0"
@@ -450,7 +450,7 @@
     algosdk "^1.13.1"
     aptos "^1.8.5"
     arbundles "^0.9.7"
-    arweave "=1.11.8"
+    arweave "=1.11.9"
     async-retry "^1.3.3"
     axios "^0.25.0"
     base64url "^3.0.1"
@@ -2445,6 +2445,18 @@ arweave@=1.11.8:
   version "1.11.8"
   resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.11.8.tgz#09376e0c6cec40a661cbb27a306cb11c0a663cd8"
   integrity sha512-58ODeNPIC4OjaOCl2bXjKbOFGsiVZFs+DkQg3BvQGvFWNqw1zTJ4Jp01xGUz+GbdOaDyJcCC0g3l0HwdJfFPyw==
+  dependencies:
+    arconnect "^0.4.2"
+    asn1.js "^5.4.1"
+    axios "^0.27.2"
+    base64-js "^1.5.1"
+    bignumber.js "^9.0.2"
+    util "^0.12.4"
+
+arweave@=1.11.9:
+  version "1.11.9"
+  resolved "https://registry.npmjs.org/arweave/-/arweave-1.11.9.tgz#4d1fc17052e4e6d6eeb8fd18063b43eca52f2a56"
+  integrity sha512-i+oQQkQgjASG/+iS/BVq0JDhpW0jLGMtiqPwfHe0x46YCnuA23prN82EW4KigxZAphF9jNzDexQjGLAKbhw4Zw==
   dependencies:
     arconnect "^0.4.2"
     asn1.js "^5.4.1"
