@@ -74,12 +74,13 @@ export async function writeContract(params: Types.WriteContractProps) {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
 
-  const contract = warp
-    .contract(params.contractTxId)
-    .connect(params.wallet ? params.wallet : 'use_wallet');
+  const signer = params.wallet || 'use_wallet';
+
+  const contract = warp.contract(params.contractTxId).connect(signer);
 
   const writeContract = await contract.writeInteraction(params.options, {
     tags: [{ name: 'ArweaveKit', value: '1.4.9' }],
+    disableBundling: signer === 'use_wallet',
   });
 
   const readState = await contract.readState();
