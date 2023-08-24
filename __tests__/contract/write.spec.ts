@@ -56,7 +56,7 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 
-  it('should create, write to and rewrite on contract on local', async () => {
+  it('should create, write to and rewrite on contract on testnet', async () => {
     const { key } = await createWallet({ environment: 'local' });
 
     const { contractTxId } = await createContract({

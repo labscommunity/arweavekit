@@ -26,7 +26,7 @@ describe('Read Contract State', () => {
     });
 
     const { readContract } = await readContractState({
-      environment: 'mainnet',
+      environment: 'testnet',
       contractTxId,
     });
 
@@ -37,9 +37,9 @@ describe('Read Contract State', () => {
     expect(typeof readContract.cachedValue.validity).toBe('object');
     expect(readContract.cachedValue.state).toEqual({ counter: 0 });
 
-    console.log("Res", readContract);
+    console.log('Res', readContract);
   });
-})
+});
 
 it('should read updated state', async () => {
   const { key } = await createWallet({ environment: 'local' });
