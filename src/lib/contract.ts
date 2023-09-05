@@ -14,6 +14,7 @@ import {
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
 import { ethers } from 'ethers';
+import { PermissionType } from 'arconnect';
 
 /**
  * Get a Warp instance based on the specified environment and options.
@@ -73,8 +74,7 @@ async function initWalletCallback(
     ];
 
     const missingPermissions = requiredPermissions.filter(
-      (permission) =>
-        permissions.indexOf(permission as Types.PermissionType) === -1
+      (permission) => permissions.indexOf(permission as PermissionType) === -1
     );
 
     if (permissions.length === 0 || missingPermissions.length > 0) {
@@ -82,7 +82,7 @@ async function initWalletCallback(
       await window.arweaveWallet.connect([
         ...permissions,
         ...missingPermissions,
-      ] as Types.PermissionType[]);
+      ] as PermissionType[]);
     }
     wallet = new InjectedArweaveSigner(window.arweaveWallet);
     await wallet.setPublicKey();
@@ -108,7 +108,11 @@ async function initWalletCallback(
   if (typeof window !== 'undefined') {
     if (params.strategy === 'arweave' && window.arweaveWallet) {
       await handleArweaveWallet();
-    } else if (params.strategy === 'ethereum' && window.ethereum) {
+    } else if (
+      params.strategy === 'ethereum' &&
+      window.ethereum &&
+      !!window.ethereum?.request
+    ) {
       await handleEthereumWallet();
     } else {
       try {
@@ -120,7 +124,7 @@ async function initWalletCallback(
           await handleArweaveWallet();
           callbackResponse = await callback(wallet);
         } else {
-          throw err;
+          throw new Error('[ArweaveKit] Failed to initialize signer');
         }
       }
     }
@@ -154,7 +158,7 @@ async function initWalletCallback(
               : new ArweaveSigner(params.wallet as JWKInterface);
           callbackResponse = await callback(wallet);
         } else {
-          throw err;
+          throw new Error('[ArweaveKit] Failed to initialize signer');
         }
       }
     }
@@ -197,7 +201,7 @@ export async function createContract(
         initState: params.initialState,
         src: params.contractSource,
       },
-      wallet === 'use_wallet'
+      wallet === 'use_wallet' || params.environment === 'local'
     );
   };
 
@@ -242,7 +246,8 @@ export async function writeContract(params: Types.WriteContractProps) {
 
     return contract.writeInteraction(params.options, {
       tags: [{ name: 'ArweaveKit', value: '1.4.9' }] as Tag[],
-      disableBundling: wallet === 'use_wallet',
+      disableBundling:
+        wallet === 'use_wallet' || params.environment === 'local',
     });
   };
   let { wallet, callbackResponse } = await initWalletCallback(params, callback);
