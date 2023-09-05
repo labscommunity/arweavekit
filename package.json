@@ -54,8 +54,8 @@
     "ethers": "^6.6.7",
     "graphql": "^16.7.1",
     "othent": "1.0.638",
-    "warp-contracts": "^1.4.1",
-    "warp-contracts-plugin-deploy": "^1.0.3"
+    "warp-contracts": "^1.4.17",
+    "warp-contracts-plugin-deploy": "^1.0.9"
   },
   "exports": {
     "./auth": {

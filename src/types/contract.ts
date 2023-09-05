@@ -1,15 +1,11 @@
-import {
-  ArWallet,
-  Contract,
-  CustomSignature,
-  JWKInterface,
-} from 'warp-contracts';
+import { ArWallet, Contract } from 'warp-contracts';
 
 export interface CreateContractProps {
-  wallet: JWKInterface;
+  wallet: ArWallet | string;
   initialState: string;
   contractSource: string;
   environment: 'local' | 'testnet' | 'mainnet';
+  strategy?: 'arweave' | 'ethereum' | 'both';
 }
 
 export interface CreateContractReturnProps {
@@ -24,8 +20,9 @@ export interface CreateContractReturnProps {
 export interface WriteContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
   contractTxId: string;
-  wallet?: ArWallet | CustomSignature;
+  wallet?: ArWallet | string;
   options: {};
+  strategy?: 'arweave' | 'ethereum' | 'both';
 }
 
 export interface ReadContractProps {
@@ -62,3 +59,14 @@ export interface ReadContractWOthentReturnProps {
   errors: object;
   validity: object;
 }
+
+export type PermissionType =
+  | 'ACCESS_ADDRESS'
+  | 'ACCESS_PUBLIC_KEY'
+  | 'ACCESS_ALL_ADDRESSES'
+  | 'SIGN_TRANSACTION'
+  | 'ENCRYPT'
+  | 'DECRYPT'
+  | 'SIGNATURE'
+  | 'ACCESS_ARWEAVE_CONFIG'
+  | 'DISPATCH';
