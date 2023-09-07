@@ -359,3 +359,24 @@ export async function createAndPostTransactionWOthent(
     throw new Error('Transaction creation unsuccessful.');
   }
 }
+
+
+
+export const ArweaveKit = {
+  initArweave,
+  createTransaction,
+  signTransaction,
+  postTransaction,
+  getTransactionStatus,
+  getTransaction,
+  createAndPostTransactionWOthent,
+
+  use(externalPackage: any) {
+    const combined = {
+      ...this,
+      ...externalPackage
+    };
+    combined.use = this.use.bind(combined);
+    return combined;
+  }
+};

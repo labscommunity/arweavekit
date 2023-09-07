@@ -103,3 +103,21 @@ export async function getBalance(
     return walletBalance;
   }
 }
+
+
+
+export const ArweaveKit = {
+  initArweave,
+  createWallet,
+  getAddress,
+  getBalance,
+
+  use(externalPackage: any) {
+    const combined = {
+      ...this,
+      ...externalPackage
+    };
+    combined.use = this.use.bind(combined);
+    return combined;
+  }
+};

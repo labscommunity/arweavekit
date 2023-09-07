@@ -196,3 +196,23 @@ export async function readContractWOthent(
 
   return res;
 }
+
+
+
+export const ArweaveKit = {
+  createContract,
+  writeContract,
+  readContractState,
+  getContract,
+  writeContractWOthent,
+  readContractWOthent,
+
+  use(externalPackage: any) {
+    const combined = {
+      ...this,
+      ...externalPackage
+    };
+    combined.use = this.use.bind(combined);
+    return combined;
+  }
+};

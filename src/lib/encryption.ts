@@ -162,3 +162,25 @@ export async function decryptDataWithAES(
 
   return decryptedData;
 }
+
+
+
+export const ArweaveKit = {
+  concatenateArrayBuffers,
+  separateArrayBuffer,
+  bufferToBase64,
+  encryptDataWithAES,
+  encryptAESKeywithRSA,
+  decryptAESKeywithRSA,
+  base64ToBuffer,
+  decryptDataWithAES,
+
+  use(externalPackage: any) {
+    const combined = {
+      ...this,
+      ...externalPackage
+    };
+    combined.use = this.use.bind(combined);
+    return combined;
+  }
+};

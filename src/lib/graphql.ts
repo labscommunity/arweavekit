@@ -293,3 +293,22 @@ enum SortOrder {
   HEIGHT_DESC
 }
 `;
+
+
+
+export const ArweaveKit = {
+  queryGQL,
+  queryTransactionsGQL,
+  queryAllTransactionsGQL,
+  ARWEAVE_GATEWAYS,
+  graphQlSchemaString,
+
+  use(externalPackage: any) {
+    const combined = {
+      ...this,
+      ...externalPackage
+    };
+    combined.use = this.use.bind(combined);
+    return combined;
+  }
+};

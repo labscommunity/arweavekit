@@ -136,3 +136,30 @@ export const Othent = {
   logOut,
   userDetails,
 };
+
+
+
+export const ArweaveKit = {
+  connect,
+  disconnect,
+  getActiveAddress,
+  getPermissions,
+  getWalletNames,
+  getAllAddresses,
+  getActivePublicKey,
+  isInstalled,
+  logIn,
+  logOut,
+  userDetails,
+  ArConnect,
+  Othent,
+
+  use(externalPackage: any) {
+    const combined = {
+      ...this,
+      ...externalPackage
+    };
+    combined.use = this.use.bind(combined);
+    return combined;
+  }
+};
