@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs';
 import { createTransaction, signTransaction } from '../../src';
+import { decodeTags } from './utils';
+import { appVersionTag } from '../../src/utils';
 
 jest.setTimeout(300000);
 
@@ -26,7 +28,7 @@ describe('Create Transaction', () => {
 
     expect(signedTransaction).toBeDefined();
     expect(txn.signature).toBeDefined();
-    expect(txn.tags).toEqual([{ name: 'QXJ3ZWF2ZUtpdA', value: 'MS40Ljc' }]);
+    expect(decodeTags(txn.tags)).toEqual([appVersionTag]);
   });
 
   it('should create and sign data transactionand post to Arweave', async () => {
@@ -55,8 +57,8 @@ describe('Create Transaction', () => {
     expect(signedTransaction.createdTransaction.signature).toBeDefined();
     expect(signedTransaction.postedTransaction.status).toEqual(200);
     expect(signedTransaction.postedTransaction.statusText).toEqual('OK');
-    expect(signedTransaction.createdTransaction.tags).toEqual([
-      { name: 'QXJ3ZWF2ZUtpdA', value: 'MS40Ljc' },
+    expect(decodeTags(signedTransaction.createdTransaction.tags)).toEqual([
+      appVersionTag,
     ]);
   });
 });

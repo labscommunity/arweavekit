@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs';
 import { createTransaction, signTransaction, postTransaction } from '../../src';
+import { decodeTags } from './utils';
+import { appVersionTag } from '../../src/utils';
 
 jest.setTimeout(300000);
 
@@ -32,8 +34,8 @@ describe('Create Transaction', () => {
     expect(postedTransaction.transaction.signature).toBeDefined();
     expect(postedTransaction.postedTransaction.status).toEqual(200);
     expect(postedTransaction.postedTransaction.statusText).toEqual('OK');
-    expect(postedTransaction.transaction.tags).toEqual([
-      { name: 'QXJ3ZWF2ZUtpdA', value: 'MS40Ljc' },
+    expect(decodeTags(postedTransaction.transaction.tags)).toEqual([
+      appVersionTag,
     ]);
   });
 });
