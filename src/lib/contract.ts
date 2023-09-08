@@ -28,7 +28,7 @@ const getWarpInstance = (
   useDeployPlugin = false,
   cacheOptions = defaultCacheOptions
 ) => {
-  // Set dbLoacation randomly for testing purposes only
+  // Set dbLocation randomly for testing purposes only
   // to avoid database is not open issue
   if (process.env.NODE_ENV === 'test') {
     const randomWord = Math.random().toString(36).substring(2, 7);
