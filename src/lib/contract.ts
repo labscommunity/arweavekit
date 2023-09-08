@@ -49,13 +49,26 @@ const getWarpInstance = (
 };
 
 /**
- *
- * @param obj - Object to check if it's JWK
- * @returns boolean
+ * Check if the passed argument is a valid JSON Web Key (JWK) for Arweave.
+ * @param obj - The object to check for JWK validity.
+ * @returns {boolean} True if it's a valid Arweave JWK, otherwise false.
  */
-const isJwk = (obj: object): boolean => {
+const isJwk = (obj: any): boolean => {
+  if (typeof obj !== 'object') return false;
   const requiredKeys = ['n', 'e', 'd', 'p', 'q', 'dp', 'dq', 'qi'];
   return requiredKeys.every((key) => key in obj);
+};
+
+/**
+ * Checks if the passed key is a valid Ethereum private key.
+ * @param key - The key to check for Ethereum private key validity.
+ * @returns {boolean} True if it's a valid Ethereum private key, otherwise false.
+ */
+const isEthPrivateKey = (key: any): boolean => {
+  if (typeof key !== 'string') return false;
+  const privateKeyRegex = /^[0-9a-fA-F]{64}$/;
+  key = key.startsWith('0x') ? key.substring(2) : key;
+  return key.length === 64 && privateKeyRegex.test(key);
 };
 
 /**
@@ -135,11 +148,7 @@ async function initWalletCallback(
       }
     }
   } else {
-    if (
-      params.strategy === 'arweave' &&
-      typeof params.wallet === 'object' &&
-      isJwk(params.wallet)
-    ) {
+    if (params.strategy === 'arweave' && isJwk(params.wallet)) {
       wallet =
         params.environment === 'local' ||
         (params as Types.WriteContractProps)?.contractTxId
@@ -147,7 +156,7 @@ async function initWalletCallback(
           : new ArweaveSigner(params.wallet as JWKInterface);
     } else if (
       params.strategy === 'ethereum' &&
-      typeof params.wallet === 'string'
+      isEthPrivateKey(params.wallet)
     ) {
       wallet = new EthereumSigner(params.wallet as string);
     } else {
@@ -156,7 +165,7 @@ async function initWalletCallback(
         callbackResponse = await callback(wallet);
       } catch (err) {
         console.log(`[ArweaveKit] ${err}`);
-        if (typeof params.wallet === 'object' && isJwk(params.wallet)) {
+        if (isJwk(params.wallet)) {
           wallet =
             params.environment === 'local' ||
             (params as Types.WriteContractProps)?.contractTxId
@@ -177,6 +186,24 @@ async function initWalletCallback(
   return { wallet, callbackResponse };
 }
 
+/**
+ * Initialize strategy based on wallet
+ * @param params - CreateContractProps | WriteContractProps
+ */
+function initStrategy(
+  params: Types.CreateContractProps | Types.WriteContractProps
+) {
+  if (typeof window === 'undefined') {
+    params.strategy = isJwk(params.wallet)
+      ? 'arweave'
+      : isEthPrivateKey(params.wallet)
+      ? 'ethereum'
+      : 'both';
+  } else {
+    params.strategy = params.strategy || 'both';
+  }
+}
+
 /***
  * create warp contract
  * @params CreateContractProps
@@ -188,13 +215,9 @@ export async function createContract(
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
   const warp = getWarpInstance(params.environment, true);
-  params.strategy = params.strategy || 'both';
+  initStrategy(params);
 
-  if (
-    params.environment === 'local' &&
-    typeof params.wallet === 'object' &&
-    isJwk(params.wallet)
-  ) {
+  if (params.environment === 'local' && isJwk(params.wallet)) {
     await warp.testing
       .addFunds(params.wallet as JWKInterface)
       .catch((e) => console.log('ERROR', e.message));
@@ -242,7 +265,7 @@ export async function createContract(
 
 export async function writeContract(params: Types.WriteContractProps) {
   const warp = getWarpInstance(params.environment);
-  params.strategy = params.strategy || 'both';
+  initStrategy(params);
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
