@@ -57,6 +57,32 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 
+  it('should create and not write to contract if wallet not passed on node local', async () => {
+    const { key } = await createWallet({ environment: 'local' });
+
+    const { contractTxId } = await createContract({
+      environment: 'local',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    try {
+      await writeContract({
+        environment: 'local',
+        contractTxId,
+        options: {
+          function: 'initialize',
+        },
+      });
+
+      // If the function doesn't throw an error, fail the test
+      fail('Expected writeContract to throw an error');
+    } catch (error: any) {
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer');
+    }
+  });
+
   it('should create, write to and rewrite on contract on testnet', async () => {
     const { key } = await createWallet({ environment: 'local' });
 

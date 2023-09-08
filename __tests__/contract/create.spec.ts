@@ -66,4 +66,19 @@ describe('Create Contract', () => {
     expect(typeof result).toEqual('object');
     expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
   });
+
+  it('should not create a new contract if wallet not passed on node environment', async () => {
+    try {
+      await createContract({
+        environment: 'local',
+        initialState: initState,
+        contractSource: contractSrc,
+      });
+
+      // If the function doesn't throw an error, fail the test
+      fail('Expected createContract to throw an error');
+    } catch (error: any) {
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer');
+    }
+  });
 });

@@ -1,7 +1,7 @@
 import { ArWallet, Contract } from 'warp-contracts';
 
 export interface CreateContractProps {
-  wallet: ArWallet | string;
+  wallet?: ArWallet | string;
   initialState: string;
   contractSource: string;
   environment: 'local' | 'testnet' | 'mainnet';
