@@ -1,3 +1,5 @@
+import { Tag } from 'warp-contracts';
+
 export const ARWEAVE_GATEWAYS = [
   'arweave.net',
   'arweave.dev',
@@ -5,4 +7,4 @@ export const ARWEAVE_GATEWAYS = [
   'arweave-search.goldsky.com',
 ] as const;
 
-export const appVersionTag = { name: 'ArweaveKit', value: '1.4.9' };
+export const appVersionTag = { name: 'ArweaveKit', value: '1.4.9' } as Tag;
