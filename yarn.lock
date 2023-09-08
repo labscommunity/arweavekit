@@ -2354,10 +2354,39 @@ argparse@^1.0.7:
   dependencies:
     sprintf-js "~1.0.2"
 
-arlocal@^1.1.59, arlocal@^1.1.60:
+arlocal@^1.1.59:
   version "1.1.60"
   resolved "https://registry.yarnpkg.com/arlocal/-/arlocal-1.1.60.tgz#a5b52a360bb72bbc6eb64137bbb120d8d0a43ef0"
   integrity sha512-oKS5f4X1XMkbFM4WfId6N6leu3k0te9B/vj5l/hE42nxKbV3QTtd1wgvOcpaKMITexZS8WyC12YcEXgiVggttA==
+  dependencies:
+    "@koa/cors" "^3.1.0"
+    apollo-server-koa "^3.6.2"
+    arbundles "^0.6.19"
+    arweave-bundles "^1.0.3"
+    asn1.js "5.4.1"
+    bignumber.js "^9.0.2"
+    bytes "^3.1.2"
+    graphql "^16.2.0"
+    knex "^0.95.6"
+    koa "^2.13.4"
+    koa-body "^4.2.0"
+    koa-bodyparser "^4.3.0"
+    koa-json "^2.0.2"
+    koa-logger "^3.2.1"
+    koa-router "^10.1.1"
+    lodash "^4.17.21"
+    mime "^3.0.0"
+    minimist "^1.2.5"
+    moment "^2.29.1"
+    rfc4648 "^1.5.1"
+    smartweave "^0.4.46"
+    sqlite3 "^5.0.3"
+    tsc-watch "^4.6.0"
+
+arlocal@^1.1.61:
+  version "1.1.61"
+  resolved "https://registry.npmjs.org/arlocal/-/arlocal-1.1.61.tgz#2389847021d67d204f254e342d158530f2443f0e"
+  integrity sha512-MAApCe5Kss0/VUmiVx35iclieHJU5HSr32FxEs6rpGj6nQ2+QfYOPwe+0d5E2djtXAjar1l6p13njq8odNfQWA==
   dependencies:
     "@koa/cors" "^3.1.0"
     apollo-server-koa "^3.6.2"

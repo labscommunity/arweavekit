@@ -12,4 +12,8 @@ export default async function testTeardown() {
       console.log('Warp cache deleted successfully');
     });
   }
+
+  if (global.arLocal) {
+    await global.arLocal.stop();
+  }
 }
