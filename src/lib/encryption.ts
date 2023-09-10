@@ -1,6 +1,26 @@
 import * as Types from '../types/encryption';
 
 /**
+ *  Get web crypto in node and browser environment
+ * @returns web crypto
+ */
+async function getWebCrypto() {
+  let webCrypto: Crypto;
+
+  if (typeof window !== 'undefined' && typeof window.crypto !== 'undefined') {
+    webCrypto = window.crypto;
+  } else {
+    try {
+      const crypto = await import('crypto');
+      webCrypto = crypto.webcrypto as Crypto;
+    } catch (e) {
+      throw new Error('Crypto API is not available.');
+    }
+  }
+  return webCrypto;
+}
+
+/**
  * concatenateArrayBuffers
  * @param buffer1 random iv as ArrayBuffer
  * @param buffer2 encrypted data as ArrayBuffer
@@ -42,7 +62,7 @@ function bufferToBase64(buf: ArrayBuffer) {
       return String.fromCharCode(ch);
     })
     .join('');
-  return btoa(binstr);
+  return Buffer.from(binstr, 'binary').toString('base64');
 }
 
 /**
@@ -53,7 +73,9 @@ function bufferToBase64(buf: ArrayBuffer) {
 export async function encryptDataWithAES(
   params: Types.EncryptDataWithAESProps
 ) {
-  const encryptedDataAESKey = await window.crypto.subtle.generateKey(
+  const webCrypto = await getWebCrypto();
+
+  const encryptedDataAESKey = await webCrypto.subtle.generateKey(
     {
       name: 'AES-GCM',
       length: 256,
@@ -62,9 +84,9 @@ export async function encryptDataWithAES(
     ['encrypt', 'decrypt']
   );
 
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const iv = webCrypto.getRandomValues(new Uint8Array(12));
 
-  const encryptedData = await window.crypto.subtle.encrypt(
+  const encryptedData = await webCrypto.subtle.encrypt(
     {
       name: 'AES-GCM',
       iv: iv,
@@ -75,7 +97,7 @@ export async function encryptDataWithAES(
 
   const combinedArrayBuffer = concatenateArrayBuffers(iv.buffer, encryptedData);
 
-  const rawEncryptedKey = await window.crypto.subtle.exportKey(
+  const rawEncryptedKey = await webCrypto.subtle.exportKey(
     'raw',
     encryptedDataAESKey
   );
@@ -122,7 +144,7 @@ export async function decryptAESKeywithRSA(
  * @returns raw AES key as ArrayBuffer
  */
 function base64ToBuffer(base64: string) {
-  var binstr = atob(base64);
+  var binstr = Buffer.from(base64, 'base64').toString('binary');
   var buf = new Uint8Array(binstr.length);
   Array.prototype.forEach.call(binstr, function (ch, i) {
     buf[i] = ch.charCodeAt(0);
@@ -138,9 +160,10 @@ function base64ToBuffer(base64: string) {
 export async function decryptDataWithAES(
   params: Types.DecryptDataWithAESProps
 ) {
+  const webCrypto = await getWebCrypto();
   const ArrayBufferKey = base64ToBuffer(params.key);
 
-  const decryptedKey = await window.crypto.subtle.importKey(
+  const decryptedKey = await webCrypto.subtle.importKey(
     'raw',
     ArrayBufferKey,
     'AES-GCM',
@@ -151,7 +174,7 @@ export async function decryptDataWithAES(
   const { prependUint8Array: iv, originalArrayBuffer: data } =
     separateArrayBuffer(params.data);
 
-  const decryptedData = await window.crypto.subtle.decrypt(
+  const decryptedData = await webCrypto.subtle.decrypt(
     {
       name: 'AES-GCM',
       iv: iv,
