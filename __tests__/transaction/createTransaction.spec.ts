@@ -7,15 +7,14 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 jest.setTimeout(300000);
 
 describe('Create Transaction', () => {
-  let key: JWKInterface;
+  let key: JWKInterface, data: string;
 
   beforeAll(async () => {
     key = await getWallet('local');
+    data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
   });
 
   it('should create data transaction with Arweave', async () => {
-    const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
-
     const txn = await createTransaction({
       key,
       type: 'data',
@@ -29,8 +28,6 @@ describe('Create Transaction', () => {
   });
 
   it('should create data transactionand post to Arweave', async () => {
-    const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
-
     const txn = await createTransaction({
       key: key,
       type: 'data',
