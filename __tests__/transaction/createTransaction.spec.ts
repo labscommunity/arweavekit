@@ -1,20 +1,23 @@
 import { readFileSync } from 'fs';
-import { createTransaction, createWallet } from '../../src';
+import { createTransaction } from '../../src';
 import { appVersionTag } from '../../src/utils';
-import { decodeTags } from './utils';
+import { decodeTags, getWallet } from './utils';
+import { JWKInterface } from 'arweave/node/lib/wallet';
 
 jest.setTimeout(300000);
 
 describe('Create Transaction', () => {
-  it('should create data transaction with Arweave', async () => {
-    const generateWallet = await createWallet({
-      environment: 'mainnet',
-    });
+  let key: JWKInterface;
 
+  beforeAll(async () => {
+    key = await getWallet('local');
+  });
+
+  it('should create data transaction with Arweave', async () => {
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
     const txn = await createTransaction({
-      key: generateWallet.key,
+      key,
       type: 'data',
       environment: 'mainnet',
       data: data,
@@ -26,16 +29,12 @@ describe('Create Transaction', () => {
   });
 
   it('should create data transactionand post to Arweave', async () => {
-    // Needs to be a funded wallet.json
-    // Else error Txn headers undefined
-    const key = JSON.parse(readFileSync('wallet.json').toString());
-
     const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
 
     const txn = await createTransaction({
       key: key,
       type: 'data',
-      environment: 'mainnet',
+      environment: 'local',
       data: data,
       options: {
         signAndPost: true,
