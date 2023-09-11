@@ -153,7 +153,7 @@ export async function encryptAESKeywithRSA(
       salt,
     });
   } else {
-    if (!params.wallet) {
+    if (!params.wallet || params.wallet === 'use_wallet') {
       throw new Error('Wallet JWK not provided');
     }
 
@@ -232,7 +232,7 @@ export async function decryptAESKeywithRSA(
       salt,
     });
   } else {
-    if (!params.wallet) {
+    if (!params.wallet || params.wallet === 'use_wallet') {
       throw new Error('Wallet JWK not provided');
     }
 
