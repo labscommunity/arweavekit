@@ -1,9 +1,21 @@
-import { ArWallet, Contract } from 'warp-contracts';
+import {
+  ArWallet,
+  Contract,
+  EvaluationManifest,
+  EvaluationOptions,
+  Tags,
+} from 'warp-contracts';
 
 export interface CreateContractProps {
   wallet?: ArWallet | string;
   initialState: string;
-  contractSource: string;
+  contractSource: string | Buffer;
+  tags?: Tags;
+  data?: {
+    'Content-Type': string;
+    body: string | Buffer;
+  };
+  evaluationManifest?: EvaluationManifest;
   environment: 'local' | 'testnet' | 'mainnet';
   strategy?: 'arweave' | 'ethereum' | 'both';
 }
@@ -22,11 +34,15 @@ export interface WriteContractProps {
   contractTxId: string;
   wallet?: ArWallet | string;
   options: {};
+  tags?: Tags;
+  vrf?: boolean;
+  evaluationOptions?: Partial<EvaluationOptions>;
   strategy?: 'arweave' | 'ethereum' | 'both';
 }
 
 export interface ReadContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
+  evaluationOptions?: Partial<EvaluationOptions>;
   contractTxId: string;
 }
 

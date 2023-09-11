@@ -72,6 +72,24 @@ const isEthPrivateKey = (key: any): boolean => {
 };
 
 /**
+ * Check if passed address is a valid Arweave address.
+ * @param address - Arweave address
+ * @returns
+ */
+function isValidArweaveAddress(address: string) {
+  if (typeof address !== 'string' || address.length !== 43) {
+    return false;
+  }
+
+  const ADDRESS_REGEX = /^[A-Za-z0-9_-]+$/;
+  if (!ADDRESS_REGEX.test(address)) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * Initialize wallet and run callback function
  * @param params CreateContractProps | WriteContractProps
  * @param callback Callback function
@@ -224,14 +242,29 @@ export async function createContract(
   }
 
   const callback = async (wallet: any) => {
-    return warp.deploy(
-      {
-        wallet,
-        initState: params.initialState,
-        src: params.contractSource,
-      },
-      wallet === 'use_wallet' || params.environment === 'local'
-    );
+    const disableBundling =
+      wallet === 'use_wallet' || params.environment === 'local';
+    const contractData = {
+      wallet,
+      initState: params.initialState,
+      evaluationManifest: params.evaluationManifest,
+      tags: params.tags,
+      data: params.data,
+    };
+    if (
+      typeof params.contractSource === 'string' &&
+      isValidArweaveAddress(params.contractSource)
+    ) {
+      return warp.deployFromSourceTx(
+        { ...contractData, srcTxId: params.contractSource },
+        disableBundling
+      );
+    } else {
+      return warp.deploy(
+        { ...contractData, src: params.contractSource },
+        disableBundling
+      );
+    }
   };
 
   const { wallet, callbackResponse } = await initWalletCallback(
@@ -271,10 +304,17 @@ export async function writeContract(params: Types.WriteContractProps) {
   let statusText: string = 'UNSUCCESSFUL';
 
   const callback = async (wallet: any) => {
-    const contract = warp.contract(params.contractTxId).connect(wallet);
+    const contract = warp
+      .contract(params.contractTxId)
+      .setEvaluationOptions({ ...params.evaluationOptions })
+      .connect(wallet);
 
     return contract.writeInteraction(params.options, {
-      tags: [{ name: 'ArweaveKit', value: '1.4.9' }] as Tag[],
+      tags: [
+        ...(params.tags || []),
+        { name: 'ArweaveKit', value: '1.4.9' },
+      ] as Tag[],
+      vrf: params.vrf,
       disableBundling:
         wallet === 'use_wallet' || params.environment === 'local',
     });
@@ -314,7 +354,9 @@ export async function readContractState(params: Types.ReadContractProps) {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
 
-  const contract = warp.contract(params.contractTxId);
+  const contract = warp
+    .contract(params.contractTxId)
+    .setEvaluationOptions({ ...params.evaluationOptions });
 
   const readContract = await contract.readState();
 
