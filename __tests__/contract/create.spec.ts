@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { createContract, createWallet } from '../../src';
 import crypto from 'crypto';
+import { Tags } from 'warp-contracts';
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
@@ -23,6 +24,58 @@ describe('Create Contract', () => {
       contractSource: contractSrc,
     });
 
+    expect(contract).toBeDefined();
+    expect(contract).toHaveProperty('_contractTxId');
+    expect(typeof contract).toEqual('object');
+    expect(result).toBeDefined();
+    expect(typeof result).toEqual('object');
+    expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
+  });
+
+  it('should create a new contract with arweave wallet passed in on testnet with a contract source txId', async () => {
+    const { key } = await createWallet({
+      environment: 'local',
+    });
+
+    const { contract, result } = await createContract({
+      wallet: key,
+      environment: 'testnet',
+      initialState: initState,
+      contractSource: 'o82FQI0q7YZRoP0snJyJji_ksQ14HQ0PV52wMY8LIyk',
+    });
+
+    expect(contract).toBeDefined();
+    expect(contract).toHaveProperty('_contractTxId');
+    expect(typeof contract).toEqual('object');
+    expect(result).toBeDefined();
+    expect(typeof result).toEqual('object');
+    expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
+  });
+
+  it('should create a new contract with arweave wallet passed in on testnet and data', async () => {
+    const { key } = await createWallet({
+      environment: 'local',
+    });
+
+    const { contract, result } = await createContract({
+      wallet: key,
+      environment: 'testnet',
+      initialState: initState,
+      contractSource: contractSrc,
+      data: {
+        'Content-Type': 'text/plain',
+        body: 'Hello World!',
+      },
+      tags: [{ name: 'App-Name', value: 'Testing' }] as Tags,
+    });
+
+    const helloWorld = await (
+      await fetch(
+        `https://gw.warp.cc/sonar/gateway/contract-data/${contract.txId()}`
+      )
+    ).text();
+
+    expect(helloWorld).toBe('Hello World!');
     expect(contract).toBeDefined();
     expect(contract).toHaveProperty('_contractTxId');
     expect(typeof contract).toEqual('object');

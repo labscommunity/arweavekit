@@ -40,6 +40,29 @@ describe('Read Contract State', () => {
     console.log('Res', readContract);
   });
 
+  it('should read state from mainnet', async () => {
+    const { readContract } = await readContractState({
+      environment: 'mainnet',
+      contractTxId: 'rK2BjT9OOFTut82rNZxu_D5RjwoMJCNgnnq1X0Z4ly0',
+      evaluationOptions: {
+        remoteStateSyncEnabled: true,
+        remoteStateSyncSource: 'https://dre-u.warp.cc/contract',
+        unsafeClient: 'skip',
+        internalWrites: true,
+        allowBigInt: true,
+      },
+    });
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect((readContract.cachedValue.state as { name: string }).name).toEqual(
+      'Atomic Cookies'
+    );
+  });
+
   it('should not read initial state if contract created on local & contract read on testnet', async () => {
     const { key } = await createWallet({ environment: 'local' });
 

@@ -6,6 +6,7 @@ import {
 } from '../../src';
 import { readFileSync } from 'fs';
 import crypto from 'crypto';
+import { Tags } from 'warp-contracts';
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
@@ -100,6 +101,7 @@ describe('Write Contracts', () => {
       options: {
         function: 'fifty',
       },
+      tags: [{ name: 'App-Name', value: 'Testing' }] as Tags,
     });
 
     const { readContract } = await readContractState({
