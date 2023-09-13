@@ -45,4 +45,50 @@ describe('Create Transaction', () => {
     expect(txn.postedTransaction.statusText).toEqual('OK');
     expect(decodeTags(txn.transaction.tags)).toEqual([appVersionTag]);
   });
+
+  it('should create data transaction and post to Bundlr', async () => {
+    const { NodeBundlr } = await import('@bundlr-network/client');
+    const bundlr = new NodeBundlr(
+      'https://node2.bundlr.network',
+      'arweave',
+      key
+    );
+
+    // Mock the createTransaction method of NodeBundlr
+    const transaction = bundlr.createTransaction(data);
+    const createTransactionMock = jest.spyOn(
+      NodeBundlr.prototype,
+      'createTransaction'
+    );
+    createTransactionMock.mockReturnValue(transaction);
+
+    // Mock the upload method of the transaction object
+    const uploadMock = jest.spyOn(transaction, 'upload');
+    uploadMock.mockReturnValue(Promise.resolve({ id: 'ID', timestamp: 123 }));
+
+    const txn = await createTransaction({
+      key: key,
+      type: 'data',
+      environment: 'mainnet',
+      data: data,
+      options: {
+        useBundlr: true,
+        signAndPost: true,
+      },
+    });
+
+    expect(txn).toBeDefined();
+    expect(txn.postedTransaction.id).toBeDefined();
+    expect(txn.transaction.signature).toBeDefined();
+
+    // Verify the mocks were called as expected
+    expect(createTransactionMock).toHaveBeenCalledWith(data, {
+      tags: [appVersionTag],
+    });
+    expect(uploadMock).toHaveBeenCalled();
+
+    // Reset the mocks after your test
+    createTransactionMock.mockRestore();
+    uploadMock.mockRestore();
+  });
 });
