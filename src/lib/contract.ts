@@ -138,8 +138,12 @@ async function initWalletCallback(
   };
 
   if (params.wallet === 'use_wallet') {
-    callbackResponse = await callback(params.wallet);
-    return { wallet: params.wallet, callbackResponse };
+    if (typeof window !== 'undefined' && window.arweaveWallet) {
+      callbackResponse = await callback(params.wallet);
+      return { wallet: params.wallet, callbackResponse };
+    } else {
+      throw new Error('[ArweaveKit] Failed to initialize signer.');
+    }
   }
 
   if (typeof window !== 'undefined') {
@@ -153,15 +157,21 @@ async function initWalletCallback(
       await handleEthereumWallet();
     } else {
       try {
-        await handleEthereumWallet();
-        callbackResponse = await callback(wallet);
+        if (window.ethereum && !!window.ethereum?.request) {
+          await handleEthereumWallet();
+          callbackResponse = await callback(wallet);
+        } else {
+          throw new Error(
+            '[ArweaveKit] Ethereum Wallet not found. Trying with Arweave Wallet.'
+          );
+        }
       } catch (err) {
         console.log(`[ArweaveKit] ${err}`);
         if (window.arweaveWallet) {
           await handleArweaveWallet();
           callbackResponse = await callback(wallet);
         } else {
-          throw new Error('[ArweaveKit] Failed to initialize signer');
+          throw new Error('[ArweaveKit] Failed to initialize signer.');
         }
       }
     }
@@ -179,8 +189,12 @@ async function initWalletCallback(
       wallet = new EthereumSigner(params.wallet as string);
     } else {
       try {
-        wallet = new EthereumSigner(params.wallet as string);
-        callbackResponse = await callback(wallet);
+        if (isEthPrivateKey(params.wallet)) {
+          wallet = new EthereumSigner(params.wallet as string);
+          callbackResponse = await callback(wallet);
+        } else {
+          throw new Error('[ArweaveKit] Trying with Arweave Signer.');
+        }
       } catch (err) {
         console.log(`[ArweaveKit] ${err}`);
         if (isJwk(params.wallet)) {
@@ -191,7 +205,7 @@ async function initWalletCallback(
               : new ArweaveSigner(params.wallet as JWKInterface);
           callbackResponse = await callback(wallet);
         } else {
-          throw new Error('[ArweaveKit] Failed to initialize signer');
+          throw new Error('[ArweaveKit] Failed to initialize signer.');
         }
       }
     }
