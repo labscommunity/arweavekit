@@ -1,4 +1,7 @@
 {
   "preset": "ts-jest",
-  "testMatch": ["**/*.spec.ts"]
+  "testMatch": ["**/*.spec.ts"],
+  "moduleNameMapper": {
+    "^#utils$": "<rootDir>/src/utils.ts"
+  }
 }
