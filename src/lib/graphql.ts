@@ -304,6 +304,9 @@ export const ArweaveKit = {
   graphQlSchemaString,
 
   use(params: Types.PluginType) {
+    if (this.hasOwnProperty(params.name)) {
+      throw new Error('Plugin name already exists, please change plugin name.')
+    }
     const combined = {
       ...this,
       [params.name]: params.plugin
