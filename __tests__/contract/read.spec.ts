@@ -1,3 +1,4 @@
+import { JWKInterface } from 'warp-contracts';
 import {
   createContract,
   createWallet,
@@ -15,9 +16,15 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 jest.setTimeout(120000);
 
 describe('Read Contract State', () => {
-  it('should read initial state', async () => {
-    const { key } = await createWallet({ environment: 'local' });
+  let key: JWKInterface;
 
+  beforeAll(async () => {
+    ({ key } = await createWallet({
+      environment: 'local',
+    }));
+  });
+
+  it('should read initial state', async () => {
     const { contractTxId } = await createContract({
       wallet: key,
       environment: 'testnet',
@@ -64,8 +71,6 @@ describe('Read Contract State', () => {
   });
 
   it('should not read initial state if contract created on local & contract read on testnet', async () => {
-    const { key } = await createWallet({ environment: 'local' });
-
     const { contractTxId } = await createContract({
       wallet: key,
       environment: 'local',
@@ -89,8 +94,6 @@ describe('Read Contract State', () => {
   });
 
   it('should read updated state', async () => {
-    const { key } = await createWallet({ environment: 'local' });
-
     const { contractTxId } = await createContract({
       environment: 'testnet',
       wallet: key,

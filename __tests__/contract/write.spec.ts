@@ -6,7 +6,7 @@ import {
 } from '../../src';
 import { readFileSync } from 'fs';
 import crypto from 'crypto';
-import { Tags } from 'warp-contracts';
+import { JWKInterface, Tags } from 'warp-contracts';
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
@@ -17,9 +17,15 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 jest.setTimeout(120000);
 
 describe('Write Contracts', () => {
-  it('should create and write to contract on local', async () => {
-    const { key } = await createWallet({ environment: 'local' });
+  let key: JWKInterface;
 
+  beforeAll(async () => {
+    ({ key } = await createWallet({
+      environment: 'local',
+    }));
+  });
+
+  it('should create and write to contract on local', async () => {
     const { contractTxId } = await createContract({
       environment: 'local',
       wallet: key,
@@ -59,8 +65,6 @@ describe('Write Contracts', () => {
   });
 
   it('should create and not write to contract if wallet not passed on node local', async () => {
-    const { key } = await createWallet({ environment: 'local' });
-
     const { contractTxId } = await createContract({
       environment: 'local',
       wallet: key,
@@ -80,13 +84,59 @@ describe('Write Contracts', () => {
       // If the function doesn't throw an error, fail the test
       fail('Expected writeContract to throw an error');
     } catch (error: any) {
-      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer');
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
+    }
+  });
+
+  it('should create and not write to contract with use_wallet passed in node environment', async () => {
+    const { contractTxId } = await createContract({
+      environment: 'local',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    try {
+      await writeContract({
+        wallet: 'use_wallet',
+        environment: 'local',
+        contractTxId,
+        options: {
+          function: 'initialize',
+        },
+      });
+      // If the function doesn't throw an error, fail the test
+      fail('Expected writeContract to throw an error');
+    } catch (error: any) {
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
+    }
+  });
+
+  it('should create and not write to contract with use_wallet passed in node environment', async () => {
+    const { contractTxId } = await createContract({
+      environment: 'local',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    try {
+      await writeContract({
+        wallet: 'invalid',
+        environment: 'local',
+        contractTxId,
+        options: {
+          function: 'initialize',
+        },
+      });
+      // If the function doesn't throw an error, fail the test
+      fail('Expected writeContract to throw an error');
+    } catch (error: any) {
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }
   });
 
   it('should create, write to and rewrite on contract on testnet', async () => {
-    const { key } = await createWallet({ environment: 'local' });
-
     const { contractTxId } = await createContract({
       environment: 'testnet',
       wallet: key,

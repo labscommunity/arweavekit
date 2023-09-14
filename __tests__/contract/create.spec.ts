@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { createContract, createWallet } from '../../src';
 import crypto from 'crypto';
-import { Tags } from 'warp-contracts';
+import { JWKInterface, Tags } from 'warp-contracts';
 
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
@@ -12,11 +12,15 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 jest.setTimeout(120000);
 
 describe('Create Contract', () => {
-  it('should create a new contract with arweave wallet passed in on testnet', async () => {
-    const { key } = await createWallet({
-      environment: 'local',
-    });
+  let key: JWKInterface;
 
+  beforeAll(async () => {
+    ({ key } = await createWallet({
+      environment: 'local',
+    }));
+  });
+
+  it('should create a new contract with arweave wallet passed in on testnet', async () => {
     const { contract, result } = await createContract({
       wallet: key,
       environment: 'testnet',
@@ -32,11 +36,37 @@ describe('Create Contract', () => {
     expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
   });
 
-  it('should create a new contract with arweave wallet passed in on testnet with a contract source txId', async () => {
-    const { key } = await createWallet({
-      environment: 'local',
-    });
+  it('should not create a new contract with use_wallet passed in node environment', async () => {
+    try {
+      await createContract({
+        wallet: 'use_wallet',
+        environment: 'testnet',
+        initialState: initState,
+        contractSource: contractSrc,
+      });
+      // If the function doesn't throw an error, fail the test
+      fail('Expected createContract to throw an error');
+    } catch (error: any) {
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
+    }
+  });
 
+  it('should not create a new contract with invalid wallet passed', async () => {
+    try {
+      await createContract({
+        wallet: 'invalid',
+        environment: 'testnet',
+        initialState: initState,
+        contractSource: contractSrc,
+      });
+      // If the function doesn't throw an error, fail the test
+      fail('Expected createContract to throw an error');
+    } catch (error: any) {
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
+    }
+  });
+
+  it('should create a new contract with arweave wallet passed in on testnet with a contract source txId', async () => {
     const { contract, result } = await createContract({
       wallet: key,
       environment: 'testnet',
@@ -53,10 +83,6 @@ describe('Create Contract', () => {
   });
 
   it('should create a new contract with arweave wallet passed in on testnet and data', async () => {
-    const { key } = await createWallet({
-      environment: 'local',
-    });
-
     const { contract, result } = await createContract({
       wallet: key,
       environment: 'testnet',
@@ -85,8 +111,6 @@ describe('Create Contract', () => {
   });
 
   it('should create a new contract with arweave wallet passed in on localhost', async () => {
-    const { key } = await createWallet({ environment: 'local' });
-
     const { contract, result } = await createContract({
       environment: 'local',
       wallet: key,
@@ -131,7 +155,7 @@ describe('Create Contract', () => {
       // If the function doesn't throw an error, fail the test
       fail('Expected createContract to throw an error');
     } catch (error: any) {
-      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer');
+      expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }
   });
 });
