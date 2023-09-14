@@ -303,10 +303,10 @@ export const ArweaveKit = {
   ARWEAVE_GATEWAYS,
   graphQlSchemaString,
 
-  use(externalPackage: any) {
+  use(params: Types.PluginType) {
     const combined = {
       ...this,
-      ...externalPackage
+      [params.name]: params.plugin
     };
     combined.use = this.use.bind(combined);
     return combined;

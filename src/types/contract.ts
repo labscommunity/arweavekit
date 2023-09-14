@@ -62,3 +62,8 @@ export interface ReadContractWOthentReturnProps {
   errors: object;
   validity: object;
 }
+
+export interface PluginType {
+  name: string, 
+  plugin: object 
+}

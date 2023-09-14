@@ -88,3 +88,8 @@ export type GraphQLError = {
 };
 
 export type Gateway = (typeof ARWEAVE_GATEWAYS)[number];
+
+export interface PluginType {
+  name: string, 
+  plugin: object 
+}

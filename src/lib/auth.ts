@@ -2,6 +2,7 @@ import {
   ConnectProps,
   OthentInstanceConenctionProps,
   UserDetailsReturnProps,
+  PluginType
 } from '../types/auth';
 import { Othent as othent } from 'othent';
 
@@ -154,10 +155,10 @@ export const ArweaveKit = {
   ArConnect,
   Othent,
 
-  use(externalPackage: any) {
+  use(params: PluginType) {
     const combined = {
       ...this,
-      ...externalPackage
+      [params.name]: params.plugin
     };
     combined.use = this.use.bind(combined);
     return combined;

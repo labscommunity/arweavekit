@@ -14,3 +14,8 @@ export interface DecryptDataWithAESProps {
   data: ArrayBuffer;
   key: string;
 }
+
+export interface PluginType {
+  name: string, 
+  plugin: object 
+}

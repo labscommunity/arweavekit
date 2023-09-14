@@ -26,3 +26,8 @@ export interface GetBalanceProps {
     winstonToAr?: boolean;
   };
 }
+
+export interface PluginType {
+  name: string, 
+  plugin: object 
+}

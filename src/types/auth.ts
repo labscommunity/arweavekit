@@ -38,3 +38,8 @@ export interface UserDetailsReturnProps {
 export interface OthentInstanceConenctionProps {
   apiId: string;
 }
+
+export interface PluginType {
+  name: string, 
+  plugin: object 
+}
