@@ -4,6 +4,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
 import { Othent as othent } from 'othent';
 import { ethers } from 'ethers';
+import { createArweaveKit } from '#utils';
 
 async function initArweave(params: Types.InitArweaveProps) {
   let arweave: Arweave;
@@ -360,9 +361,7 @@ export async function createAndPostTransactionWOthent(
   }
 }
 
-
-
-export const ArweaveKit = {
+export const ArweaveKit = createArweaveKit({
   initArweave,
   createTransaction,
   signTransaction,
@@ -370,16 +369,4 @@ export const ArweaveKit = {
   getTransactionStatus,
   getTransaction,
   createAndPostTransactionWOthent,
-
-  use(params: Types.PluginType) {
-    if (this.hasOwnProperty(params.name)) {
-      throw new Error('Plugin name already exists, please change plugin name.')
-    }
-    const combined = {
-      ...this,
-      [params.name]: params.plugin
-    };
-    combined.use = this.use.bind(combined);
-    return combined;
-  }
-};
+});

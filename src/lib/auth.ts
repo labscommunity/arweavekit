@@ -2,9 +2,9 @@ import {
   ConnectProps,
   OthentInstanceConenctionProps,
   UserDetailsReturnProps,
-  PluginType
 } from '../types/auth';
 import { Othent as othent } from 'othent';
+import { createArweaveKit } from '#utils';
 
 /***
  * connect to arconnect wallet
@@ -138,9 +138,7 @@ export const Othent = {
   userDetails,
 };
 
-
-
-export const ArweaveKit = {
+export const ArweaveKit = createArweaveKit({
   connect,
   disconnect,
   getActiveAddress,
@@ -154,16 +152,4 @@ export const ArweaveKit = {
   userDetails,
   ArConnect,
   Othent,
-
-  use(params: PluginType) {
-    if (this.hasOwnProperty(params.name)) {
-      throw new Error('Plugin name already exists, please change plugin name.')
-    }
-    const combined = {
-      ...this,
-      [params.name]: params.plugin
-    };
-    combined.use = this.use.bind(combined);
-    return combined;
-  }
-};
+});

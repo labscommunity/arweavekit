@@ -1,6 +1,7 @@
 import Arweave from 'arweave';
 import * as Types from '../types/wallet';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
+import { createArweaveKit } from '#utils';
 
 const initArweave = (params: Types.InitArweaveProps) => {
   let arweave: Arweave;
@@ -104,23 +105,9 @@ export async function getBalance(
   }
 }
 
-
-
-export const ArweaveKit = {
+export const ArweaveKit = createArweaveKit({
   initArweave,
   createWallet,
   getAddress,
   getBalance,
-
-  use(params: Types.PluginType) {
-    if (this.hasOwnProperty(params.name)) {
-      throw new Error('Plugin name already exists, please change plugin name.')
-    }
-    const combined = {
-      ...this,
-      [params.name]: params.plugin
-    };
-    combined.use = this.use.bind(combined);
-    return combined;
-  }
-};
+});

@@ -174,8 +174,3 @@ export interface CreateandPostTransactionWOthentReturnProps {
   success: boolean;
   transactionId: string;
 }
-
-export interface PluginType {
-  name: string, 
-  plugin: object 
-}

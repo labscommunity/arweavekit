@@ -1,4 +1,5 @@
 import * as Types from '../types/encryption';
+import { createArweaveKit } from '#utils';
 
 /**
  * concatenateArrayBuffers
@@ -163,9 +164,7 @@ export async function decryptDataWithAES(
   return decryptedData;
 }
 
-
-
-export const ArweaveKit = {
+export const ArweaveKit = createArweaveKit({
   concatenateArrayBuffers,
   separateArrayBuffer,
   bufferToBase64,
@@ -174,16 +173,4 @@ export const ArweaveKit = {
   decryptAESKeywithRSA,
   base64ToBuffer,
   decryptDataWithAES,
-
-  use(params: Types.PluginType) {
-    if (this.hasOwnProperty(params.name)) {
-      throw new Error('Plugin name already exists, please change plugin name.')
-    }
-    const combined = {
-      ...this,
-      [params.name]: params.plugin
-    };
-    combined.use = this.use.bind(combined);
-    return combined;
-  }
-};
+});

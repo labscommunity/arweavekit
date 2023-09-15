@@ -2,7 +2,8 @@ import Arweave from 'arweave';
 import { buildSchema, parse, validate, GraphQLError } from 'graphql';
 
 import * as Types from '../types/graphql';
-// import { ARWEAVE_GATEWAYS, graphQlSchemaString } from '../utils.js';
+import { createArweaveKit } from '#utils';
+// import { ARWEAVE_GATEWAYS, graphQlSchemaString } from '#utils.js';
 
 /**
  * Query data with GraphQL endpoint
@@ -294,24 +295,10 @@ enum SortOrder {
 }
 `;
 
-
-
-export const ArweaveKit = {
+export const ArweaveKit = createArweaveKit({
   queryGQL,
   queryTransactionsGQL,
   queryAllTransactionsGQL,
   ARWEAVE_GATEWAYS,
   graphQlSchemaString,
-
-  use(params: Types.PluginType) {
-    if (this.hasOwnProperty(params.name)) {
-      throw new Error('Plugin name already exists, please change plugin name.')
-    }
-    const combined = {
-      ...this,
-      [params.name]: params.plugin
-    };
-    combined.use = this.use.bind(combined);
-    return combined;
-  }
-};
+});

@@ -2,6 +2,7 @@ import { DeployPlugin, ArweaveSigner } from 'warp-contracts-plugin-deploy';
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
+import { createArweaveKit } from '#utils';
 
 /***
  * create warp contract
@@ -197,25 +198,11 @@ export async function readContractWOthent(
   return res;
 }
 
-
-
-export const ArweaveKit = {
+export const ArweaveKit = createArweaveKit({
   createContract,
   writeContract,
   readContractState,
   getContract,
   writeContractWOthent,
   readContractWOthent,
-
-  use(params: Types.PluginType) {
-    if (this.hasOwnProperty(params.name)) {
-      throw new Error('Plugin name already exists, please change plugin name.')
-    }
-    const combined = {
-      ...this,
-      [params.name]: params.plugin
-    };
-    combined.use = this.use.bind(combined);
-    return combined;
-  }
-};
+});

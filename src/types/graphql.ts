@@ -1,4 +1,4 @@
-import { ARWEAVE_GATEWAYS } from '../utils';
+import { ARWEAVE_GATEWAYS } from '#utils';
 import { GraphQLError as ActualGraphQLError } from 'graphql';
 
 export type QueryGQLOptions = {
@@ -88,8 +88,3 @@ export type GraphQLError = {
 };
 
 export type Gateway = (typeof ARWEAVE_GATEWAYS)[number];
-
-export interface PluginType {
-  name: string, 
-  plugin: object 
-}
