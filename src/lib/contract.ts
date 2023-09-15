@@ -122,7 +122,11 @@ async function initWalletCallback(
         ...missingPermissions,
       ] as PermissionType[]);
     }
-    wallet = new InjectedArweaveSigner(window.arweaveWallet);
+    if ((params.wallet as any)?.namespaces?.arweaveWallet?.walletName) {
+      wallet = new InjectedArweaveSigner(params.wallet);
+    } else {
+      wallet = new InjectedArweaveSigner(window.arweaveWallet);
+    }
     await wallet.setPublicKey();
   };
 
