@@ -6,6 +6,7 @@ import {
   EthereumSigner,
 } from 'warp-contracts-plugin-deploy';
 import {
+  CacheOptions,
   JWKInterface,
   Tag,
   WarpFactory,
@@ -26,20 +27,20 @@ import { PermissionType } from 'arconnect';
 const getWarpInstance = (
   environment: 'local' | 'testnet' | 'mainnet',
   useDeployPlugin = false,
-  cacheOptions = defaultCacheOptions
+  cacheOptions?: CacheOptions
 ) => {
   // Set dbLocation randomly for testing purposes only
   // to avoid database is not open issue
   if (process.env.NODE_ENV === 'test') {
     const randomWord = Math.random().toString(36).substring(2, 7);
-    cacheOptions.dbLocation = `./cache/${randomWord}`;
+    cacheOptions = { dbLocation: `./cache/${randomWord}`, inMemory: false };
   }
   const warp =
     environment === 'local'
       ? WarpFactory.forLocal()
       : environment === 'testnet'
-      ? WarpFactory.forTestnet(cacheOptions)
-      : WarpFactory.forMainnet(cacheOptions);
+      ? WarpFactory.forTestnet({ ...defaultCacheOptions, ...cacheOptions })
+      : WarpFactory.forMainnet({ ...defaultCacheOptions, ...cacheOptions });
 
   if (useDeployPlugin) {
     warp.use(new DeployPlugin());
@@ -311,7 +312,7 @@ export async function createContract(
  */
 
 export async function writeContract(params: Types.WriteContractProps) {
-  const warp = getWarpInstance(params.environment);
+  const warp = getWarpInstance(params.environment, false, params.cacheOptions);
   initStrategy(params);
 
   let status: number = 400;
@@ -360,10 +361,7 @@ export async function writeContract(params: Types.WriteContractProps) {
  */
 
 export async function readContractState(params: Types.ReadContractProps) {
-  const warp = getWarpInstance(params.environment, false, {
-    ...defaultCacheOptions,
-    inMemory: true,
-  });
+  const warp = getWarpInstance(params.environment, false, params.cacheOptions);
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';

@@ -1,5 +1,6 @@
 import {
   ArWallet,
+  CacheOptions,
   Contract,
   EvaluationManifest,
   EvaluationOptions,
@@ -38,12 +39,14 @@ export interface WriteContractProps {
   vrf?: boolean;
   evaluationOptions?: Partial<EvaluationOptions>;
   strategy?: 'arweave' | 'ethereum' | 'both';
+  cacheOptions?: CacheOptions;
 }
 
 export interface ReadContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
   evaluationOptions?: Partial<EvaluationOptions>;
   contractTxId: string;
+  cacheOptions?: CacheOptions;
 }
 
 export interface WriteContractWOthentProps {
