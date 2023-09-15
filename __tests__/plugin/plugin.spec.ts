@@ -2,8 +2,8 @@ import * as pluginOne from './pluginOne';
 import * as pluginTwo from './pluginTwo';
 import { ArweaveKit } from '../../src/lib/wallet';
 
-describe('ExternalPackage', () => {
-  it('should use external packages', () => {
+describe('Plugins', () => {
+  it('should use plugins', () => {
     const arweaveKit = ArweaveKit.use({
       name: 'pluginOne',
       plugin: pluginOne,
@@ -13,12 +13,12 @@ describe('ExternalPackage', () => {
     expect(arweaveKit.pluginTwo.hello()).toBe('PluginTwo');
   });
 
-  it('should throw error when same named external packages used', () => {
+  it('should throw error when same named plugins used', () => {
     try {
       const arweaveKit = ArweaveKit.use({
         name: 'pluginThree',
         plugin: pluginOne,
-      }).use({ name: 'pluginTwo', plugin: pluginTwo });
+      }).use({ name: 'pluginThree', plugin: pluginTwo });
 
       // if not thrown error fail the test
       fail('must throw error');
@@ -43,13 +43,14 @@ describe('ExternalPackage', () => {
     }
   });
 
-  it('show also contain all functions except plugins too', () => {
+  it('should contain all functions with plugins', () => {
     const arweaveKit = ArweaveKit.use({
       name: 'pluginFour',
       plugin: pluginOne,
     });
 
     const functionNames = [
+      'pluginFour',
       'initArweave',
       'createWallet',
       'getAddress',
