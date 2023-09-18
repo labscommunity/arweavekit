@@ -103,6 +103,15 @@ async function initWalletCallback(
   let wallet: any;
   let callbackResponse: any;
 
+  const isArWallet = isJwk(params.wallet);
+  const isEthWallet = isEthPrivateKey(params.wallet);
+
+  if (isEthWallet) {
+    params.wallet = (params.wallet as string).startsWith('0x')
+      ? (params.wallet as string).substring(2)
+      : params.wallet;
+  }
+
   const handleArweaveWallet = async () => {
     const permissions = await window.arweaveWallet.getPermissions();
     const requiredPermissions = [
@@ -149,9 +158,7 @@ async function initWalletCallback(
     } else {
       throw new Error('[ArweaveKit] Failed to initialize signer.');
     }
-  }
-
-  if (typeof window !== 'undefined') {
+  } else if (typeof window !== 'undefined' && !isArWallet && !isEthWallet) {
     if (params.strategy === 'arweave' && window.arweaveWallet) {
       await handleArweaveWallet();
     } else if (
@@ -181,20 +188,17 @@ async function initWalletCallback(
       }
     }
   } else {
-    if (params.strategy === 'arweave' && isJwk(params.wallet)) {
+    if (params.strategy === 'arweave' && isArWallet) {
       wallet =
         params.environment === 'local' ||
         (params as Types.WriteContractProps)?.contractTxId
           ? params.wallet
           : new ArweaveSigner(params.wallet as JWKInterface);
-    } else if (
-      params.strategy === 'ethereum' &&
-      isEthPrivateKey(params.wallet)
-    ) {
+    } else if (params.strategy === 'ethereum' && isEthWallet) {
       wallet = new EthereumSigner(params.wallet as string);
     } else {
       try {
-        if (isEthPrivateKey(params.wallet)) {
+        if (isEthWallet) {
           wallet = new EthereumSigner(params.wallet as string);
           callbackResponse = await callback(wallet);
         } else {
@@ -202,7 +206,7 @@ async function initWalletCallback(
         }
       } catch (err) {
         console.log(`[ArweaveKit] ${err}`);
-        if (isJwk(params.wallet)) {
+        if (isArWallet) {
           wallet =
             params.environment === 'local' ||
             (params as Types.WriteContractProps)?.contractTxId
