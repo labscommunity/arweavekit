@@ -1,21 +1,7 @@
-import {
-  DeployPlugin,
-  ArweaveSigner,
-  InjectedArweaveSigner,
-  InjectedEthereumSigner,
-  EthereumSigner,
-} from 'warp-contracts-plugin-deploy';
-import {
-  CacheOptions,
-  JWKInterface,
-  Tag,
-  WarpFactory,
-  defaultCacheOptions,
-} from 'warp-contracts';
+import type { CacheOptions, JWKInterface, Tag } from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
 import { ethers } from 'ethers';
-import { PermissionType } from 'arconnect';
 
 /**
  * Get a Warp instance based on the specified environment and options.
@@ -24,7 +10,7 @@ import { PermissionType } from 'arconnect';
  * @param cacheOptions - Options for caching (defaults {@link defaultCacheOptions}).
  * @returns An instance of Warp.
  */
-const getWarpInstance = (
+const getWarpInstance = async (
   environment: 'local' | 'testnet' | 'mainnet',
   useDeployPlugin = false,
   cacheOptions?: CacheOptions
@@ -35,6 +21,7 @@ const getWarpInstance = (
     const randomWord = Math.random().toString(36).substring(2, 7);
     cacheOptions = { dbLocation: `./cache/${randomWord}`, inMemory: false };
   }
+  const { WarpFactory, defaultCacheOptions } = await import('warp-contracts');
   const warp =
     environment === 'local'
       ? WarpFactory.forLocal()
@@ -43,6 +30,7 @@ const getWarpInstance = (
       : WarpFactory.forMainnet({ ...defaultCacheOptions, ...cacheOptions });
 
   if (useDeployPlugin) {
+    const { DeployPlugin } = await getDeployPlugin();
     warp.use(new DeployPlugin());
   }
 
@@ -90,6 +78,49 @@ function isValidArweaveAddress(address: string) {
   return true;
 }
 
+const getDeployPlugin = async (): Promise<{
+  ArweaveSigner: any;
+  InjectedArweaveSigner: any;
+  InjectedEthereumSigner: any;
+  EthereumSigner: any;
+  DeployPlugin: any;
+}> => {
+  if (typeof window !== 'undefined') {
+    const {
+      DeployPlugin,
+      ArweaveSigner,
+      InjectedArweaveSigner,
+      InjectedEthereumSigner,
+      EthereumSigner,
+    } = await import('warp-contracts-plugin-deploy');
+
+    return {
+      DeployPlugin,
+      ArweaveSigner,
+      InjectedArweaveSigner,
+      InjectedEthereumSigner,
+      EthereumSigner,
+    };
+  } else {
+    const module = await import('warp-contracts-plugin-deploy');
+    const {
+      DeployPlugin,
+      ArweaveSigner,
+      InjectedArweaveSigner,
+      InjectedEthereumSigner,
+      EthereumSigner,
+    } = module?.default || module;
+
+    return {
+      DeployPlugin,
+      ArweaveSigner,
+      InjectedArweaveSigner,
+      InjectedEthereumSigner,
+      EthereumSigner,
+    };
+  }
+};
+
 /**
  * Initialize wallet and run callback function
  * @param params CreateContractProps | WriteContractProps
@@ -102,6 +133,13 @@ async function initWalletCallback(
 ) {
   let wallet: any;
   let callbackResponse: any;
+
+  const {
+    ArweaveSigner,
+    EthereumSigner,
+    InjectedArweaveSigner,
+    InjectedEthereumSigner,
+  } = await getDeployPlugin();
 
   const isArWallet = isJwk(params.wallet);
   const isEthWallet = isEthPrivateKey(params.wallet);
@@ -121,7 +159,8 @@ async function initWalletCallback(
     ];
 
     const missingPermissions = requiredPermissions.filter(
-      (permission) => permissions.indexOf(permission as PermissionType) === -1
+      (permission) =>
+        permissions.indexOf(permission as Types.PermissionType) === -1
     );
 
     if (permissions.length === 0 || missingPermissions.length > 0) {
@@ -129,7 +168,7 @@ async function initWalletCallback(
       await window.arweaveWallet.connect([
         ...permissions,
         ...missingPermissions,
-      ] as PermissionType[]);
+      ] as Types.PermissionType[]);
     }
     if ((params.wallet as any)?.namespaces?.arweaveWallet?.walletName) {
       wallet = new InjectedArweaveSigner(params.wallet);
@@ -255,7 +294,7 @@ export async function createContract(
 ): Promise<Types.CreateContractReturnProps> {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
-  const warp = getWarpInstance(params.environment, true);
+  const warp = await getWarpInstance(params.environment, true);
   initStrategy(params);
 
   if (params.environment === 'local' && isJwk(params.wallet)) {
@@ -320,7 +359,11 @@ export async function createContract(
  */
 
 export async function writeContract(params: Types.WriteContractProps) {
-  const warp = getWarpInstance(params.environment, false, params.cacheOptions);
+  const warp = await getWarpInstance(
+    params.environment,
+    false,
+    params.cacheOptions
+  );
   initStrategy(params);
 
   let status: number = 400;
@@ -369,7 +412,11 @@ export async function writeContract(params: Types.WriteContractProps) {
  */
 
 export async function readContractState(params: Types.ReadContractProps) {
-  const warp = getWarpInstance(params.environment, false, params.cacheOptions);
+  const warp = await getWarpInstance(
+    params.environment,
+    false,
+    params.cacheOptions
+  );
 
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
