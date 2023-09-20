@@ -2,7 +2,7 @@ import { DeployPlugin, ArweaveSigner } from 'warp-contracts-plugin-deploy';
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
-import { appVersionTag } from '#utils';
+import { appVersionTag } from '../utils';
 
 /***
  * create warp contract
