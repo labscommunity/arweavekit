@@ -58,6 +58,9 @@
     "warp-contracts-plugin-deploy": "^1.0.9"
   },
   "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
     "./auth": {
       "import": "./dist/lib/auth.js"
     },
