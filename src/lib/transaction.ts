@@ -75,7 +75,7 @@ export async function createTransaction<
             let transaction;
 
             if (
-              params.data instanceof Buffer ||
+              Buffer.isBuffer(params.data) ||
               typeof params.data === 'string'
             ) {
               transaction = bundlr.createTransaction(params?.data, {
@@ -135,7 +135,7 @@ export async function createTransaction<
 
         let transaction;
 
-        if (params.data instanceof Buffer || typeof params.data === 'string') {
+        if (Buffer.isBuffer(params.data) || typeof params.data === 'string') {
           transaction = bundlr.createTransaction(params?.data, {
             tags: allTags ? allTags : [appVersionTag],
           });
