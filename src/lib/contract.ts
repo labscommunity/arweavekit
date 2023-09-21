@@ -1,6 +1,7 @@
 import type { CacheOptions, JWKInterface, Tag } from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
+import { appVersionTag } from '../utils';
 import { ethers } from 'ethers';
 
 /**
@@ -378,7 +379,7 @@ export async function writeContract(params: Types.WriteContractProps) {
     return contract.writeInteraction(params.options, {
       tags: [
         ...(params.tags || []),
-        { name: 'ArweaveKit', value: '1.4.9' },
+        appVersionTag,
       ] as Tag[],
       vrf: params.vrf,
       disableBundling:
@@ -472,7 +473,7 @@ export async function writeContractWOthent(
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [{ name: 'ArweaveKit', value: '1.4.9' }],
+    tags: [appVersionTag],
   });
 
   const postedTransaction = await othentInstance.sendTransactionWarp(

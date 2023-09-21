@@ -2,7 +2,7 @@ import Arweave from 'arweave';
 import { buildSchema, parse, validate, GraphQLError } from 'graphql';
 
 import * as Types from '../types/graphql';
-// import { ARWEAVE_GATEWAYS, graphQlSchemaString } from '../utils.js';
+import { ARWEAVE_GATEWAYS } from '../utils';
 
 /**
  * Query data with GraphQL endpoint
@@ -136,13 +136,6 @@ function initArweave(gateway: string): Arweave {
 
   return arweave;
 }
-
-export const ARWEAVE_GATEWAYS = [
-  'arweave.net',
-  'arweave.dev',
-  'g8way.io',
-  'arweave-search.goldsky.com',
-] as const;
 
 export const graphQlSchemaString = `
 type Query {

@@ -1,14 +1,20 @@
 import { readFileSync } from 'fs';
 import { createTransaction, signTransaction } from '../../src';
+import { decodeTags, getWallet } from './utils';
+import { appVersionTag } from '../../src/utils';
+import { JWKInterface } from 'arweave/node/lib/wallet';
 
 jest.setTimeout(300000);
 
 describe('Create Transaction', () => {
+  let key: JWKInterface, data: string;
+
+  beforeAll(async () => {
+    key = await getWallet('local');
+    data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
+  });
+
   it('should create and sign data transaction with Arweave', async () => {
-    const key = JSON.parse(readFileSync('wallet.json').toString());
-
-    const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
-
     const txn = await createTransaction({
       key: key,
       type: 'data',
@@ -26,26 +32,20 @@ describe('Create Transaction', () => {
 
     expect(signedTransaction).toBeDefined();
     expect(txn.signature).toBeDefined();
-    expect(txn.tags).toEqual([{ name: 'QXJ3ZWF2ZUtpdA', value: 'MS40Ljc' }]);
+    expect(decodeTags(txn.tags)).toEqual([appVersionTag]);
   });
 
   it('should create and sign data transactionand post to Arweave', async () => {
-    // Needs to be a funded wallet.json
-    // Else error Txn headers undefined
-    const key = JSON.parse(readFileSync('wallet.json').toString());
-
-    const data = readFileSync('__tests__/transaction/data/test.json', 'utf-8');
-
     const txn = await createTransaction({
       key: key,
       type: 'data',
-      environment: 'mainnet',
+      environment: 'local',
       data: data,
     });
 
     const signedTransaction = await signTransaction({
       createdTransaction: txn,
-      environment: 'mainnet',
+      environment: 'local',
       key: key,
       postTransaction: true,
     });
@@ -55,8 +55,8 @@ describe('Create Transaction', () => {
     expect(signedTransaction.createdTransaction.signature).toBeDefined();
     expect(signedTransaction.postedTransaction.status).toEqual(200);
     expect(signedTransaction.postedTransaction.statusText).toEqual('OK');
-    expect(signedTransaction.createdTransaction.tags).toEqual([
-      { name: 'QXJ3ZWF2ZUtpdA', value: 'MS40Ljc' },
+    expect(decodeTags(signedTransaction.createdTransaction.tags)).toEqual([
+      appVersionTag,
     ]);
   });
 });
