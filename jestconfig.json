@@ -1,8 +1,6 @@
 {
   "preset": "ts-jest",
   "testMatch": ["**/*.spec.ts"],
-  "testEnvironment": "node",
-  "moduleNameMapper": {
-    "^#utils$": "<rootDir>/src/utils.ts"
-  }
+  "globalTeardown": "<rootDir>/__tests__/globalTeardown.ts",
+  "globalSetup": "<rootDir>/__tests__/globalSetup.ts"
 }

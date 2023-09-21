@@ -4,7 +4,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
 import { Othent as othent } from 'othent';
 import { ethers } from 'ethers';
-import { createArweaveKit } from '#utils';
+import { createArweaveKit, appVersionTag } from '../utils';
 
 async function initArweave(params: Types.InitArweaveProps) {
   let arweave: Arweave;
@@ -68,23 +68,18 @@ export async function createTransaction<
             await bundlr.ready();
 
             const allTags = params?.options.tags && [
-              {
-                name: 'ArweaveKit',
-                value: '1.4.9',
-              },
+              appVersionTag,
               ...params?.options.tags,
             ];
 
             let transaction;
 
             if (
-              params.data instanceof Buffer ||
+              Buffer.isBuffer(params.data) ||
               typeof params.data === 'string'
             ) {
               transaction = bundlr.createTransaction(params?.data, {
-                tags: allTags
-                  ? allTags
-                  : [{ name: 'ArweaveKit', value: '1.4.9' }],
+                tags: allTags ? allTags : [appVersionTag],
               });
             } else {
               throw new Error('Bundlr only accepts `string` and `Buffer`.');
@@ -99,15 +94,16 @@ export async function createTransaction<
           } else {
             throw new Error('No Ethereum object found in window');
           }
-        } catch (error) {
-          console.error('Posting with Bundlr failed, posting with Arweave');
+        } catch (error: any) {
+          console.error(error?.message || error);
+          console.error('Posting with Bundlr failed, posting with Arweave.');
           // create transaction
           const transaction = await arweave.createTransaction({
             data: params.data,
           });
 
           // tags
-          transaction.addTag('ArweaveKit', '1.4.9');
+          transaction.addTag(appVersionTag.name, appVersionTag.value);
           if (params?.options?.tags) {
             params?.options?.tags?.map((k, i) =>
               transaction.addTag(k.name, k.value)
@@ -133,18 +129,15 @@ export async function createTransaction<
         );
 
         const allTags = params?.options.tags && [
-          {
-            name: 'ArweaveKit',
-            value: '1.4.9',
-          },
+          appVersionTag,
           ...params?.options.tags,
         ];
 
         let transaction;
 
-        if (params.data instanceof Buffer || typeof params.data === 'string') {
+        if (Buffer.isBuffer(params.data) || typeof params.data === 'string') {
           transaction = bundlr.createTransaction(params?.data, {
-            tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.9' }],
+            tags: allTags ? allTags : [appVersionTag],
           });
         } else {
           throw new Error('Bundlr only accepts `string` and `Buffer`.');
@@ -178,7 +171,7 @@ export async function createTransaction<
       );
 
       // tags
-      transaction.addTag('ArweaveKit', '1.4.9');
+      transaction.addTag(appVersionTag.name, appVersionTag.value);
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -223,7 +216,7 @@ export async function createTransaction<
       );
 
       // add tags
-      transaction.addTag('ArweaveKit', '1.4.9');
+      transaction.addTag(appVersionTag.name, appVersionTag.value);
       if (params?.options?.tags) {
         params?.options?.tags?.map((k, i) =>
           transaction.addTag(k.name, k.value)
@@ -322,13 +315,7 @@ export async function createAndPostTransactionWOthent(
   const othentInstance = await othent({
     API_ID: params.apiId,
   });
-  const allTags = params?.tags && [
-    {
-      name: 'ArweaveKit',
-      value: '1.4.9',
-    },
-    ...params?.tags,
-  ];
+  const allTags = params?.tags && [appVersionTag, ...params?.tags];
 
   let postedTransaction;
 
@@ -336,7 +323,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionBundlr({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.9' }],
+      tags: allTags ? allTags : [appVersionTag],
     });
 
     postedTransaction = await othentInstance.sendTransactionBundlr(
@@ -346,7 +333,7 @@ export async function createAndPostTransactionWOthent(
     const signedTransaction = await othentInstance.signTransactionArweave({
       othentFunction: params.othentFunction,
       data: params.data,
-      tags: allTags ? allTags : [{ name: 'ArweaveKit', value: '1.4.9' }],
+      tags: allTags ? allTags : [appVersionTag],
     });
 
     postedTransaction = await othentInstance.sendTransactionArweave(

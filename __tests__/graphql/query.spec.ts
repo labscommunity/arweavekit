@@ -1,9 +1,17 @@
-import { queryGQL, queryTransactionsGQL } from '../../src/lib/graphql';
+import {
+  queryAllTransactionsGQL,
+  queryGQL,
+  queryTransactionsGQL,
+} from '../../src/lib/graphql';
 import * as Types from '../../src/types/graphql';
 import {
+  contractTransactionsWithPageInfo,
+  goldskyTransactionsQuery,
   transactionsQuery,
   transactionsWithPageInfo,
 } from './queries';
+
+jest.setTimeout(120000);
 
 describe('Query GraphQL endpoint with `queryGQL`', () => {
   it('should run and return first 10 transactions', async () => {
@@ -18,6 +26,32 @@ describe('Query GraphQL endpoint with `queryGQL`', () => {
     expect(data).not.toBeNull();
     expect(errors).toBeNull();
     expect(data?.transactions.edges.length).toBe(10);
+  });
+
+  it('should run and return first 10 transactions with goldsky gateway', async () => {
+    const { data, errors, status } = await queryGQL(goldskyTransactionsQuery, {
+      gateway: 'arweave-search.goldsky.com',
+      filters: {
+        count: 10,
+        name: 'Content-Type',
+        values: 'image/*',
+        match: 'WILDCARD',
+      },
+    });
+
+    const edges = data?.transactions.edges;
+    const contentTypes = edges?.map((edge) => {
+      const contentType = edge.node.tags.find(
+        (tag) => tag.name === 'Content-Type'
+      );
+      return /image\/.+/.test(contentType?.value || '');
+    });
+
+    expect(status).toBe(200);
+    expect(data).not.toBeNull();
+    expect(errors).toBeNull();
+    expect(edges?.length).toBe(10);
+    expect(contentTypes).toStrictEqual(Array(10).fill(true));
   });
 
   it('should produce errors when invalid query is passed', async () => {
@@ -109,5 +143,33 @@ describe('Query GraphQL endpoint with `queryTransactionsGQL`', () => {
     expect(status).toBe(400);
     expect(data).toEqual([]);
     expect(errors).not.toBeNull();
+  });
+});
+
+describe('Query GraphQL endpoint with `queryAllTransactionsGQL`', () => {
+  it('should get all transactions', async () => {
+    const data = await queryAllTransactionsGQL(
+      contractTransactionsWithPageInfo,
+      {
+        gateway: 'arweave.net',
+        filters: {
+          count: 100,
+        },
+      }
+    );
+
+    expect(data).not.toBeNull();
+    expect(data.length).toBeGreaterThanOrEqual(15);
+  });
+
+  it('should produce errors when invalid query is passed', async () => {
+    const data = await queryAllTransactionsGQL(`invalid`, {
+      gateway: 'arweave.net',
+      filters: {
+        count: 100,
+      },
+    });
+
+    expect(data).toEqual([]);
   });
 });
