@@ -4,7 +4,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 import * as Types from '../types/transaction';
 import { Othent as othent } from 'othent';
 import { ethers } from 'ethers';
-import { appVersionTag } from '../utils';
+import { createArweaveKit, appVersionTag } from '../utils';
 
 async function initArweave(params: Types.InitArweaveProps) {
   let arweave: Arweave;
@@ -347,3 +347,13 @@ export async function createAndPostTransactionWOthent(
     throw new Error('Transaction creation unsuccessful.');
   }
 }
+
+export const ArweaveKit = createArweaveKit({
+  initArweave,
+  createTransaction,
+  signTransaction,
+  postTransaction,
+  getTransactionStatus,
+  getTransaction,
+  createAndPostTransactionWOthent,
+});

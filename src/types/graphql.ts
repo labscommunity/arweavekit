@@ -1,4 +1,4 @@
-import { ARWEAVE_GATEWAYS } from '../utils';
+import { ARWEAVE_GATEWAYS } from '#utils';
 import { GraphQLError as ActualGraphQLError } from 'graphql';
 
 export type QueryGQLOptions = {

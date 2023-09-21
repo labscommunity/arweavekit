@@ -4,6 +4,7 @@ import {
   UserDetailsReturnProps,
 } from '../types/auth';
 import { Othent as othent } from 'othent';
+import { createArweaveKit } from '#utils';
 
 /***
  * connect to arconnect wallet
@@ -136,3 +137,19 @@ export const Othent = {
   logOut,
   userDetails,
 };
+
+export const ArweaveKit = createArweaveKit({
+  connect,
+  disconnect,
+  getActiveAddress,
+  getPermissions,
+  getWalletNames,
+  getAllAddresses,
+  getActivePublicKey,
+  isInstalled,
+  logIn,
+  logOut,
+  userDetails,
+  ArConnect,
+  Othent,
+});

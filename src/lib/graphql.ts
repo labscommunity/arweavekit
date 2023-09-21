@@ -2,7 +2,7 @@ import Arweave from 'arweave';
 import { buildSchema, parse, validate, GraphQLError } from 'graphql';
 
 import * as Types from '../types/graphql';
-import { ARWEAVE_GATEWAYS } from '../utils';
+import { createArweaveKit, ARWEAVE_GATEWAYS } from '../utils';
 
 /**
  * Query data with GraphQL endpoint
@@ -286,3 +286,11 @@ enum SortOrder {
   HEIGHT_DESC
 }
 `;
+
+export const ArweaveKit = createArweaveKit({
+  queryGQL,
+  queryTransactionsGQL,
+  queryAllTransactionsGQL,
+  ARWEAVE_GATEWAYS,
+  graphQlSchemaString,
+});

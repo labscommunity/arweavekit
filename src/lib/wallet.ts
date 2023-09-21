@@ -1,6 +1,7 @@
 import Arweave from 'arweave';
 import * as Types from '../types/wallet';
 import { generateMnemonic, getKeyFromMnemonic } from 'arweave-mnemonic-keys';
+import { createArweaveKit } from '#utils';
 
 const initArweave = (params: Types.InitArweaveProps) => {
   let arweave: Arweave;
@@ -103,3 +104,10 @@ export async function getBalance(
     return walletBalance;
   }
 }
+
+export const ArweaveKit = createArweaveKit({
+  initArweave,
+  createWallet,
+  getAddress,
+  getBalance,
+});

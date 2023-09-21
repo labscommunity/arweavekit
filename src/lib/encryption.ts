@@ -1,5 +1,6 @@
 import { JWKInterface } from 'warp-contracts';
 import * as Types from '../types/encryption';
+import { createArweaveKit } from '../utils';
 import Arweave from 'arweave';
 
 /**
@@ -345,3 +346,14 @@ export async function decryptDataWithAES(
 
   return decryptedData;
 }
+
+export const ArweaveKit = createArweaveKit({
+  concatenateArrayBuffers,
+  separateArrayBuffer,
+  bufferToBase64,
+  encryptDataWithAES,
+  encryptAESKeywithRSA,
+  decryptAESKeywithRSA,
+  base64ToBuffer,
+  decryptDataWithAES,
+});

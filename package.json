@@ -1,6 +1,6 @@
 {
   "name": "arweavekit",
-  "version": "1.4.9",
+  "version": "1.5.0",
   "description": "Utility library to build full stack permaweb applications",
   "type": "module",
   "main": "dist/index.js",
@@ -58,6 +58,9 @@
     "othent": "1.0.638",
     "warp-contracts": "^1.4.17",
     "warp-contracts-plugin-deploy": "^1.0.9"
+  },
+  "imports": {
+    "#utils": "./dist/utils.js"
   },
   "exports": {
     ".": {
