@@ -1,7 +1,7 @@
 import type { CacheOptions, JWKInterface, Tag } from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
-import { appVersionTag } from '../utils';
+import { appVersionTag, createArweaveKit } from '../utils';
 import { ethers } from 'ethers';
 
 /**
