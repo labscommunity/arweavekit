@@ -1,15 +1,24 @@
-import {
+import type {
   ArWallet,
+  CacheOptions,
   Contract,
-  CustomSignature,
-  JWKInterface,
+  EvaluationManifest,
+  EvaluationOptions,
+  Tags,
 } from 'warp-contracts';
 
 export interface CreateContractProps {
-  wallet: JWKInterface;
+  wallet?: ArWallet | string;
   initialState: string;
-  contractSource: string;
+  contractSource: string | Buffer;
+  tags?: Tags;
+  data?: {
+    'Content-Type': string;
+    body: string | Buffer;
+  };
+  evaluationManifest?: EvaluationManifest;
   environment: 'local' | 'testnet' | 'mainnet';
+  strategy?: 'arweave' | 'ethereum' | 'both';
 }
 
 export interface CreateContractReturnProps {
@@ -24,13 +33,20 @@ export interface CreateContractReturnProps {
 export interface WriteContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
   contractTxId: string;
-  wallet?: ArWallet | CustomSignature;
+  wallet?: ArWallet | string;
   options: {};
+  tags?: Tags;
+  vrf?: boolean;
+  evaluationOptions?: Partial<EvaluationOptions>;
+  strategy?: 'arweave' | 'ethereum' | 'both';
+  cacheOptions?: CacheOptions;
 }
 
 export interface ReadContractProps {
   environment: 'local' | 'testnet' | 'mainnet';
+  evaluationOptions?: Partial<EvaluationOptions>;
   contractTxId: string;
+  cacheOptions?: CacheOptions;
 }
 
 export interface WriteContractWOthentProps {
@@ -62,3 +78,14 @@ export interface ReadContractWOthentReturnProps {
   errors: object;
   validity: object;
 }
+
+export type PermissionType =
+  | 'ACCESS_ADDRESS'
+  | 'ACCESS_PUBLIC_KEY'
+  | 'ACCESS_ALL_ADDRESSES'
+  | 'SIGN_TRANSACTION'
+  | 'ENCRYPT'
+  | 'DECRYPT'
+  | 'SIGNATURE'
+  | 'ACCESS_ARWEAVE_CONFIG'
+  | 'DISPATCH';
