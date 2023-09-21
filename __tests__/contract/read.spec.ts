@@ -1,3 +1,4 @@
+import { JWKInterface } from 'warp-contracts';
 import {
   createContract,
   createWallet,
@@ -15,9 +16,15 @@ const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 jest.setTimeout(120000);
 
 describe('Read Contract State', () => {
-  it('should read initial state', async () => {
-    const { key } = await createWallet({ environment: 'local' });
+  let key: JWKInterface;
 
+  beforeAll(async () => {
+    ({ key } = await createWallet({
+      environment: 'local',
+    }));
+  });
+
+  it('should read initial state', async () => {
     const { contractTxId } = await createContract({
       wallet: key,
       environment: 'testnet',
@@ -26,7 +33,7 @@ describe('Read Contract State', () => {
     });
 
     const { readContract } = await readContractState({
-      environment: 'mainnet',
+      environment: 'testnet',
       contractTxId,
     });
 
@@ -37,38 +44,82 @@ describe('Read Contract State', () => {
     expect(typeof readContract.cachedValue.validity).toBe('object');
     expect(readContract.cachedValue.state).toEqual({ counter: 0 });
 
-    console.log("Res", readContract);
-  });
-})
-
-it('should read updated state', async () => {
-  const { key } = await createWallet({ environment: 'local' });
-
-  const { contractTxId } = await createContract({
-    environment: 'testnet',
-    wallet: key,
-    initialState: initState,
-    contractSource: contractSrc,
+    console.log('Res', readContract);
   });
 
-  await writeContract({
-    environment: 'testnet',
-    contractTxId: contractTxId,
-    wallet: key,
-    options: {
-      function: 'fifty',
-    },
+  it('should read state from mainnet', async () => {
+    const { readContract } = await readContractState({
+      environment: 'mainnet',
+      contractTxId: 'rK2BjT9OOFTut82rNZxu_D5RjwoMJCNgnnq1X0Z4ly0',
+      evaluationOptions: {
+        remoteStateSyncEnabled: true,
+        remoteStateSyncSource: 'https://dre-u.warp.cc/contract',
+        unsafeClient: 'skip',
+        internalWrites: true,
+        allowBigInt: true,
+      },
+    });
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect((readContract.cachedValue.state as { name: string }).name).toEqual(
+      'Atomic Cookies'
+    );
   });
 
-  const { readContract } = await readContractState({
-    environment: 'testnet',
-    contractTxId: contractTxId,
+  it('should not read initial state if contract created on local & contract read on testnet', async () => {
+    const { contractTxId } = await createContract({
+      wallet: key,
+      environment: 'local',
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    try {
+      await readContractState({
+        environment: 'testnet',
+        contractTxId,
+      });
+
+      // If the function doesn't throw an error, fail the test
+      fail('Expected readContractState to throw an error');
+    } catch (error: any) {
+      expect(
+        error.message.includes(`Unable to retrieve tx ${contractTxId}`)
+      ).toBeTruthy();
+    }
   });
 
-  expect(readContract.sortKey).toBeDefined();
-  expect(readContract.cachedValue.state).toBeDefined();
-  expect(readContract.cachedValue.validity).toBeDefined();
-  expect(typeof readContract.cachedValue.state).toBe('object');
-  expect(typeof readContract.cachedValue.validity).toBe('object');
-  expect(readContract.cachedValue.state).toEqual({ counter: 50 });
+  it('should read updated state', async () => {
+    const { contractTxId } = await createContract({
+      environment: 'testnet',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    await writeContract({
+      environment: 'testnet',
+      contractTxId: contractTxId,
+      wallet: key,
+      options: {
+        function: 'fifty',
+      },
+    });
+
+    const { readContract } = await readContractState({
+      environment: 'testnet',
+      contractTxId: contractTxId,
+    });
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect(readContract.cachedValue.state).toEqual({ counter: 50 });
+  });
 });

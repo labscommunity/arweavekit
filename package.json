@@ -35,7 +35,7 @@
     "@types/bn.js": "^5.1.1",
     "@types/jest": "^29.4.0",
     "@types/node-fetch": "^2.6.2",
-    "arlocal": "^1.1.60",
+    "arlocal": "^1.1.61",
     "babel-jest": "^29.5.0",
     "dotenv": "^16.0.3",
     "jest": "^29.4.2",
@@ -54,10 +54,13 @@
     "ethers": "^6.6.7",
     "graphql": "^16.7.1",
     "othent": "1.0.638",
-    "warp-contracts": "^1.4.1",
-    "warp-contracts-plugin-deploy": "^1.0.3"
+    "warp-contracts": "^1.4.17",
+    "warp-contracts-plugin-deploy": "^1.0.9"
   },
   "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
     "./auth": {
       "import": "./dist/lib/auth.js"
     },
