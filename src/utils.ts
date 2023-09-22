@@ -9,7 +9,10 @@ export const ARWEAVE_GATEWAYS = [
   'arweave-search.goldsky.com',
 ] as const;
 
-export const appVersionTag = { name: 'ArweaveKit', value: '1.4.9' } as Tag;
+export const appVersionTag = {
+  name: 'ArweaveKit',
+  value: 'REPLACE-WITH-ARWEAVEKIT-VERSION',
+} as Tag;
 
 export const createArweaveKit = <T extends Record<string, any> = {}>(
   initialPlugins: T
