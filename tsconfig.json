@@ -12,11 +12,7 @@
     "sourceMap": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "baseUrl": "./",
-    "paths": {
-      "#utils": ["src/utils.ts"]
-    }
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "__tests__/*", "dist/"]

@@ -59,9 +59,6 @@
     "warp-contracts": "^1.4.17",
     "warp-contracts-plugin-deploy": "^1.0.9"
   },
-  "imports": {
-    "#utils": "./dist/utils.js"
-  },
   "exports": {
     ".": {
       "import": "./dist/index.js"

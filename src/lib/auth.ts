@@ -4,7 +4,7 @@ import {
   UserDetailsReturnProps,
 } from '../types/auth';
 import { Othent as othent } from 'othent';
-import { createArweaveKit } from '#utils';
+import { createArweaveKit } from '../utils';
 
 /***
  * connect to arconnect wallet
