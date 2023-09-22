@@ -6,6 +6,16 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 
 jest.setTimeout(300000);
 
+jest.mock('../../src/utils', () => {
+  const version = JSON.parse(
+    readFileSync('./package.json', { encoding: 'utf-8' })
+  ).version;
+  return {
+    ...jest.requireActual('../../src/utils'),
+    appVersionTag: { name: 'ArweaveKit', value: version },
+  };
+});
+
 describe('Create Transaction', () => {
   let key: JWKInterface, data: string;
 

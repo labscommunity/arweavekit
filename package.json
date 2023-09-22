@@ -14,7 +14,7 @@
   "scripts": {
     "tsc": "tsc -p tsconfig.json",
     "rollup:build": "rm -rf ./dist && npx rollup -c",
-    "build": "rimraf ./dist && yarn tsc && tsc-esm-fix --tsconfig tsconfig.json",
+    "build": "rimraf ./dist && yarn tsc && tsc-esm-fix --tsconfig tsconfig.json && tsx scripts/embedVersion.ts",
     "prepack": "yarn build",
     "test": "jest --config jestconfig.json",
     "lint": "tslint -p tsconfig.json",
@@ -46,6 +46,7 @@
     "tsc-esm-fix": "^2.20.17",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
+    "tsx": "^3.12.10",
     "typescript": "^4.9.5"
   },
   "dependencies": {
