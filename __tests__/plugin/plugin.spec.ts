@@ -21,7 +21,7 @@ describe('Plugins', () => {
       }).use({ name: 'pluginThree', plugin: pluginTwo });
 
       // if not thrown error fail the test
-      fail('must throw error');
+      throw new Error('must throw error');
     } catch (error: any) {
       expect(error.message).toBe(
         'Plugin name already exists, please change plugin name.'
@@ -37,7 +37,7 @@ describe('Plugins', () => {
       });
 
       // if not thrown error fail the test
-      fail('must throw error');
+      throw new Error('must throw error');
     } catch (error: any) {
       expect(error.message).toBe('Please provide a valid plugin name.');
     }

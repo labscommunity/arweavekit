@@ -17,7 +17,7 @@ describe('Encryption AES', () => {
     expect(dataToEncrypt).toStrictEqual(decryptedData);
   });
 
-  it('should not encrypt and decrypt data when incorrect key provided', async () => {
+  it('should not decrypt data when incorrect key provided', async () => {
     const dataToEncrypt = new TextEncoder().encode('Hello World!').buffer;
 
     const { rawEncryptedKeyAsBase64, combinedArrayBuffer } =
@@ -32,9 +32,31 @@ describe('Encryption AES', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected decryptDataWithAES to throw an error');
+      throw new Error('Expected decryptDataWithAES to throw an error');
     } catch (err: any) {
       expect(err.message).toBe('Invalid key length');
+    }
+  });
+
+  it('should not decrypt data when incorrect encrypted data and key provided', async () => {
+    const dataToEncryptOne = new TextEncoder().encode('Hello World One!');
+    const dataToEncryptTwo = new TextEncoder().encode('Hello World Two!');
+
+    const encryptedOne = await encryptDataWithAES({ data: dataToEncryptOne });
+    const encryptedTwo = await encryptDataWithAES({ data: dataToEncryptTwo });
+
+    try {
+      await decryptDataWithAES({
+        data: encryptedOne.combinedArrayBuffer,
+        key: encryptedTwo.rawEncryptedKeyAsBase64,
+      });
+
+      // If the function doesn't throw an error, fail the test
+      throw new Error('Expected decryptDataWithAES to throw an error');
+    } catch (err: any) {
+      expect(err.message).toBe(
+        'The operation failed for an operation-specific reason'
+      );
     }
   });
 });

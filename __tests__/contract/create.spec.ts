@@ -45,7 +45,7 @@ describe('Create Contract', () => {
         contractSource: contractSrc,
       });
       // If the function doesn't throw an error, fail the test
-      fail('Expected createContract to throw an error');
+      throw new Error('Expected createContract to throw an error');
     } catch (error: any) {
       expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }
@@ -60,7 +60,7 @@ describe('Create Contract', () => {
         contractSource: contractSrc,
       });
       // If the function doesn't throw an error, fail the test
-      fail('Expected createContract to throw an error');
+      throw new Error('Expected createContract to throw an error');
     } catch (error: any) {
       expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }
@@ -144,6 +144,26 @@ describe('Create Contract', () => {
     expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
   });
 
+  it('should not create a new contract with ethereum wallet passed in on local', async () => {
+    try {
+      const key = crypto.randomBytes(32).toString('hex');
+
+      const { contract, result } = await createContract({
+        environment: 'local',
+        wallet: key,
+        initialState: initState,
+        contractSource: contractSrc,
+      });
+
+      // If the function doesn't throw an error, fail the test
+      throw new Error('Expected createContract to throw an error');
+    } catch (error: any) {
+      expect(error.message).toBe(
+        'Only ArWallet | CustomSignature wallet type are allowed when bundling is disabled.'
+      );
+    }
+  });
+
   it('should not create a new contract if wallet not passed on node environment', async () => {
     try {
       await createContract({
@@ -153,7 +173,7 @@ describe('Create Contract', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected createContract to throw an error');
+      throw new Error('Expected createContract to throw an error');
     } catch (error: any) {
       expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }

@@ -24,7 +24,28 @@ describe('Read Contract State', () => {
     }));
   });
 
-  it('should read initial state', async () => {
+  it('should read initial state on local', async () => {
+    const { contractTxId } = await createContract({
+      wallet: key,
+      environment: 'local',
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    const { readContract } = await readContractState({
+      environment: 'local',
+      contractTxId,
+    });
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect(readContract.cachedValue.state).toEqual({ counter: 0 });
+  });
+
+  it('should read initial state on testnet', async () => {
     const { contractTxId } = await createContract({
       wallet: key,
       environment: 'testnet',
@@ -43,8 +64,6 @@ describe('Read Contract State', () => {
     expect(typeof readContract.cachedValue.state).toBe('object');
     expect(typeof readContract.cachedValue.validity).toBe('object');
     expect(readContract.cachedValue.state).toEqual({ counter: 0 });
-
-    console.log('Res', readContract);
   });
 
   it('should read state from mainnet', async () => {
@@ -85,7 +104,7 @@ describe('Read Contract State', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected readContractState to throw an error');
+      throw new Error('Expected readContractState to throw an error');
     } catch (error: any) {
       expect(
         error.message.includes(`Unable to retrieve tx ${contractTxId}`)
