@@ -64,6 +64,31 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 
+  it('should create and write to contract on testnet with vrf', async () => {
+    const { contractTxId } = await createContract({
+      environment: 'testnet',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    const writeResult = await writeContract({
+      environment: 'testnet',
+      contractTxId: contractTxId,
+      wallet: key,
+      options: {
+        function: 'random',
+      },
+      vrf: true,
+    });
+
+    expect(writeResult.state).toBeDefined();
+    expect(typeof writeResult.state).toBe('object');
+    expect(writeResult.state).toHaveProperty('counter');
+    expect((writeResult.state as any).counter).toBeGreaterThanOrEqual(1);
+    expect((writeResult.state as any).counter).toBeLessThanOrEqual(100);
+  });
+
   it('should create and not write to contract if wallet not passed on node local', async () => {
     const { contractTxId } = await createContract({
       environment: 'local',
