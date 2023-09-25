@@ -388,7 +388,9 @@ export async function writeContract(params: Types.WriteContractProps) {
   };
   let { wallet, callbackResponse } = await initWalletCallback(params, callback);
 
-  const contract = warp.contract(params.contractTxId).connect(wallet);
+  const contract = warp.contract(params.contractTxId)
+    .setEvaluationOptions({ ...params.evaluationOptions })
+    .connect(wallet);
 
   const readState = await contract.readState();
 
