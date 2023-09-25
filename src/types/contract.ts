@@ -7,6 +7,8 @@ import type {
   Tags,
 } from 'warp-contracts';
 
+export type Environment = 'local' | 'testnet' | 'mainnet';
+
 export interface CreateContractProps {
   wallet?: ArWallet | string;
   initialState: string;
@@ -17,7 +19,7 @@ export interface CreateContractProps {
     body: string | Buffer;
   };
   evaluationManifest?: EvaluationManifest;
-  environment: 'local' | 'testnet' | 'mainnet';
+  environment: Environment;
   strategy?: 'arweave' | 'ethereum' | 'both';
 }
 
@@ -31,7 +33,7 @@ export interface CreateContractReturnProps {
 }
 
 export interface WriteContractProps {
-  environment: 'local' | 'testnet' | 'mainnet';
+  environment: Environment;
   contractTxId: string;
   wallet?: ArWallet | string;
   options: {};
@@ -43,10 +45,20 @@ export interface WriteContractProps {
 }
 
 export interface ReadContractProps {
-  environment: 'local' | 'testnet' | 'mainnet';
+  environment: Environment;
   evaluationOptions?: Partial<EvaluationOptions>;
   contractTxId: string;
   cacheOptions?: CacheOptions;
+}
+
+export interface ViewContractProps {
+  wallet?: ArWallet | string;
+  environment: Environment;
+  evaluationOptions?: Partial<EvaluationOptions>;
+  contractTxId: string;
+  cacheOptions?: CacheOptions;
+  strategy?: 'arweave' | 'ethereum' | 'both';
+  options: {};
 }
 
 export interface WriteContractWOthentProps {
@@ -78,6 +90,11 @@ export interface ReadContractWOthentReturnProps {
   errors: object;
   validity: object;
 }
+
+export type ContractProps =
+  | CreateContractProps
+  | WriteContractProps
+  | ViewContractProps;
 
 export type PermissionType =
   | 'ACCESS_ADDRESS'

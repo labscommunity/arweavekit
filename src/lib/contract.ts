@@ -1,4 +1,11 @@
-import type { CacheOptions, JWKInterface, Tag } from 'warp-contracts';
+import type {
+  CacheOptions,
+  JWKInterface,
+  Tag,
+  ContractDeploy,
+  WriteInteractionResponse,
+  InteractionResult,
+} from 'warp-contracts';
 import * as Types from '../types/contract';
 import { Othent as othent } from 'othent';
 import { appVersionTag, createArweaveKit } from '../utils';
@@ -12,7 +19,7 @@ import { ethers } from 'ethers';
  * @returns An instance of Warp.
  */
 const getWarpInstance = async (
-  environment: 'local' | 'testnet' | 'mainnet',
+  environment: Types.Environment,
   useDeployPlugin = false,
   cacheOptions?: CacheOptions
 ) => {
@@ -79,13 +86,7 @@ function isValidArweaveAddress(address: string) {
   return true;
 }
 
-const getDeployPlugin = async (): Promise<{
-  ArweaveSigner: any;
-  InjectedArweaveSigner: any;
-  InjectedEthereumSigner: any;
-  EthereumSigner: any;
-  DeployPlugin: any;
-}> => {
+const getDeployPlugin = async () => {
   if (typeof window !== 'undefined') {
     const {
       DeployPlugin,
@@ -128,10 +129,13 @@ const getDeployPlugin = async (): Promise<{
  * @param callback Callback function
  * @returns wallet and callback function response
  */
-async function initWalletCallback(
-  params: Types.CreateContractProps | Types.WriteContractProps,
+async function initWalletCallback<ReturnType>(
+  params: Types.ContractProps,
   callback: (wallet: any) => Promise<any>
-) {
+): Promise<{
+  wallet: any;
+  callbackResponse: ReturnType;
+}> {
   let wallet: any;
   let callbackResponse: any;
 
@@ -271,9 +275,7 @@ async function initWalletCallback(
  * Initialize strategy based on wallet
  * @param params - CreateContractProps | WriteContractProps
  */
-function initStrategy(
-  params: Types.CreateContractProps | Types.WriteContractProps
-) {
+function initStrategy(params: Types.ContractProps) {
   if (typeof window === 'undefined') {
     params.strategy = isJwk(params.wallet)
       ? 'arweave'
@@ -311,7 +313,7 @@ export async function createContract(
       wallet,
       initState: params.initialState,
       evaluationManifest: params.evaluationManifest,
-      tags: params.tags,
+      tags: [...(params.tags || []), appVersionTag],
       data: params.data,
     };
     if (
@@ -330,7 +332,7 @@ export async function createContract(
     }
   };
 
-  const { wallet, callbackResponse } = await initWalletCallback(
+  const { wallet, callbackResponse } = await initWalletCallback<ContractDeploy>(
     params,
     callback
   );
@@ -370,25 +372,22 @@ export async function writeContract(params: Types.WriteContractProps) {
   let status: number = 400;
   let statusText: string = 'UNSUCCESSFUL';
 
+  const contract = warp
+    .contract(params.contractTxId)
+    .setEvaluationOptions({ ...params.evaluationOptions });
+
   const callback = async (wallet: any) => {
-    const contract = warp
-      .contract(params.contractTxId)
-      .setEvaluationOptions({ ...params.evaluationOptions })
-      .connect(wallet);
+    contract.connect(wallet);
 
     return contract.writeInteraction(params.options, {
-      tags: [
-        ...(params.tags || []),
-        appVersionTag,
-      ] as Tag[],
+      tags: [...(params.tags || []), appVersionTag] as Tag[],
       vrf: params.vrf,
       disableBundling:
         wallet === 'use_wallet' || params.environment === 'local',
     });
   };
-  let { wallet, callbackResponse } = await initWalletCallback(params, callback);
-
-  const contract = warp.contract(params.contractTxId).connect(wallet);
+  let { callbackResponse } =
+    await initWalletCallback<WriteInteractionResponse | null>(params, callback);
 
   const readState = await contract.readState();
 
@@ -435,6 +434,56 @@ export async function readContractState(params: Types.ReadContractProps) {
 
   return {
     readContract,
+    result: {
+      status,
+      statusText,
+    },
+  };
+}
+
+/**
+ * view state of warp contract
+ * @params ReadContractProps
+ */
+export async function viewContractState<State, Result>(
+  params: Types.ViewContractProps
+) {
+  const warp = await getWarpInstance(
+    params.environment,
+    false,
+    params.cacheOptions
+  );
+
+  initStrategy(params);
+
+  let status: number = 400;
+  let statusText: string = 'UNSUCCESSFUL';
+
+  const contract = warp
+    .contract(params.contractTxId)
+    .setEvaluationOptions({ ...params.evaluationOptions });
+
+  const callback = async (wallet: any) => {
+    contract.connect(wallet);
+    return await contract.viewState({ ...params.options });
+  };
+
+  let callbackResponse: InteractionResult<unknown, unknown>;
+  try {
+    ({ callbackResponse } = await initWalletCallback<
+      InteractionResult<unknown, unknown>
+    >(params, callback));
+  } catch (error) {
+    callbackResponse = await contract.viewState({ ...params.options });
+  }
+
+  if (callbackResponse.type === 'ok') {
+    status = 200;
+    statusText = 'SUCCESSFUL';
+  }
+
+  return {
+    viewContract: callbackResponse as InteractionResult<State, Result>,
     result: {
       status,
       statusText,

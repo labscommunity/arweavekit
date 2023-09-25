@@ -12,6 +12,10 @@ const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
 );
+const contractSrcBigInt = readFileSync(
+  '__tests__/contract/data/contract-bigint.js',
+  'utf-8'
+);
 const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 
 jest.setTimeout(120000);
@@ -62,6 +66,39 @@ describe('Write Contracts', () => {
     expect(typeof readContract.cachedValue.state).toBe('object');
     expect(typeof readContract.cachedValue.validity).toBe('object');
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
+  });
+
+  it('should create and write to contract on local bigint', async () => {
+    const evaluationOptions = { allowBigInt: true };
+    const { contractTxId } = await createContract({
+      environment: 'local',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrcBigInt,
+    });
+
+    await writeContract({
+      environment: 'local',
+      contractTxId: contractTxId,
+      wallet: key,
+      options: {
+        function: 'initialize',
+      },
+      evaluationOptions,
+    });
+
+    const { readContract } = await readContractState({
+      environment: 'local',
+      contractTxId: contractTxId,
+      evaluationOptions,
+    });
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect(readContract.cachedValue.state).toEqual({ counter: BigInt(10) });
   });
 
   it('should create and write to contract on testnet with vrf', async () => {
