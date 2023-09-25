@@ -126,7 +126,7 @@ describe('Create Transaction', () => {
     expect(decodeTags(txn.transaction.tags)).toEqual([appVersionTag]);
     expect(txn.transaction.target).toBe(receiverAddress);
     expect(txn.transaction.quantity).toEqual(sendQuantity);
-    expect(parseInt(beforeReceiverBalance)).toBeLessThan(
+    expect(parseInt(beforeReceiverBalance) + parseInt(sendQuantity)).toEqual(
       parseInt(afterReceiverBalance)
     );
   });

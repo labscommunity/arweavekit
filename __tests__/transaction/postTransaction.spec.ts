@@ -93,7 +93,7 @@ describe('Post Transaction', () => {
     ]);
     expect(postedTransaction.transaction.target).toBe(receiverAddress);
     expect(postedTransaction.transaction.quantity).toEqual(sendQuantity);
-    expect(parseInt(beforeReceiverBalance)).toBeLessThan(
+    expect(parseInt(beforeReceiverBalance) + parseInt(sendQuantity)).toEqual(
       parseInt(afterReceiverBalance)
     );
   });

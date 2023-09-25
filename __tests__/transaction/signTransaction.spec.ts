@@ -135,7 +135,7 @@ describe('Sign Transaction', () => {
     ]);
     expect(signedTransaction.createdTransaction.target).toBe(receiverAddress);
     expect(signedTransaction.createdTransaction.quantity).toEqual(sendQuantity);
-    expect(parseInt(beforeReceiverBalance)).toBeLessThan(
+    expect(parseInt(beforeReceiverBalance) + parseInt(sendQuantity)).toEqual(
       parseInt(afterReceiverBalance)
     );
   });
