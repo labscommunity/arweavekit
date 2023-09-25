@@ -21,7 +21,7 @@ describe('Plugins', () => {
       }).use({ name: 'pluginThree', plugin: pluginTwo });
 
       // if not thrown error fail the test
-      fail('must throw error');
+      throw new Error('must throw error');
     } catch (error: any) {
       expect(error.message).toBe(
         'Plugin name already exists, please change plugin name.'
@@ -37,7 +37,7 @@ describe('Plugins', () => {
       });
 
       // if not thrown error fail the test
-      fail('must throw error');
+      throw new Error('must throw error');
     } catch (error: any) {
       expect(error.message).toBe('Please provide a valid plugin name.');
     }
@@ -59,5 +59,19 @@ describe('Plugins', () => {
     functionNames.forEach((functionName) => {
       expect(!!(arweaveKit as any)[functionName]).toBeTruthy();
     });
+  });
+
+  it('should be able to use wallet functions', async () => {
+    const { key } = await ArweaveKit.createWallet({ environment: 'local' });
+    const address = await ArweaveKit.getAddress({ environment: 'local', key });
+    const balance = await ArweaveKit.getBalance({
+      environment: 'local',
+      address,
+      options: { winstonToAr: true },
+    });
+
+    expect(key).toBeDefined();
+    expect(address).toBeDefined();
+    expect(parseFloat(balance)).toEqual(1.0);
   });
 });

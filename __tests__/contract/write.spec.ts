@@ -64,6 +64,31 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 
+  it('should create and write to contract on testnet with vrf', async () => {
+    const { contractTxId } = await createContract({
+      environment: 'testnet',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    const writeResult = await writeContract({
+      environment: 'testnet',
+      contractTxId: contractTxId,
+      wallet: key,
+      options: {
+        function: 'random',
+      },
+      vrf: true,
+    });
+
+    expect(writeResult.state).toBeDefined();
+    expect(typeof writeResult.state).toBe('object');
+    expect(writeResult.state).toHaveProperty('counter');
+    expect((writeResult.state as any).counter).toBeGreaterThanOrEqual(1);
+    expect((writeResult.state as any).counter).toBeLessThanOrEqual(100);
+  });
+
   it('should create and not write to contract if wallet not passed on node local', async () => {
     const { contractTxId } = await createContract({
       environment: 'local',
@@ -82,7 +107,7 @@ describe('Write Contracts', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected writeContract to throw an error');
+      throw new Error('Expected writeContract to throw an error');
     } catch (error: any) {
       expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }
@@ -106,13 +131,13 @@ describe('Write Contracts', () => {
         },
       });
       // If the function doesn't throw an error, fail the test
-      fail('Expected writeContract to throw an error');
+      throw new Error('Expected writeContract to throw an error');
     } catch (error: any) {
       expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }
   });
 
-  it('should create and not write to contract with use_wallet passed in node environment', async () => {
+  it('should create and not write to contract with invalid wallet passed in node environment', async () => {
     const { contractTxId } = await createContract({
       environment: 'local',
       wallet: key,
@@ -130,13 +155,13 @@ describe('Write Contracts', () => {
         },
       });
       // If the function doesn't throw an error, fail the test
-      fail('Expected writeContract to throw an error');
+      throw new Error('Expected writeContract to throw an error');
     } catch (error: any) {
       expect(error.message).toBe('[ArweaveKit] Failed to initialize signer.');
     }
   });
 
-  it('should create, write to and rewrite on contract on testnet', async () => {
+  it('should create, write to and read a contract on testnet', async () => {
     const { contractTxId } = await createContract({
       environment: 'testnet',
       wallet: key,
@@ -167,7 +192,7 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 
-  it('should create, write to and rewrite on contract on testnet with ethereum', async () => {
+  it('should create, write to and read a contract on testnet with ethereum', async () => {
     const key = crypto.randomBytes(32).toString('hex');
 
     const { contractTxId } = await createContract({
@@ -197,5 +222,29 @@ describe('Write Contracts', () => {
     expect(typeof readContract.cachedValue.state).toBe('object');
     expect(typeof readContract.cachedValue.validity).toBe('object');
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
+  });
+
+  it('should fail to write a contract on local with ethereum', async () => {
+    const { contractTxId } = await createContract({
+      environment: 'local',
+      wallet: key,
+      initialState: initState,
+      contractSource: contractSrc,
+    });
+
+    try {
+      await writeContract({
+        environment: 'local',
+        contractTxId: contractTxId,
+        wallet: crypto.randomBytes(32).toString('hex'),
+        options: {
+          function: 'fifty',
+        },
+      });
+    } catch (error: any) {
+      expect(error.message).toBe(
+        'Unable to use signing function of type: ethereum when bundling is disabled.'
+      );
+    }
   });
 });

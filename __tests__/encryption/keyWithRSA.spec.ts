@@ -7,14 +7,13 @@ import {
 
 describe('Encryption RSA', () => {
   let wallet: JWKInterface;
+  const keyToEncrypt = 'ArweaveKit';
 
   beforeAll(async () => {
     ({ key: wallet } = await createWallet({ environment: 'mainnet' }));
   });
 
   it('should encrypt and decrypt key', async () => {
-    const keyToEncrypt = 'ArweaveKit';
-
     const encryptedKey = await encryptAESKeywithRSA({
       key: keyToEncrypt,
       wallet,
@@ -27,22 +26,44 @@ describe('Encryption RSA', () => {
     expect(keyToEncrypt).toBe(decryptedKey);
   });
 
+  it('should not encrypt and decrypt with different wallets', async () => {
+    const encryptedKey = await encryptAESKeywithRSA({
+      key: keyToEncrypt,
+      wallet,
+    });
+
+    const { key: anotherWallet } = await createWallet({
+      environment: 'mainnet',
+    });
+
+    try {
+      const decryptedKey = await decryptAESKeywithRSA({
+        key: encryptedKey,
+        wallet: anotherWallet,
+      });
+      // If the function doesn't throw an error, fail the test
+      throw new Error('Expected decryptAESKeywithRSA to throw an error');
+    } catch (err: any) {
+      expect(err.message).toBe(
+        'The operation failed for an operation-specific reason'
+      );
+    }
+  });
+
   it('should throw error when wallet not provided to `encryptAESKeywithRSA`', async () => {
-    const keyToEncrypt = 'ArweaveKit';
     try {
       await encryptAESKeywithRSA({
         key: keyToEncrypt,
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected encryptAESKeywithRSA to throw an error');
+      throw new Error('Expected encryptAESKeywithRSA to throw an error');
     } catch (err: any) {
       expect(err.message).toBe('Wallet JWK not provided');
     }
   });
 
   it('should throw error when wallet not provided to `decryptAESKeywithRSA`', async () => {
-    const keyToEncrypt = 'ArweaveKit';
     const encryptedKey = await encryptAESKeywithRSA({
       key: keyToEncrypt,
       wallet,
@@ -54,14 +75,13 @@ describe('Encryption RSA', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected decryptAESKeywithRSA to throw an error');
+      throw new Error('Expected decryptAESKeywithRSA to throw an error');
     } catch (err: any) {
       expect(err.message).toBe('Wallet JWK not provided');
     }
   });
 
   it('should throw error when invalid wallet provided to `encryptAESKeywithRSA`', async () => {
-    const keyToEncrypt = 'ArweaveKit';
     try {
       await encryptAESKeywithRSA({
         key: keyToEncrypt,
@@ -69,14 +89,13 @@ describe('Encryption RSA', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected encryptAESKeywithRSA to throw an error');
+      throw new Error('Expected encryptAESKeywithRSA to throw an error');
     } catch (err: any) {
       expect(err.message).toBe('Wallet JWK invalid');
     }
   });
 
   it('should throw error when wallet `use_wallet` provided to `encryptAESKeywithRSA`', async () => {
-    const keyToEncrypt = 'ArweaveKit';
     try {
       await encryptAESKeywithRSA({
         key: keyToEncrypt,
@@ -84,14 +103,13 @@ describe('Encryption RSA', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected encryptAESKeywithRSA to throw an error');
+      throw new Error('Expected encryptAESKeywithRSA to throw an error');
     } catch (err: any) {
       expect(err.message).toBe('Wallet JWK not provided');
     }
   });
 
   it('should throw error when invalid wallet provided to `decryptAESKeywithRSA`', async () => {
-    const keyToEncrypt = 'ArweaveKit';
     const encryptedKey = await encryptAESKeywithRSA({
       key: keyToEncrypt,
       wallet,
@@ -104,14 +122,13 @@ describe('Encryption RSA', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected decryptAESKeywithRSA to throw an error');
+      throw new Error('Expected decryptAESKeywithRSA to throw an error');
     } catch (err: any) {
       expect(err.message).toBe('Wallet JWK invalid');
     }
   });
 
   it('should throw error when wallet `use_wallet` provided to `decryptAESKeywithRSA`', async () => {
-    const keyToEncrypt = 'ArweaveKit';
     const encryptedKey = await encryptAESKeywithRSA({
       key: keyToEncrypt,
       wallet,
@@ -124,7 +141,7 @@ describe('Encryption RSA', () => {
       });
 
       // If the function doesn't throw an error, fail the test
-      fail('Expected decryptAESKeywithRSA to throw an error');
+      throw new Error('Expected decryptAESKeywithRSA to throw an error');
     } catch (err: any) {
       expect(err.message).toBe('Wallet JWK not provided');
     }
