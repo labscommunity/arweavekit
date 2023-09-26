@@ -12,19 +12,23 @@ const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
 );
-const contractSrcBigInt = readFileSync(
-  '__tests__/contract/data/contract-bigint.js',
+const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
+const contractSrcEval = readFileSync(
+  '__tests__/contract/data/contract-evaloptions.js',
   'utf-8'
 );
-const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
+const initStateEval = readFileSync(
+  '__tests__/contract/data/state-evaloptions.json',
+  'utf-8'
+);
 
 jest.setTimeout(120000);
 
 describe('Write Contracts', () => {
-  let key: JWKInterface;
+  let key: JWKInterface, walletAddress: string;
 
   beforeAll(async () => {
-    ({ key } = await createWallet({
+    ({ key, walletAddress } = await createWallet({
       environment: 'local',
     }));
   });
@@ -68,13 +72,16 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 
-  it('should create and write to contract on local bigint', async () => {
+  it('should create and write to contract with bigint on local', async () => {
     const evaluationOptions = { allowBigInt: true };
     const { contractTxId } = await createContract({
       environment: 'local',
       wallet: key,
-      initialState: initState,
-      contractSource: contractSrcBigInt,
+      initialState: JSON.stringify({
+        ...JSON.parse(initStateEval),
+        creator: walletAddress,
+      }),
+      contractSource: contractSrcEval,
     });
 
     await writeContract({
@@ -98,7 +105,10 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.validity).toBeDefined();
     expect(typeof readContract.cachedValue.state).toBe('object');
     expect(typeof readContract.cachedValue.validity).toBe('object');
-    expect(readContract.cachedValue.state).toEqual({ counter: BigInt(10) });
+    expect(readContract.cachedValue.state).toEqual({
+      counter: BigInt(10),
+      creator: walletAddress,
+    });
   });
 
   it('should create and write to contract on testnet with vrf', async () => {

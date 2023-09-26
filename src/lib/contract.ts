@@ -522,7 +522,7 @@ export async function writeContractWOthent(
   const signedTransaction = await othentInstance.signTransactionWarp({
     othentFunction: params.othentFunction,
     data: params.data,
-    tags: [appVersionTag],
+    tags: [...(params.tags || []), appVersionTag],
   });
 
   const postedTransaction = await othentInstance.sendTransactionWarp(

@@ -11,14 +11,19 @@ const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
 );
-const initState = readFileSync(
-  '__tests__/contract/data/state-view.json',
+const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
+const contractSrcEval = readFileSync(
+  '__tests__/contract/data/contract-evaloptions.js',
+  'utf-8'
+);
+const initStateEval = readFileSync(
+  '__tests__/contract/data/state-evaloptions.json',
   'utf-8'
 );
 
 jest.setTimeout(120000);
 
-describe('Read Contract State', () => {
+describe('View Contract State', () => {
   let key: JWKInterface, walletAddress: string;
 
   beforeAll(async () => {
@@ -55,6 +60,50 @@ describe('Read Contract State', () => {
 
     expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
     expect(viewContract.result).toEqual(walletAddress);
+  });
+
+  it('should do internal write and view state on local', async () => {
+    const evaluationOptions = {
+      allowBigInt: true,
+      internalWrites: true,
+    };
+    const { contractTxId: contractTxId1 } = await createContract({
+      wallet: key,
+      environment: 'local',
+      initialState: initStateEval,
+      contractSource: contractSrcEval,
+    });
+
+    const { contractTxId: contractTxId2 } = await createContract({
+      wallet: key,
+      environment: 'local',
+      initialState: initStateEval,
+      contractSource: contractSrcEval,
+    });
+
+    const { state } = await writeContract({
+      wallet: key,
+      environment: 'local',
+      contractTxId: contractTxId1,
+      options: {
+        function: 'internalWrite',
+        contractId: contractTxId2,
+      },
+      evaluationOptions,
+    });
+
+    const { viewContract, result } = await viewContractState({
+      wallet: key,
+      environment: 'local',
+      contractTxId: contractTxId2,
+      options: {
+        function: 'counter',
+      },
+      evaluationOptions,
+    });
+
+    expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
+    expect(viewContract.result).toEqual((state as any).counter);
   });
 
   it('should update contract creator and get creator on testnet', async () => {
