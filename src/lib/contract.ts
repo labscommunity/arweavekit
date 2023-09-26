@@ -458,6 +458,8 @@ export async function viewContractState<State, Result>(
     params.cacheOptions
   );
 
+  params.connectWallet = params.connectWallet ?? true;
+
   initStrategy(params);
 
   let status: number = 400;
@@ -474,6 +476,9 @@ export async function viewContractState<State, Result>(
 
   let callbackResponse: InteractionResult<unknown, unknown>;
   try {
+    if (!params.connectWallet) {
+      throw new Error('View state without connecting wallet');
+    }
     ({ callbackResponse } = await initWalletCallback<
       InteractionResult<unknown, unknown>
     >(params, callback));

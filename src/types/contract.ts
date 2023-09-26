@@ -58,6 +58,7 @@ export interface ViewContractProps {
   contractTxId: string;
   cacheOptions?: CacheOptions;
   strategy?: 'arweave' | 'ethereum' | 'both';
+  connectWallet?: boolean;
   options: {};
 }
 
