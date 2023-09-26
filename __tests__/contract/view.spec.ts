@@ -110,14 +110,14 @@ describe('View Contract State', () => {
   it('should update contract creator and get creator on testnet', async () => {
     const { contractTxId } = await createContract({
       wallet: key,
-      environment: 'local',
+      environment: 'testnet',
       initialState: initState,
       contractSource: contractSrc,
     });
 
     await writeContract({
       wallet: key,
-      environment: 'local',
+      environment: 'testnet',
       contractTxId,
       options: {
         function: 'updateCreator',
@@ -126,7 +126,7 @@ describe('View Contract State', () => {
 
     const { viewContract, result } = await viewContractState({
       wallet: key,
-      environment: 'local',
+      environment: 'testnet',
       contractTxId,
       options: {
         function: 'getCreator',
