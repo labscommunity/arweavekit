@@ -7,6 +7,7 @@ import {
 } from '../../src/index';
 import { readFileSync } from 'fs';
 
+type ContractState = { counter: number };
 const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
@@ -81,7 +82,7 @@ describe('View Contract State', () => {
       contractSource: contractSrcEval,
     });
 
-    const { state } = await writeContract({
+    const { state } = await writeContract<ContractState>({
       wallet: key,
       environment: 'local',
       contractTxId: contractTxId1,
@@ -103,7 +104,7 @@ describe('View Contract State', () => {
     });
 
     expect(result).toEqual({ status: 200, statusText: 'SUCCESSFUL' });
-    expect(viewContract.result).toEqual((state as any).counter);
+    expect(viewContract.result).toEqual(state.counter);
   });
 
   it('should update contract creator and get creator on testnet', async () => {

@@ -12,6 +12,8 @@ const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
 );
+
+type ContractState = { counter: number };
 const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
 const contractSrcEval = readFileSync(
   '__tests__/contract/data/contract-evaloptions.js',
@@ -119,7 +121,7 @@ describe('Write Contracts', () => {
       contractSource: contractSrc,
     });
 
-    const writeResult = await writeContract({
+    const writeResult = await writeContract<ContractState>({
       environment: 'testnet',
       contractTxId: contractTxId,
       wallet: key,
@@ -132,8 +134,8 @@ describe('Write Contracts', () => {
     expect(writeResult.state).toBeDefined();
     expect(typeof writeResult.state).toBe('object');
     expect(writeResult.state).toHaveProperty('counter');
-    expect((writeResult.state as any).counter).toBeGreaterThanOrEqual(1);
-    expect((writeResult.state as any).counter).toBeLessThanOrEqual(100);
+    expect(writeResult.state.counter).toBeGreaterThanOrEqual(1);
+    expect(writeResult.state.counter).toBeLessThanOrEqual(100);
   });
 
   it('should create and not write to contract if wallet not passed on node local', async () => {

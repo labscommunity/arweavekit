@@ -361,7 +361,7 @@ export async function createContract(
  * @params WriteContractProps
  */
 
-export async function writeContract(params: Types.WriteContractProps) {
+export async function writeContract<State>(params: Types.WriteContractProps) {
   const warp = await getWarpInstance(
     params.environment,
     false,
@@ -373,7 +373,7 @@ export async function writeContract(params: Types.WriteContractProps) {
   let statusText: string = 'UNSUCCESSFUL';
 
   const contract = warp
-    .contract(params.contractTxId)
+    .contract<State>(params.contractTxId)
     .setEvaluationOptions({ ...params.evaluationOptions });
 
   const callback = async (wallet: any) => {
@@ -411,7 +411,9 @@ export async function writeContract(params: Types.WriteContractProps) {
  * @params ReadContractProps
  */
 
-export async function readContractState(params: Types.ReadContractProps) {
+export async function readContractState<State>(
+  params: Types.ReadContractProps
+) {
   const warp = await getWarpInstance(
     params.environment,
     false,
@@ -422,7 +424,7 @@ export async function readContractState(params: Types.ReadContractProps) {
   let statusText: string = 'UNSUCCESSFUL';
 
   const contract = warp
-    .contract(params.contractTxId)
+    .contract<State>(params.contractTxId)
     .setEvaluationOptions({ ...params.evaluationOptions });
 
   const readContract = await contract.readState();
