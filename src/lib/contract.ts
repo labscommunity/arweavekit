@@ -181,6 +181,7 @@ async function initWalletCallback<ReturnType>(
       wallet = new InjectedArweaveSigner(window.arweaveWallet);
     }
     await wallet.setPublicKey();
+    wallet.getAddress = () => wallet.signer.getActiveAddress;
   };
 
   const handleEthereumWallet = async () => {
@@ -193,6 +194,7 @@ async function initWalletCallback<ReturnType>(
     // @ts-ignore
     wallet = new InjectedEthereumSigner(provider);
     await wallet.setPublicKey();
+    wallet.getAddress = () => signer?.address;
   };
 
   if (params.wallet === 'use_wallet') {
