@@ -71,9 +71,9 @@ const isEthPrivateKey = (key: any): boolean => {
 /**
  * Check if passed address is a valid Arweave address.
  * @param address - Arweave address
- * @returns
+ * @returns {boolean} True if address is valid, otherwise false
  */
-function isValidArweaveAddress(address: string) {
+function isValidArweaveAddress(address: string): boolean {
   if (typeof address !== 'string' || address.length !== 43) {
     return false;
   }
@@ -125,7 +125,7 @@ const getDeployPlugin = async () => {
 
 /**
  * Initialize wallet and run callback function
- * @param params CreateContractProps | WriteContractProps
+ * @param params {@link Types.ContractProps}
  * @param callback Callback function
  * @returns wallet and callback function response
  */
@@ -275,7 +275,7 @@ async function initWalletCallback<ReturnType>(
 
 /**
  * Initialize strategy based on wallet
- * @param params - CreateContractProps | WriteContractProps
+ * @param params - {@link Types.ContractProps}
  */
 function initStrategy(params: Types.ContractProps) {
   if (typeof window === 'undefined') {
@@ -290,9 +290,9 @@ function initStrategy(params: Types.ContractProps) {
 }
 
 /***
- * create warp contract
- * @params CreateContractProps
- * @returns CreateContractReturnProps
+ * Create warp contract
+ * @param params - {@link Types.CreateContractProps}
+ * @returns {Types.CreateContractReturnProps} {@link Types.CreateContractReturnProps}
  */
 export async function createContract(
   params: Types.CreateContractProps
@@ -359,8 +359,8 @@ export async function createContract(
 }
 
 /**
- * write to warp contract
- * @params WriteContractProps
+ * Write to warp contract
+ * @param params - {@link Types.WriteContractProps}
  */
 
 export async function writeContract<State>(params: Types.WriteContractProps) {
@@ -409,8 +409,8 @@ export async function writeContract<State>(params: Types.WriteContractProps) {
 }
 
 /**
- * read state of warp contract
- * @params ReadContractProps
+ * Read state of warp contract
+ * @param params - {@link Types.ReadContractProps}
  */
 
 export async function readContractState<State>(
@@ -446,8 +446,8 @@ export async function readContractState<State>(
 }
 
 /**
- * view state of warp contract
- * @params ReadContractProps
+ * View state of warp contract
+ * @param params - {@link Types.ViewContractProps}
  */
 export async function viewContractState<State, Result>(
   params: Types.ViewContractProps
@@ -501,8 +501,8 @@ export async function viewContractState<State, Result>(
 }
 
 /**
- * get contract
- * @params contractTxId: string
+ * Get contract
+ * @param contractTxId - Contract transaction id
  * @returns Contract
  */
 export async function getContract(contractTxId: string) {
@@ -517,9 +517,9 @@ export async function getContract(contractTxId: string) {
 }
 
 /**
- * writeContractWOthent
- * @params WriteContractWOthentProps
- * @returns WriteContractWOthentReturnProps
+ * Write contract with Othent
+ * @param params - {@link Types.WriteContractWOthentProps}
+ * @returns {Types.WriteContractWOthentReturnProps} {@link Types.WriteContractWOthentReturnProps}
  */
 
 export async function writeContractWOthent(
@@ -546,9 +546,9 @@ export async function writeContractWOthent(
 }
 
 /**
- * readContractWOthent
- * @params ReadContractWOthentProps
- * @returns ReadContractWOthentReturnProps
+ * Read contract with Othent
+ * @param params - {@link Types.ReadContractWOthentProps}
+ * @returns {Types.ReadContractWOthentReturnProps} {@link Types.ReadContractWOthentReturnProps}
  */
 
 export async function readContractWOthent(
@@ -568,6 +568,7 @@ export const ArweaveKit = createArweaveKit({
   createContract,
   writeContract,
   readContractState,
+  viewContractState,
   getContract,
   writeContractWOthent,
   readContractWOthent,
