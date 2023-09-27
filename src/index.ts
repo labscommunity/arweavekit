@@ -12,6 +12,7 @@ export {
   createContract,
   writeContract,
   readContractState,
+  viewContractState,
   getContract,
   writeContractWOthent,
   readContractWOthent,

@@ -12,15 +12,25 @@ const contractSrc = readFileSync(
   '__tests__/contract/data/contract.js',
   'utf-8'
 );
+
+type ContractState = { counter: number };
 const initState = readFileSync('__tests__/contract/data/state.json', 'utf-8');
+const contractSrcEval = readFileSync(
+  '__tests__/contract/data/contract-evaloptions.js',
+  'utf-8'
+);
+const initStateEval = readFileSync(
+  '__tests__/contract/data/state-evaloptions.json',
+  'utf-8'
+);
 
 jest.setTimeout(120000);
 
 describe('Write Contracts', () => {
-  let key: JWKInterface;
+  let key: JWKInterface, walletAddress: string;
 
   beforeAll(async () => {
-    ({ key } = await createWallet({
+    ({ key, walletAddress } = await createWallet({
       environment: 'local',
     }));
   });
@@ -64,6 +74,45 @@ describe('Write Contracts', () => {
     expect(readContract.cachedValue.state).toEqual({ counter: 50 });
   });
 
+  it('should create and write to contract with bigint on local', async () => {
+    const evaluationOptions = { allowBigInt: true };
+    const { contractTxId } = await createContract({
+      environment: 'local',
+      wallet: key,
+      initialState: JSON.stringify({
+        ...JSON.parse(initStateEval),
+        creator: walletAddress,
+      }),
+      contractSource: contractSrcEval,
+    });
+
+    await writeContract({
+      environment: 'local',
+      contractTxId: contractTxId,
+      wallet: key,
+      options: {
+        function: 'initialize',
+      },
+      evaluationOptions,
+    });
+
+    const { readContract } = await readContractState({
+      environment: 'local',
+      contractTxId: contractTxId,
+      evaluationOptions,
+    });
+
+    expect(readContract.sortKey).toBeDefined();
+    expect(readContract.cachedValue.state).toBeDefined();
+    expect(readContract.cachedValue.validity).toBeDefined();
+    expect(typeof readContract.cachedValue.state).toBe('object');
+    expect(typeof readContract.cachedValue.validity).toBe('object');
+    expect(readContract.cachedValue.state).toEqual({
+      counter: BigInt(10),
+      creator: walletAddress,
+    });
+  });
+
   it('should create and write to contract on testnet with vrf', async () => {
     const { contractTxId } = await createContract({
       environment: 'testnet',
@@ -72,7 +121,7 @@ describe('Write Contracts', () => {
       contractSource: contractSrc,
     });
 
-    const writeResult = await writeContract({
+    const writeResult = await writeContract<ContractState>({
       environment: 'testnet',
       contractTxId: contractTxId,
       wallet: key,
@@ -85,8 +134,8 @@ describe('Write Contracts', () => {
     expect(writeResult.state).toBeDefined();
     expect(typeof writeResult.state).toBe('object');
     expect(writeResult.state).toHaveProperty('counter');
-    expect((writeResult.state as any).counter).toBeGreaterThanOrEqual(1);
-    expect((writeResult.state as any).counter).toBeLessThanOrEqual(100);
+    expect(writeResult.state.counter).toBeGreaterThanOrEqual(1);
+    expect(writeResult.state.counter).toBeLessThanOrEqual(100);
   });
 
   it('should create and not write to contract if wallet not passed on node local', async () => {
