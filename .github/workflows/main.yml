@@ -33,6 +33,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: 📦 Install Dependencies
+        run: yarn install
 
       - name: Unit Tests
         run: yarn test
