@@ -1,0 +1,39 @@
+name: 'main'
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+
+  run-tests:
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x]
+
+    runs-on: ${{ matrix.os }}
+
+    name: Run Tests
+
+    steps:
+
+      - name: 📚 Checkout
+        uses: actions/checkout@v2.1.1
+
+      - name: 🟢 Install Node (${{ matrix.node-version }})
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org
+
+      - name: 📦 Install Dependencies
+        run: yarn install
+
+      - name: Unit Tests
+        run: yarn test

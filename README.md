@@ -54,3 +54,10 @@ Every function has a dedicated page with the following information associated wi
 - Returned data for function calls
 
 Read the docs [here](https://community-labs.gitbook.io/arweavekit-docs/permawebjs/introduction)
+
+## Contributing
+
+### Setup
+
+- Install the [Node](https://nodejs.org/) version written in the [.nvmrc](.nvmrc) file.
+  - If you are using [Node Version Manager](https://github.com/nvm-sh/nvm) (aka `nvm`), you can run `nvm use` and it will automatically change your environment to use the Node version in the `.nvmrc` file.
