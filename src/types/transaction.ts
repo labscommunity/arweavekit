@@ -174,3 +174,7 @@ export interface CreateandPostTransactionWOthentReturnProps {
   success: boolean;
   transactionId: string;
 }
+
+export interface TransactionData {
+  data: string | Blob;
+}
