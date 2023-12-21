@@ -7,6 +7,7 @@ export {
   getTransaction,
   getTransactionStatus,
   createAndPostTransactionWOthent,
+  getData,
 } from './lib/transaction';
 export {
   createContract,

@@ -304,6 +304,42 @@ export async function getTransaction(params: Types.GetTransactionProps) {
 }
 
 /**
+ *
+ * @param GetTransactionProps
+ * @returns TransactionData
+ */
+
+export async function getData(params: Types.GetTransactionProps) {
+  // Separate the URL from the parameters
+  const intialUrl =
+    params.environment === 'local'
+      ? 'http://127.0.0.1:1984/'
+      : 'https://arweave.net/';
+
+  const apiUrl = `${intialUrl}${params.transactionId}`;
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch. Status Code: ${response.status}`);
+    }
+    const contentType = response.headers.get('content-type');
+    if (!contentType) {
+      throw new TypeError('No Content-type!');
+    } else if (contentType.includes('application/json')) {
+      const json = await response.json();
+      return json;
+    } else if (contentType.includes('text')) {
+      const text = await response.text();
+      return text;
+    } else {
+      const blob = await response.blob();
+      return blob;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+/**
  * CreateandPostTransactionWOthent
  * @params CreateandPostTransactionWOthentProps
  * @returns CreateandPostTransactionWOthentReturnProps
